@@ -43,7 +43,7 @@ export class Blog {
 
   @Prop({
     type: Boolean,
-    default: true,
+    default: false,
   })
   isMembership: boolean;
 

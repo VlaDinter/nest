@@ -172,7 +172,7 @@ export class Post {
     const query = PostModel.find();
 
     if (blogId) {
-      query.where({ blogId: filters.blogId });
+      query.where({ blogId });
     }
 
     const totalCount = await PostModel.countDocuments(query.getFilter()).lean();
