@@ -11,12 +11,10 @@ import {
   NotFoundException,
   HttpStatus,
 } from '@nestjs/common';
-import { BlogsService } from '../application/blogs.service';
+import { BlogInputModelType, BlogPostInputModelType, BlogsService } from '../application/blogs.service';
 import { BlogViewModel } from '../view-models/blog-view-model';
-import { BlogDto } from '../dto/blog.dto';
 import { PostViewModel } from '../../posts/view-models/post-view-model';
 import { PostsService } from '../../posts/application/posts.service';
-import { PostDto } from '../../posts/dto/post.dto';
 import { PaginationInterface } from '../../../interfaces/pagination.interface';
 import { FiltersInterface } from '../../../interfaces/filters.interface';
 
@@ -47,17 +45,17 @@ export class BlogsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  postBlogs(@Body() createBlogDto: BlogDto): Promise<BlogViewModel> {
-    return this.blogsService.addBlog(createBlogDto);
+  postBlogs(@Body() inputModel: BlogInputModelType): Promise<BlogViewModel> {
+    return this.blogsService.addBlog(inputModel);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async putBlog(
     @Param('id') blogId: string,
-    @Body() updateBlogDto: BlogDto,
+    @Body() inputModel: BlogInputModelType
   ): Promise<void> {
-    const updatedBlog = await this.blogsService.editBlog(blogId, updateBlogDto);
+    const updatedBlog = await this.blogsService.editBlog(blogId, inputModel);
 
     if (!updatedBlog) {
       throw new NotFoundException('Blog not found');
@@ -91,7 +89,7 @@ export class BlogsController {
   @Post(':blogId/posts')
   async postPosts(
     @Param('blogId') blogId: string,
-    @Body() createPostDto: PostDto,
+    @Body() inputModel: BlogPostInputModelType
   ): Promise<PostViewModel> {
     const foundBlog = await this.blogsService.getBlog(blogId);
 
@@ -99,6 +97,6 @@ export class BlogsController {
       throw new NotFoundException('Blog not found');
     }
 
-    return this.postsService.addPost({ ...createPostDto, blogId });
+    return this.postsService.addPost({ ...inputModel, blogId });
   }
 }

@@ -5,6 +5,29 @@ import { PostDto } from '../dto/Post.dto';
 import { BlogsService } from '../../blogs/application/blogs.service';
 import { PaginationInterface } from '../../../interfaces/pagination.interface';
 import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { IsDefined, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+
+export class PostInputModelType {
+  @MaxLength(30)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  title: string;
+  @MaxLength(100)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  shortDescription: string;
+  @MaxLength(1000)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  content: string;
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  blogId: string;
+}
 
 @Injectable()
 export class PostsService {

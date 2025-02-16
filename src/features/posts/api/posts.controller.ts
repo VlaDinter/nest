@@ -12,8 +12,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PostViewModel } from '../view-models/post-view-model';
-import { PostsService } from '../application/posts.service';
-import { PostDto } from '../dto/post.dto';
+import { PostInputModelType, PostsService } from '../application/posts.service';
 import { CommentViewModel } from '../../comments/view-models/comment-view-model';
 import { CommentsService } from '../../comments/application/comments.service';
 import { PaginationInterface } from '../../../interfaces/pagination.interface';
@@ -46,17 +45,17 @@ export class PostsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  postPosts(@Body() createPostDto: PostDto): Promise<PostViewModel> {
-    return this.postsService.addPost(createPostDto);
+  postPosts(@Body() inputModel: PostInputModelType): Promise<PostViewModel> {
+    return this.postsService.addPost(inputModel);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async putPost(
     @Param('id') postId: string,
-    @Body() updatePostDto: PostDto,
+    @Body() inputModel: PostInputModelType
   ): Promise<void> {
-    const updatedPost = await this.postsService.editPost(postId, updatePostDto);
+    const updatedPost = await this.postsService.editPost(postId, inputModel);
 
     if (!updatedPost) {
       throw new NotFoundException('Post not found');

@@ -114,7 +114,7 @@ export class User {
     const createdUser = new UserModel({
       login: dto.login,
       email: dto.email,
-      passwordHash: UserModel.generatePasswordHash(dto.password),
+      passwordHash: await UserModel.generatePasswordHash(dto.password),
       emailConfirmation: UserModel.configureEmailConfirmation(isConfirmed)
     });
 

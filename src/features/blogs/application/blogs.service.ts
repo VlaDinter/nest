@@ -4,6 +4,44 @@ import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
 import { FiltersInterface } from '../../../interfaces/filters.interface';
 import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { IsDefined, IsNotEmpty, IsString, IsUrl, MaxLength } from 'class-validator';
+
+export class BlogInputModelType {
+  @MaxLength(15)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  name: string;
+  @MaxLength(500)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  description: string;
+  @IsUrl()
+  @MaxLength(100)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  websiteUrl: string;
+}
+
+export class BlogPostInputModelType {
+  @MaxLength(30)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  title: string;
+  @MaxLength(100)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  shortDescription: string;
+  @MaxLength(1000)
+  @IsNotEmpty()
+  @IsString()
+  @IsDefined()
+  content: string;
+}
 
 @Injectable()
 export class BlogsService {

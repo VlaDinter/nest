@@ -238,7 +238,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlogDto"
+                  "$ref": "#/components/schemas/BlogInputModelType"
                 }
               }
             }
@@ -286,7 +286,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlogDto"
+                  "$ref": "#/components/schemas/BlogInputModelType"
                 }
               }
             }
@@ -352,7 +352,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostDto"
+                  "$ref": "#/components/schemas/BlogPostInputModelType"
                 }
               }
             }
@@ -382,7 +382,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostDto"
+                  "$ref": "#/components/schemas/PostInputModelType"
                 }
               }
             }
@@ -430,7 +430,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostDto"
+                  "$ref": "#/components/schemas/PostInputModelType"
                 }
               }
             }
@@ -548,11 +548,15 @@ window.onload = function() {
           "type": "object",
           "properties": {}
         },
-        "BlogDto": {
+        "BlogInputModelType": {
           "type": "object",
           "properties": {}
         },
-        "PostDto": {
+        "BlogPostInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "PostInputModelType": {
           "type": "object",
           "properties": {}
         }
