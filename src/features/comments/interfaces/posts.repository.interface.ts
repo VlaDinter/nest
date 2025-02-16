@@ -1,11 +1,11 @@
 import { CommentViewModel } from '../view-models/comment-view-model';
-import { FiltersType } from '../../../types/FiltersType';
-import { PaginationType } from '../../../types/PaginationType';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
 
 export abstract class ICommentsRepository {
   abstract findComments(
-    filters: FiltersType,
-  ): Promise<PaginationType<CommentViewModel>>;
+    filters: FiltersInterface,
+  ): Promise<PaginationInterface<CommentViewModel>>;
   abstract findComment(commentId: string): Promise<CommentViewModel | null>;
   abstract deleteAll(): Promise<void>;
 }

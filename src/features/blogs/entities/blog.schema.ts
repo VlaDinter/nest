@@ -1,9 +1,9 @@
 import { HydratedDocument, Model, Types, SortOrder } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PaginationType } from '../../../types/PaginationType';
-import { FiltersType } from '../../../types/FiltersType';
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
 
 @Schema()
 export class Blog {
@@ -58,7 +58,7 @@ export class Blog {
     };
   }
 
-  static setBlog(dto: BlogDto, BlogModel: BlogModelType): BlogDocument {
+  static setBlog(BlogModel: BlogModelType, dto: BlogDto): BlogDocument {
     const createdBlog = new BlogModel({
       name: dto.name,
       description: dto.description,
@@ -69,9 +69,9 @@ export class Blog {
   }
 
   static async filterBlogs(
-    filters: FiltersType,
+    filters: FiltersInterface,
     BlogModel: BlogModelType,
-  ): Promise<PaginationType<BlogViewModel>> {
+  ): Promise<PaginationInterface<BlogViewModel>> {
     const sortBy =
       typeof filters.sortBy === 'string' ? filters.sortBy : 'createdAt';
     const sortDirection: SortOrder =
@@ -111,11 +111,11 @@ BlogSchema.methods = {
 };
 
 type BlogModelStaticType = {
-  setBlog: (dto: BlogDto, BlogModel: BlogModelType) => BlogDocument;
+  setBlog: (BlogModel: BlogModelType, dto: BlogDto) => BlogDocument;
   filterBlogs: (
-    filters: FiltersType,
+    filters: FiltersInterface,
     BlogModel: BlogModelType,
-  ) => Promise<PaginationType<BlogViewModel>>;
+  ) => Promise<PaginationInterface<BlogViewModel>>;
 };
 
 const blogStaticMethods: BlogModelStaticType = {

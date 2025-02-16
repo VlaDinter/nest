@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserModelType } from '../../entities/user.schema';
-import { FiltersType } from '../../../../types/FiltersType';
-import { PaginationType } from '../../../../types/PaginationType';
 import { UserViewModel } from '../../view-models/user-view-model';
 import { UserDto } from '../../dto/user.dto';
 import { IUsersRepository } from '../../interfaces/users.repository.interface';
+import { MeViewModel } from '../../view-models/me-view-model';
+import { FiltersInterface } from '../../../../interfaces/filters.interface';
+import { PaginationInterface } from '../../../../interfaces/pagination.interface';
 
 @Injectable()
 export class UsersMongooseRepository extends IUsersRepository {
@@ -15,19 +16,68 @@ export class UsersMongooseRepository extends IUsersRepository {
     super();
   }
 
-  findUsers(filters: FiltersType): Promise<PaginationType<UserViewModel>> {
+  findUsers(filters: FiltersInterface): Promise<PaginationInterface<UserViewModel>> {
     return this.UserModel.filterUsers(filters, this.UserModel);
   }
 
-  async createUser(createUserDto: UserDto): Promise<UserViewModel> {
+  findUser(userId: string): Promise<UserViewModel | null> {
+    return this.UserModel.findOne({ id: userId }, { _id: 0, __v: 0 }).lean();
+  }
+
+  findUserByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
+    return this.UserModel.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] }, { _id: 0, __v: 0 }).lean();
+  }
+
+  findUserByCode(code: string): Promise<UserViewModel | null> {
+    return this.UserModel.findOne({ 'emailConfirmation.confirmationCode': code }, { _id: 0, __v: 0 }).lean();
+  }
+
+  async findMe(userId: string): Promise<MeViewModel | null> {
+    const userInstance = await this.UserModel.findOne({ id: userId });
+
+    return userInstance?.mapDBUserToMeViewModel() || null;
+  }
+
+  async createUser(createUserDto: UserDto, isConfirmed = false): Promise<UserViewModel> {
     const userInstance = await this.UserModel.setUser(
-      createUserDto,
       this.UserModel,
+      createUserDto,
+      isConfirmed
     );
 
     await userInstance.save();
 
     return userInstance.mapDBUserToUserViewModel();
+  }
+
+  async updateUserEmailConfirmation(
+    userId: string,
+    isConfirmed = false
+  ): Promise<UserViewModel | null> {
+    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
+
+    if (!userInstance) return null;
+
+    userInstance.emailConfirmation = this.UserModel.configureEmailConfirmation(isConfirmed);
+
+    await userInstance.save();
+
+    return userInstance;
+  }
+
+  async updateUserPassword(
+    userId: string,
+    newPassword: string
+  ): Promise<UserViewModel | null> {
+    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
+
+    if (!userInstance) return null;
+
+    userInstance.passwordHash = await this.UserModel.generatePasswordHash(newPassword);
+
+    await userInstance.save();
+
+    return userInstance;
   }
 
   async deleteUser(userId: string): Promise<UserViewModel | null> {

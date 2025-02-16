@@ -33,6 +33,143 @@ window.onload = function() {
           }
         }
       },
+      "/auth/me": {
+        "get": {
+          "operationId": "AuthController_getMe",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "operationId": "AuthController_postLogin",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/registration": {
+        "post": {
+          "operationId": "AuthController_postRegistration",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/registration-email-resending": {
+        "post": {
+          "operationId": "AuthController_postRegistrationEmailResending",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailConfirmationInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/registration-confirmation": {
+        "post": {
+          "operationId": "AuthController_postRegistrationConfirmation",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationConfirmationCodeInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/password-recovery": {
+        "post": {
+          "operationId": "AuthController_postPasswordRecovery",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailConfirmationInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/new-password": {
+        "post": {
+          "operationId": "AuthController_postNewPassword",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewPasswordRecoveryInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
       "/users": {
         "get": {
           "operationId": "UsersController_getUsers",
@@ -51,7 +188,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDto"
+                  "$ref": "#/components/schemas/CreateUserInputModelType"
                 }
               }
             }
@@ -391,7 +528,23 @@ window.onload = function() {
     "servers": [],
     "components": {
       "schemas": {
-        "UserDto": {
+        "LoginInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "CreateUserInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "EmailConfirmationInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "RegistrationConfirmationCodeInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "NewPasswordRecoveryInputModelType": {
           "type": "object",
           "properties": {}
         },

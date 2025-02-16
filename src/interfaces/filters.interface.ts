@@ -1,6 +1,6 @@
 import { SortOrder } from 'mongoose';
 
-export type FiltersType = {
+export interface FiltersInterface {
   searchEmailTerm: string;
   searchLoginTerm: string;
   searchNameTerm: string;
@@ -8,4 +8,4 @@ export type FiltersType = {
   pageNumber: number;
   pageSize: number;
   sortBy: string;
-};
+}

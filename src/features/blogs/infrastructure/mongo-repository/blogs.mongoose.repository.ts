@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PaginationType } from '../../../../types/PaginationType';
-import { FiltersType } from '../../../../types/FiltersType';
 import { IBlogsRepository } from '../../interfaces/blogs.repository.interface';
 import { BlogModelType, Blog } from '../../entities/blog.schema';
 import { BlogViewModel } from '../../view-models/blog-view-model';
 import { BlogDto } from '../../dto/blog.dto';
+import { FiltersInterface } from '../../../../interfaces/filters.interface';
+import { PaginationInterface } from '../../../../interfaces/pagination.interface';
 
 @Injectable()
 export class BlogsMongooseRepository extends IBlogsRepository {
@@ -15,7 +15,7 @@ export class BlogsMongooseRepository extends IBlogsRepository {
     super();
   }
 
-  findBlogs(filters: FiltersType): Promise<PaginationType<BlogViewModel>> {
+  findBlogs(filters: FiltersInterface): Promise<PaginationInterface<BlogViewModel>> {
     return this.BlogModel.filterBlogs(filters, this.BlogModel);
   }
 
@@ -25,8 +25,8 @@ export class BlogsMongooseRepository extends IBlogsRepository {
 
   async createBlog(createBlogDto: BlogDto): Promise<BlogViewModel> {
     const blogInstance = await this.BlogModel.setBlog(
-      createBlogDto,
       this.BlogModel,
+      createBlogDto
     );
 
     await blogInstance.save();

@@ -1,8 +1,8 @@
 import { HydratedDocument, Model, SortOrder, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CommentViewModel } from '../view-models/comment-view-model';
-import { FiltersType } from '../../../types/FiltersType';
-import { PaginationType } from '../../../types/PaginationType';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
 
 @Schema()
 export class CommentatorInfo {
@@ -99,9 +99,9 @@ export class Comment {
   }
 
   static async filterComments(
-    filters: FiltersType,
+    filters: FiltersInterface,
     CommentModel: CommentModelType,
-  ): Promise<PaginationType<CommentViewModel>> {
+  ): Promise<PaginationInterface<CommentViewModel>> {
     const sortBy =
       typeof filters.sortBy === 'string' ? filters.sortBy : 'createdAt';
     const sortDirection: SortOrder =
@@ -140,9 +140,9 @@ CommentSchema.methods = {
 
 type CommentModelStaticType = {
   filterComments: (
-    filters: FiltersType,
+    filters: FiltersInterface,
     CommentModel: CommentModelType,
-  ) => Promise<PaginationType<CommentViewModel>>;
+  ) => Promise<PaginationInterface<CommentViewModel>>;
 };
 
 const commentStaticMethods: CommentModelStaticType = {

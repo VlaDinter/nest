@@ -1,12 +1,12 @@
-import { PaginationType } from '../../../types/PaginationType';
 import { BlogViewModel } from '../view-models/blog-view-model';
-import { FiltersType } from '../../../types/FiltersType';
 import { BlogDto } from '../dto/blog.dto';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
 
 export abstract class IBlogsRepository {
   abstract findBlogs(
-    filters: FiltersType,
-  ): Promise<PaginationType<BlogViewModel>>;
+    filters: FiltersInterface,
+  ): Promise<PaginationInterface<BlogViewModel>>;
   abstract findBlog(postId: string): Promise<BlogViewModel | null>;
   abstract createBlog(createBlogDto: BlogDto): Promise<BlogViewModel>;
   abstract updateBlog(

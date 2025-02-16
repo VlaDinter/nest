@@ -9,6 +9,7 @@ import { UsersModule } from './features/users/users.module';
 import { BlogsModule } from './features/blogs/blogs.module';
 import { PostsModule } from './features/posts/posts.module';
 import { CommentsModule } from './features/comments/comments.module';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CommentsModule } from './features/comments/comments.module';
         dbName: process.env.MONGO_DB_NAME,
       },
     ),
+    AuthModule,
     UsersModule,
     BlogsModule,
     PostsModule,

@@ -11,13 +11,13 @@ import {
   NotFoundException,
   HttpStatus,
 } from '@nestjs/common';
-import { PaginationType } from '../../../types/PaginationType';
 import { PostViewModel } from '../view-models/post-view-model';
 import { PostsService } from '../application/posts.service';
-import { FiltersType } from '../../../types/FiltersType';
 import { PostDto } from '../dto/post.dto';
 import { CommentViewModel } from '../../comments/view-models/comment-view-model';
 import { CommentsService } from '../../comments/application/comments.service';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
 
 @Controller('posts')
 export class PostsController {
@@ -28,8 +28,8 @@ export class PostsController {
 
   @Get()
   getPosts(
-    @Query() filters: FiltersType,
-  ): Promise<PaginationType<PostViewModel>> {
+    @Query() filters: FiltersInterface,
+  ): Promise<PaginationInterface<PostViewModel>> {
     return this.postsService.getPosts(filters);
   }
 
@@ -76,8 +76,8 @@ export class PostsController {
   @Get(':postId/comments')
   async getComments(
     @Param('postId') postId: string,
-    @Query() filters: FiltersType,
-  ): Promise<PaginationType<CommentViewModel>> {
+    @Query() filters: FiltersInterface,
+  ): Promise<PaginationInterface<CommentViewModel>> {
     const foundPost = await this.postsService.getPost(postId);
 
     if (!foundPost) {

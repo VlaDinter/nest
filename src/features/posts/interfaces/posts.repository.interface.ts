@@ -1,12 +1,12 @@
-import { PaginationType } from '../../../types/PaginationType';
 import { PostViewModel } from '../view-models/post-view-model';
-import { FiltersType } from '../../../types/FiltersType';
 import { PostDto } from '../dto/Post.dto';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
 
 export abstract class IPostsRepository {
   abstract findPosts(
-    filters: FiltersType,
-  ): Promise<PaginationType<PostViewModel>>;
+    filters: FiltersInterface,
+  ): Promise<PaginationInterface<PostViewModel>>;
   abstract findPost(postId: string): Promise<PostViewModel | null>;
   abstract createPost(
     createPostDto: PostDto,

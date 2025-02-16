@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostsRepository } from '../../interfaces/posts.repository.interface';
 import { Post, PostModelType } from '../../entities/post.schema';
-import { PaginationType } from '../../../../types/PaginationType';
 import { PostViewModel } from '../../view-models/post-view-model';
-import { FiltersType } from '../../../../types/FiltersType';
 import { PostDto } from '../../dto/Post.dto';
+import { FiltersInterface } from '../../../../interfaces/filters.interface';
+import { PaginationInterface } from '../../../../interfaces/pagination.interface';
 
 @Injectable()
 export class PostsMongooseRepository extends IPostsRepository {
@@ -16,9 +16,9 @@ export class PostsMongooseRepository extends IPostsRepository {
   }
 
   findPosts(
-    filters: FiltersType,
+    filters: FiltersInterface,
     blogId?: string,
-  ): Promise<PaginationType<PostViewModel>> {
+  ): Promise<PaginationInterface<PostViewModel>> {
     return this.PostModel.filterPosts(filters, this.PostModel, blogId);
   }
 
@@ -37,8 +37,8 @@ export class PostsMongooseRepository extends IPostsRepository {
     blogName: string,
   ): Promise<PostViewModel> {
     const postInstance = await this.PostModel.setPost(
-      createPostDto,
       this.PostModel,
+      createPostDto,
       blogName,
     );
 

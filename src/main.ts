@@ -3,14 +3,15 @@ import { createWriteStream } from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { appInit } from './settings';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7000;
 const serverUrl = `http://localhost:${PORT}`;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  appInit(app);
 
   const config = new DocumentBuilder()
     .setTitle('Examples')
@@ -27,6 +28,8 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
 
   await app.listen(PORT);
+
+  console.log(`Application is running on: ${await app.getUrl()}`);
 
   // get the swagger json file (if app is running in development mode)
   if (process.env.NODE_ENV === 'development') {

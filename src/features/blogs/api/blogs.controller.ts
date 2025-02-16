@@ -11,14 +11,14 @@ import {
   NotFoundException,
   HttpStatus,
 } from '@nestjs/common';
-import { PaginationType } from '../../../types/PaginationType';
-import { FiltersType } from '../../../types/FiltersType';
 import { BlogsService } from '../application/blogs.service';
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
 import { PostViewModel } from '../../posts/view-models/post-view-model';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostDto } from '../../posts/dto/post.dto';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
 
 @Controller('blogs')
 export class BlogsController {
@@ -29,8 +29,8 @@ export class BlogsController {
 
   @Get()
   getBlogs(
-    @Query() filters: FiltersType,
-  ): Promise<PaginationType<BlogViewModel>> {
+    @Query() filters: FiltersInterface,
+  ): Promise<PaginationInterface<BlogViewModel>> {
     return this.blogsService.getBlogs(filters);
   }
 
@@ -77,8 +77,8 @@ export class BlogsController {
   @Get(':blogId/posts')
   async getPosts(
     @Param('blogId') blogId: string,
-    @Query() filters: FiltersType,
-  ): Promise<PaginationType<PostViewModel>> {
+    @Query() filters: FiltersInterface,
+  ): Promise<PaginationInterface<PostViewModel>> {
     const foundBlog = await this.blogsService.getBlog(blogId);
 
     if (!foundBlog) {

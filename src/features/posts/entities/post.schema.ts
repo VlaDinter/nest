@@ -1,9 +1,9 @@
 import { HydratedDocument, Model, Types, SortOrder } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PaginationType } from '../../../types/PaginationType';
 import { PostViewModel } from '../view-models/post-view-model';
-import { FiltersType } from '../../../types/FiltersType';
 import { PostDto } from '../dto/post.dto';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
 
 @Schema()
 export class LikeDetails {
@@ -137,8 +137,8 @@ export class Post {
   }
 
   static setPost(
-    dto: PostDto,
     PostModel: PostModelType,
+    dto: PostDto,
     blogName: string,
   ): PostDocument {
     const createdPost = new PostModel({
@@ -153,10 +153,10 @@ export class Post {
   }
 
   static async filterPosts(
-    filters: FiltersType,
+    filters: FiltersInterface,
     PostModel: PostModelType,
     blogId?: string,
-  ): Promise<PaginationType<PostViewModel>> {
+  ): Promise<PaginationInterface<PostViewModel>> {
     const sortBy =
       typeof filters.sortBy === 'string' ? filters.sortBy : 'createdAt';
     const sortDirection: SortOrder =
@@ -197,15 +197,15 @@ PostSchema.methods = {
 
 type PostModelStaticType = {
   setPost: (
-    dto: PostDto,
     PostModel: PostModelType,
+    dto: PostDto,
     blogName: string,
   ) => PostDocument;
   filterPosts: (
-    filters: FiltersType,
+    filters: FiltersInterface,
     PostModel: PostModelType,
     blogId?: string,
-  ) => Promise<PaginationType<PostViewModel>>;
+  ) => Promise<PaginationInterface<PostViewModel>>;
 };
 
 const postStaticMethods: PostModelStaticType = {

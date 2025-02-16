@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationType } from '../../../types/PaginationType';
-import { FiltersType } from '../../../types/FiltersType';
 import { BlogsMongooseRepository } from '../infrastructure/mongo-repository/blogs.mongoose.repository';
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
+import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { PaginationInterface } from '../../../interfaces/pagination.interface';
 
 @Injectable()
 export class BlogsService {
   constructor(private readonly blogsRepository: BlogsMongooseRepository) {}
 
-  getBlogs(filters: FiltersType): Promise<PaginationType<BlogViewModel>> {
+  getBlogs(filters: FiltersInterface): Promise<PaginationInterface<BlogViewModel>> {
     return this.blogsRepository.findBlogs(filters);
   }
 

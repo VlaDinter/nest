@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ICommentsRepository } from '../../interfaces/posts.repository.interface';
 import { Comment, CommentModelType } from '../../entities/comment.schema';
 import { CommentViewModel } from '../../view-models/comment-view-model';
-import { FiltersType } from '../../../../types/FiltersType';
-import { PaginationType } from '../../../../types/PaginationType';
+import { PaginationInterface } from '../../../../interfaces/pagination.interface';
+import { FiltersInterface } from '../../../../interfaces/filters.interface';
 
 @Injectable()
 export class CommentsMongooseRepository extends ICommentsRepository {
@@ -15,8 +15,8 @@ export class CommentsMongooseRepository extends ICommentsRepository {
   }
 
   findComments(
-    filters: FiltersType,
-  ): Promise<PaginationType<CommentViewModel>> {
+    filters: FiltersInterface,
+  ): Promise<PaginationInterface<CommentViewModel>> {
     return this.CommentModel.filterComments(filters, this.CommentModel);
   }
 
