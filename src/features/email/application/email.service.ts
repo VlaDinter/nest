@@ -34,13 +34,44 @@ export class EmailServiceMock implements EmailService {
       }
     });
 
-    await transport.sendMail({
-      from: 'Dimych <dimychdeveloper@gmail.com>',
-      to: email,
-      subject: title,
-      html: message
-    }, (error) => {
-      console.log(error);
+    await new Promise((resolve, reject) => {
+      // verify connection configuration
+      transport.verify(function (error, success) {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("Server is ready to take our messages");
+          resolve(success);
+        }
+      });
+    });
+
+    // await transport.sendMail({
+    //   from: 'Dimych <dimychdeveloper@gmail.com>',
+    //   to: email,
+    //   subject: title,
+    //   html: message
+    // }, (error) => {
+    //   console.log(error);
+    // });
+
+    await new Promise((resolve, reject) => {
+      // send mail
+      transport.sendMail({
+        from: 'Dimych <dimychdeveloper@gmail.com>',
+        to: email,
+        subject: title,
+        html: message
+      }, (err, info) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          console.log(info);
+          resolve(info);
+        }
+      });
     });
   }
 }
