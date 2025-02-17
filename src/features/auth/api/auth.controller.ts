@@ -60,7 +60,14 @@ export class AuthController {
   @Post('/registration-email-resending')
   @HttpCode(HttpStatus.NO_CONTENT)
   async postRegistrationEmailResending(@Body() inputModel: EmailConfirmationInputModelType): Promise<void> {
-    await this.authService.editUserEmailConfirmation(inputModel.email);
+    const foundUser = await this.authService.editUserEmailConfirmation(inputModel.email);
+
+    if (!foundUser) {
+      throw new BadRequestException([{
+        message: 'email already confirmed or doesnt exist',
+        field: 'email'
+      }]);
+    }
   }
 
   @UseGuards(ThrottlerGuard)

@@ -68,16 +68,20 @@ export class AuthService {
     }
   }
 
-  async editUserEmailConfirmation(email: string): Promise<void> {
+  async editUserEmailConfirmation(email: string): Promise<UserViewModel | null> {
     const user = await this.usersService.getUserByLoginOrEmail(email);
 
-    if (user) {
-      const updatedUser = await this.usersService.editUserEmailConfirmation(user.id);
-
-      if (updatedUser?.emailConfirmation) {
-        await this.emailServiceMock.sendConfirmation(updatedUser.email, updatedUser.emailConfirmation.confirmationCode);
-      }
+    if (!user || user.emailConfirmation?.isConfirmed) {
+      return null;
     }
+
+    const updatedUser = await this.usersService.editUserEmailConfirmation(user.id);
+
+    if (updatedUser?.emailConfirmation) {
+      await this.emailServiceMock.sendConfirmation(updatedUser.email, updatedUser.emailConfirmation.confirmationCode);
+    }
+
+    return updatedUser;
   }
 
   async getUserByCode(code: string): Promise<UserViewModel | null> {
