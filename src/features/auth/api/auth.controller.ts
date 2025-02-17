@@ -70,7 +70,10 @@ export class AuthController {
     const foundUser = await this.authService.getUserByCode(inputModel.code);
 
     if (!foundUser) {
-      throw new BadRequestException();
+      throw new BadRequestException([{
+        message: 'confirmation code is incorrect, expired or already been applied',
+        field: 'code'
+      }]);
     }
   }
 
@@ -88,7 +91,10 @@ export class AuthController {
     const updatedUser = await this.authService.editUserPassword(inputModel.newPassword, inputModel.recoveryCode);
 
     if (!updatedUser) {
-      throw new BadRequestException();
+      throw new BadRequestException([{
+        message: 'recoveryCode is incorrect or expired',
+        field: 'recoveryCode'
+      }]);
     }
   }
 }

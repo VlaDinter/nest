@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserViewModel } from '../view-models/user-view-model';
 import { UserDto } from '../dto/user.dto';
 import { UsersMongooseRepository } from '../infrastructure/mongo-repository/users.mongoose.repository';
@@ -83,11 +83,23 @@ export class UsersService {
   async validateOrRejectModel(model: UserDto, ctor: { new (): CreateUserInputModelType }): Promise<void> {
     let user = await this.getUserByLoginOrEmail(model.email);
 
-    if (!user) {
-      user = await this.getUserByLoginOrEmail(model.login);
+    if (user) {
+      throw new BadRequestException([{
+        message: 'email already exists',
+        field: 'email'
+      }]);
     }
 
-    if (model instanceof ctor === false || user) {
+    user = await this.getUserByLoginOrEmail(model.login);
+
+    if (user) {
+      throw new BadRequestException([{
+        message: 'login already exists',
+        field: 'login'
+      }]);
+    }
+
+    if (model instanceof ctor === false) {
       throw new Error('Incorrect input data');
     }
 

@@ -137,7 +137,7 @@ export class User {
       : 10;
     const skip = (pageNumber - 1) * pageSize;
     const sort = { [sortBy]: sortDirection };
-    const query = UserModel.find({}, { passwordHash: 0, _id: 0, __v: 0 });
+    const query = UserModel.find({}, { _id: 0, __v: 0, passwordHash: 0, emailConfirmation: 0 });
 
     if (
       typeof filters.searchLoginTerm === 'string' &&
