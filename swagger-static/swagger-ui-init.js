@@ -173,7 +173,56 @@ window.onload = function() {
       "/users": {
         "get": {
           "operationId": "UsersController_getUsers",
-          "parameters": [],
+          "parameters": [
+            {
+              "name": "searchLoginTerm",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "searchEmailTerm",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pageSize",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "sortBy",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "sortDirection",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": ""
@@ -223,7 +272,48 @@ window.onload = function() {
       "/blogs": {
         "get": {
           "operationId": "BlogsController_getBlogs",
-          "parameters": [],
+          "parameters": [
+            {
+              "name": "searchNameTerm",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pageSize",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "sortBy",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "sortDirection",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": ""
@@ -327,6 +417,38 @@ window.onload = function() {
               "schema": {
                 "type": "string"
               }
+            },
+            {
+              "name": "pageSize",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "sortBy",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "sortDirection",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
             }
           ],
           "responses": {
@@ -367,7 +489,40 @@ window.onload = function() {
       "/posts": {
         "get": {
           "operationId": "PostsController_getPosts",
-          "parameters": [],
+          "parameters": [
+            {
+              "name": "pageSize",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "sortBy",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "sortDirection",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": ""
@@ -471,6 +626,38 @@ window.onload = function() {
               "schema": {
                 "type": "string"
               }
+            },
+            {
+              "name": "pageSize",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "sortBy",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "sortDirection",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
             }
           ],
           "responses": {
@@ -508,6 +695,10 @@ window.onload = function() {
       "contact": {}
     },
     "tags": [
+      {
+        "name": "auth",
+        "description": ""
+      },
       {
         "name": "users",
         "description": ""

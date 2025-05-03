@@ -16,13 +16,13 @@ export class AppController {
   ) {}
 
   @Get()
-  getHello() {
+  getHello(): string {
     return this.appService.getHello();
   }
 
   @Delete('testing/all-data')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteAllData() {
+  async deleteAllData(): Promise<void> {
     await this.usersService.removeAll();
     await this.blogsService.removeAll();
     await this.postsService.removeAll();

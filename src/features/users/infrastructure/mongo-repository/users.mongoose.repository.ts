@@ -5,8 +5,8 @@ import { UserViewModel } from '../../view-models/user-view-model';
 import { UserDto } from '../../dto/user.dto';
 import { IUsersRepository } from '../../interfaces/users.repository.interface';
 import { MeViewModel } from '../../view-models/me-view-model';
-import { FiltersInterface } from '../../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../../interfaces/pagination.interface';
+import { IFilters } from '../../../../interfaces/filters.interface';
+import { IPagination } from '../../../../interfaces/pagination.interface';
 
 @Injectable()
 export class UsersMongooseRepository extends IUsersRepository {
@@ -16,8 +16,8 @@ export class UsersMongooseRepository extends IUsersRepository {
     super();
   }
 
-  findUsers(filters: FiltersInterface): Promise<PaginationInterface<UserViewModel>> {
-    return this.UserModel.filterUsers(filters, this.UserModel);
+  findUsers(filters: IFilters): Promise<IPagination<UserViewModel>> {
+    return this.UserModel.filterUsers(this.UserModel, filters);
   }
 
   findUser(userId: string): Promise<UserViewModel | null> {
@@ -25,24 +25,33 @@ export class UsersMongooseRepository extends IUsersRepository {
   }
 
   findUserByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
-    return this.UserModel.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] }, { _id: 0, __v: 0 }).lean();
+    return this.UserModel.findOne(
+      { $or: [{ email: loginOrEmail }, { login: loginOrEmail }] },
+      { _id: 0, __v: 0 },
+    ).lean();
   }
 
   findUserByCode(code: string): Promise<UserViewModel | null> {
-    return this.UserModel.findOne({ 'emailConfirmation.confirmationCode': code }, { _id: 0, __v: 0 }).lean();
+    return this.UserModel.findOne(
+      { 'emailConfirmation.confirmationCode': code },
+      { _id: 0, __v: 0 },
+    ).lean();
   }
 
   async findMe(userId: string): Promise<MeViewModel | null> {
-    const userInstance = await this.UserModel.findOne({ id: userId });
+    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
 
     return userInstance?.mapDBUserToMeViewModel() || null;
   }
 
-  async createUser(createUserDto: UserDto, isConfirmed = false): Promise<UserViewModel> {
+  async createUser(
+    createUserDto: UserDto,
+    isConfirmed = false,
+  ): Promise<UserViewModel> {
     const userInstance = await this.UserModel.setUser(
       this.UserModel,
       createUserDto,
-      isConfirmed
+      isConfirmed,
     );
 
     await userInstance.save();
@@ -52,13 +61,14 @@ export class UsersMongooseRepository extends IUsersRepository {
 
   async updateUserEmailConfirmation(
     userId: string,
-    isConfirmed = false
+    isConfirmed = false,
   ): Promise<UserViewModel | null> {
     const userInstance = await this.UserModel.findOne({ id: userId }).exec();
 
     if (!userInstance) return null;
 
-    userInstance.emailConfirmation = this.UserModel.configureEmailConfirmation(isConfirmed);
+    userInstance.emailConfirmation =
+      this.UserModel.configureEmailConfirmation(isConfirmed);
 
     await userInstance.save();
 
@@ -67,13 +77,14 @@ export class UsersMongooseRepository extends IUsersRepository {
 
   async updateUserPassword(
     userId: string,
-    newPassword: string
+    newPassword: string,
   ): Promise<UserViewModel | null> {
     const userInstance = await this.UserModel.findOne({ id: userId }).exec();
 
     if (!userInstance) return null;
 
-    userInstance.passwordHash = await this.UserModel.generatePasswordHash(newPassword);
+    userInstance.passwordHash =
+      await this.UserModel.generatePasswordHash(newPassword);
 
     await userInstance.save();
 

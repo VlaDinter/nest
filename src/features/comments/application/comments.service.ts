@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommentViewModel } from '../view-models/comment-view-model';
 import { CommentsMongooseRepository } from '../infrastructure/mongo-repository/comments.mongoose.repository';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { IFilters } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
 
 @Injectable()
 export class CommentsService {
@@ -10,7 +10,7 @@ export class CommentsService {
     private readonly commentsRepository: CommentsMongooseRepository,
   ) {}
 
-  getComments(filters: FiltersInterface): Promise<PaginationInterface<CommentViewModel>> {
+  getComments(filters: IFilters): Promise<IPagination<CommentViewModel>> {
     return this.commentsRepository.findComments(filters);
   }
 

@@ -4,9 +4,10 @@ import {
   ArgumentsHost,
   ExceptionFilter,
   HttpException,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
-import { APIErrorResultInterface } from './interfaces/api-error-result.interface';
+import { IAPIErrorResult } from './interfaces/api-error-result.interface';
+import { IFieldError } from './interfaces/field-error.interface';
 
 @Catch(Error)
 export class ErrorExceptionFilter implements ExceptionFilter {
@@ -19,7 +20,9 @@ export class ErrorExceptionFilter implements ExceptionFilter {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send({ error: exception.toString(), stack: exception.stack });
     } else {
-      response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('some error occurred');
+      response
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send('some error occurred');
     }
   }
 }
@@ -32,24 +35,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    if (status === HttpStatus.INTERNAL_SERVER_ERROR && process.env.envorinment !== 'production') {
+    if (
+      status === HttpStatus.INTERNAL_SERVER_ERROR &&
+      process.env.envorinment !== 'production'
+    ) {
       response.status(status).json(exception);
     }
 
     if (status === HttpStatus.BAD_REQUEST) {
-      const errorResponse: APIErrorResultInterface = {
-        errorsMessages: []
+      const responseBody = exception.getResponse();
+      const errorResponse: IAPIErrorResult = {
+        errorsMessages: [],
       };
 
-      const responseBody = exception.getResponse();
+      responseBody['message']?.forEach((item: IFieldError): void => {
+        errorResponse.errorsMessages?.push(item);
+      });
 
-      responseBody['message']?.forEach(item => errorResponse.errorsMessages?.push(item));
       response.status(status).json(errorResponse);
     } else {
       response.status(status).json({
         statusCode: status,
         timestamp: new Date().toISOString(),
-        path: request.url
+        path: request.url,
       });
     }
   }

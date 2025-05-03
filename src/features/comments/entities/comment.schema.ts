@@ -1,8 +1,9 @@
-import { HydratedDocument, Model, SortOrder, Types } from 'mongoose';
+import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CommentViewModel } from '../view-models/comment-view-model';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
+import { IFilters } from '../../../interfaces/filters.interface';
+import { ISortDirections } from '../../../interfaces/sort-directions.interface';
 
 @Schema()
 export class CommentatorInfo {
@@ -99,21 +100,18 @@ export class Comment {
   }
 
   static async filterComments(
-    filters: FiltersInterface,
     CommentModel: CommentModelType,
-  ): Promise<PaginationInterface<CommentViewModel>> {
-    const sortBy =
-      typeof filters.sortBy === 'string' ? filters.sortBy : 'createdAt';
-    const sortDirection: SortOrder =
-      filters.sortDirection === 'asc' ? 'asc' : 'desc';
-    const pageNumber = Number.isInteger(Number(filters.pageNumber))
-      ? Number(filters.pageNumber)
-      : 1;
-    const pageSize = Number.isInteger(Number(filters.pageSize))
-      ? Number(filters.pageSize)
-      : 10;
+    filters: IFilters,
+  ): Promise<IPagination<CommentViewModel>> {
+    const sortBy = filters.sortBy;
+    const sortDirection =
+      filters.sortDirection === ISortDirections.ASC
+        ? ISortDirections.ASC
+        : ISortDirections.DESC;
+    const pageSize = filters.pageSize > 0 ? filters.pageSize : 10;
+    const pageNumber = filters.pageNumber > 0 ? filters.pageNumber : 1;
     const skip = (pageNumber - 1) * pageSize;
-    const sort = { [sortBy]: sortDirection };
+    const sort = !sortBy ? {} : { [sortBy]: sortDirection };
     const query = CommentModel.find();
     const totalCount = await CommentModel.countDocuments(
       query.getFilter(),
@@ -140,9 +138,9 @@ CommentSchema.methods = {
 
 type CommentModelStaticType = {
   filterComments: (
-    filters: FiltersInterface,
     CommentModel: CommentModelType,
-  ) => Promise<PaginationInterface<CommentViewModel>>;
+    filters: IFilters,
+  ) => Promise<IPagination<CommentViewModel>>;
 };
 
 const commentStaticMethods: CommentModelStaticType = {

@@ -4,8 +4,8 @@ import { IBlogsRepository } from '../../interfaces/blogs.repository.interface';
 import { BlogModelType, Blog } from '../../entities/blog.schema';
 import { BlogViewModel } from '../../view-models/blog-view-model';
 import { BlogDto } from '../../dto/blog.dto';
-import { FiltersInterface } from '../../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../../interfaces/pagination.interface';
+import { IFilters } from '../../../../interfaces/filters.interface';
+import { IPagination } from '../../../../interfaces/pagination.interface';
 
 @Injectable()
 export class BlogsMongooseRepository extends IBlogsRepository {
@@ -15,8 +15,8 @@ export class BlogsMongooseRepository extends IBlogsRepository {
     super();
   }
 
-  findBlogs(filters: FiltersInterface): Promise<PaginationInterface<BlogViewModel>> {
-    return this.BlogModel.filterBlogs(filters, this.BlogModel);
+  findBlogs(filters: IFilters): Promise<IPagination<BlogViewModel>> {
+    return this.BlogModel.filterBlogs(this.BlogModel, filters);
   }
 
   findBlog(blogId: string): Promise<BlogViewModel | null> {
@@ -26,7 +26,7 @@ export class BlogsMongooseRepository extends IBlogsRepository {
   async createBlog(createBlogDto: BlogDto): Promise<BlogViewModel> {
     const blogInstance = await this.BlogModel.setBlog(
       this.BlogModel,
-      createBlogDto
+      createBlogDto,
     );
 
     await blogInstance.save();

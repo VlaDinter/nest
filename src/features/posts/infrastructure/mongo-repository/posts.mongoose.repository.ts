@@ -4,8 +4,8 @@ import { IPostsRepository } from '../../interfaces/posts.repository.interface';
 import { Post, PostModelType } from '../../entities/post.schema';
 import { PostViewModel } from '../../view-models/post-view-model';
 import { PostDto } from '../../dto/Post.dto';
-import { FiltersInterface } from '../../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../../interfaces/pagination.interface';
+import { IFilters } from '../../../../interfaces/filters.interface';
+import { IPagination } from '../../../../interfaces/pagination.interface';
 
 @Injectable()
 export class PostsMongooseRepository extends IPostsRepository {
@@ -16,10 +16,10 @@ export class PostsMongooseRepository extends IPostsRepository {
   }
 
   findPosts(
-    filters: FiltersInterface,
+    filters: IFilters,
     blogId?: string,
-  ): Promise<PaginationInterface<PostViewModel>> {
-    return this.PostModel.filterPosts(filters, this.PostModel, blogId);
+  ): Promise<IPagination<PostViewModel>> {
+    return this.PostModel.filterPosts(this.PostModel, filters, blogId);
   }
 
   async findPost(postId: string): Promise<PostViewModel | null> {

@@ -1,3 +1,3 @@
-export interface PayloadInterface {
+export interface IPayload {
   userId: string;
 }

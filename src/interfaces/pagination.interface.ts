@@ -1,4 +1,4 @@
-export interface PaginationInterface<T> {
+export interface IPagination<T> {
   totalCount: number;
   pagesCount: number;
   pageSize: number;

@@ -1,4 +1,4 @@
-import { get } from 'http';
+import { get, IncomingMessage } from 'http';
 import { createWriteStream } from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
@@ -17,6 +17,7 @@ async function bootstrap() {
     .setTitle('Examples')
     .setDescription('The nest API description')
     .setVersion('1.0')
+    .addTag('auth')
     .addTag('users')
     .addTag('blogs')
     .addTag('posts')
@@ -31,26 +32,30 @@ async function bootstrap() {
 
   console.log(`Application is running on: ${await app.getUrl()}`);
 
-  // get the swagger json file (if app is running in development mode)
   if (process.env.NODE_ENV === 'development') {
-    // write swagger ui file
-    get(`${serverUrl}/swagger/swagger-ui-bundle.js`, function (response) {
-      response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));
-      console.log(
-        `Swagger UI bundle file written to: '/swagger-static/swagger-ui-bundle.js'`,
-      );
-    });
+    get(
+      `${serverUrl}/swagger/swagger-ui-bundle.js`,
+      function (response: IncomingMessage): void {
+        response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));
+        console.log(
+          `Swagger UI bundle file written to: '/swagger-static/swagger-ui-bundle.js'`,
+        );
+      },
+    );
 
-    get(`${serverUrl}/swagger/swagger-ui-init.js`, function (response) {
-      response.pipe(createWriteStream('swagger-static/swagger-ui-init.js'));
-      console.log(
-        `Swagger UI init file written to: '/swagger-static/swagger-ui-init.js'`,
-      );
-    });
+    get(
+      `${serverUrl}/swagger/swagger-ui-init.js`,
+      function (response: IncomingMessage): void {
+        response.pipe(createWriteStream('swagger-static/swagger-ui-init.js'));
+        console.log(
+          `Swagger UI init file written to: '/swagger-static/swagger-ui-init.js'`,
+        );
+      },
+    );
 
     get(
       `${serverUrl}/swagger/swagger-ui-standalone-preset.js`,
-      function (response) {
+      function (response: IncomingMessage): void {
         response.pipe(
           createWriteStream('swagger-static/swagger-ui-standalone-preset.js'),
         );
@@ -60,12 +65,15 @@ async function bootstrap() {
       },
     );
 
-    get(`${serverUrl}/swagger/swagger-ui.css`, function (response) {
-      response.pipe(createWriteStream('swagger-static/swagger-ui.css'));
-      console.log(
-        `Swagger UI css file written to: '/swagger-static/swagger-ui.css'`,
-      );
-    });
+    get(
+      `${serverUrl}/swagger/swagger-ui.css`,
+      function (response: IncomingMessage): void {
+        response.pipe(createWriteStream('swagger-static/swagger-ui.css'));
+        console.log(
+          `Swagger UI css file written to: '/swagger-static/swagger-ui.css'`,
+        );
+      },
+    );
   }
 }
 

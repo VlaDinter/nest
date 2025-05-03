@@ -1,12 +1,10 @@
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { IFilters } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
 
 export abstract class IBlogsRepository {
-  abstract findBlogs(
-    filters: FiltersInterface,
-  ): Promise<PaginationInterface<BlogViewModel>>;
+  abstract findBlogs(filters: IFilters): Promise<IPagination<BlogViewModel>>;
   abstract findBlog(postId: string): Promise<BlogViewModel | null>;
   abstract createBlog(createBlogDto: BlogDto): Promise<BlogViewModel>;
   abstract updateBlog(

@@ -1,10 +1,10 @@
-import { SortOrder } from 'mongoose';
+import { ISortDirections } from './sort-directions.interface';
 
-export interface FiltersInterface {
-  searchEmailTerm: string;
-  searchLoginTerm: string;
-  searchNameTerm: string;
-  sortDirection: SortOrder;
+export interface IFilters {
+  searchEmailTerm?: string;
+  searchLoginTerm?: string;
+  searchNameTerm?: string;
+  sortDirection: ISortDirections;
   pageNumber: number;
   pageSize: number;
   sortBy: string;

@@ -6,6 +6,9 @@ import { PostsService } from './application/posts.service';
 import { PostsMongooseRepository } from './infrastructure/mongo-repository/posts.mongoose.repository';
 import { Post, PostSchema } from './entities/post.schema';
 import { CommentsModule } from '../comments/comments.module';
+import { CqrsModule } from '@nestjs/cqrs';
+
+const adapters = [PostsMongooseRepository];
 
 @Module({
   imports: [
@@ -16,10 +19,11 @@ import { CommentsModule } from '../comments/comments.module';
       },
     ]),
     forwardRef(() => BlogsModule),
+    CqrsModule,
     CommentsModule,
   ],
   controllers: [PostsController],
-  providers: [PostsService, PostsMongooseRepository],
+  providers: [PostsService, ...adapters],
   exports: [PostsService],
 })
 export class PostsModule {}

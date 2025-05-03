@@ -6,24 +6,42 @@ import { AuthService } from './application/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { jwtConstants } from '../../constants';
 import { AuthController } from './api/auth.controller';
-import { EmailServiceMock } from '../email/application/email.service';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { BasicStrategy } from './strategies/basic.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { MailManager } from '../../adapters/mail-manager';
+import { LoginUserUseCase } from './application/use-cases/login-user-use-case';
+import { SendConfirmationToCreatedUserUseCase } from './application/use-cases/send-confirmation-to-created-user-use-case';
+import { SendConfirmationToUpdatedUserUseCase } from './application/use-cases/send-confirmation-to-updated-user-use-case';
+import { SendRecoveryCodeToUserUseCase } from './application/use-cases/send-recovery-code-to-user-use-case';
+import { CqrsModule } from '@nestjs/cqrs';
+
+const adapters = [LocalStrategy, JwtStrategy, BasicStrategy, MailManager];
+const useCases = [
+  LoginUserUseCase,
+  SendConfirmationToCreatedUserUseCase,
+  SendConfirmationToUpdatedUserUseCase,
+  SendRecoveryCodeToUserUseCase,
+];
 
 @Module({
   imports: [
     UsersModule,
+    CqrsModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '5m' }
+      signOptions: { expiresIn: '5m' },
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 10000,
-      limit: 5
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 10000,
+        limit: 5,
+      },
+    ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, EmailServiceMock],
+  providers: [AuthService, ...adapters, ...useCases],
   exports: [AuthService],
 })
 export class AuthModule {}

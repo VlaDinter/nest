@@ -1,9 +1,10 @@
-import { HydratedDocument, Model, Types, SortOrder } from 'mongoose';
+import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { PostViewModel } from '../view-models/post-view-model';
 import { PostDto } from '../dto/post.dto';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
+import { IFilters } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
+import { ISortDirections } from '../../../interfaces/sort-directions.interface';
 
 @Schema()
 export class LikeDetails {
@@ -153,22 +154,19 @@ export class Post {
   }
 
   static async filterPosts(
-    filters: FiltersInterface,
     PostModel: PostModelType,
+    filters: IFilters,
     blogId?: string,
-  ): Promise<PaginationInterface<PostViewModel>> {
-    const sortBy =
-      typeof filters.sortBy === 'string' ? filters.sortBy : 'createdAt';
-    const sortDirection: SortOrder =
-      filters.sortDirection === 'asc' ? 'asc' : 'desc';
-    const pageNumber = Number.isInteger(Number(filters.pageNumber))
-      ? Number(filters.pageNumber)
-      : 1;
-    const pageSize = Number.isInteger(Number(filters.pageSize))
-      ? Number(filters.pageSize)
-      : 10;
+  ): Promise<IPagination<PostViewModel>> {
+    const sortBy = filters.sortBy;
+    const sortDirection =
+      filters.sortDirection === ISortDirections.ASC
+        ? ISortDirections.ASC
+        : ISortDirections.DESC;
+    const pageSize = filters.pageSize > 0 ? filters.pageSize : 10;
+    const pageNumber = filters.pageNumber > 0 ? filters.pageNumber : 1;
     const skip = (pageNumber - 1) * pageSize;
-    const sort = { [sortBy]: sortDirection };
+    const sort = !sortBy ? {} : { [sortBy]: sortDirection };
     const query = PostModel.find();
 
     if (blogId) {
@@ -202,10 +200,10 @@ type PostModelStaticType = {
     blogName: string,
   ) => PostDocument;
   filterPosts: (
-    filters: FiltersInterface,
     PostModel: PostModelType,
+    filters: IFilters,
     blogId?: string,
-  ) => Promise<PaginationInterface<PostViewModel>>;
+  ) => Promise<IPagination<PostViewModel>>;
 };
 
 const postStaticMethods: PostModelStaticType = {

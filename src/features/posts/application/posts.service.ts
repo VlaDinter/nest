@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PostsMongooseRepository } from '../infrastructure/mongo-repository/posts.mongoose.repository';
 import { PostViewModel } from '../view-models/post-view-model';
 import { PostDto } from '../dto/Post.dto';
-import { BlogsService } from '../../blogs/application/blogs.service';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
+import { IFilters } from '../../../interfaces/filters.interface';
 import { IsDefined, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class PostInputModelType {
@@ -31,15 +30,12 @@ export class PostInputModelType {
 
 @Injectable()
 export class PostsService {
-  constructor(
-    private readonly postsRepository: PostsMongooseRepository,
-    private readonly blogsService: BlogsService,
-  ) {}
+  constructor(private readonly postsRepository: PostsMongooseRepository) {}
 
   getPosts(
-    filters: FiltersInterface,
+    filters: IFilters,
     blogId?: string,
-  ): Promise<PaginationInterface<PostViewModel>> {
+  ): Promise<IPagination<PostViewModel>> {
     return this.postsRepository.findPosts(filters, blogId);
   }
 
@@ -47,23 +43,16 @@ export class PostsService {
     return this.postsRepository.findPost(postId);
   }
 
-  async addPost(createPostDto: PostDto): Promise<PostViewModel> {
-    const blog = await this.blogsService.getBlog(createPostDto.blogId);
-
-    return this.postsRepository.createPost(createPostDto, blog?.name || 'Name');
+  addPost(createPostDto, blogName): Promise<PostViewModel> {
+    return this.postsRepository.createPost(createPostDto, blogName);
   }
 
   async editPost(
     postId: string,
     updatePostDto: PostDto,
+    blogName: string,
   ): Promise<PostViewModel | null> {
-    const blog = await this.blogsService.getBlog(updatePostDto.blogId);
-
-    return this.postsRepository.updatePost(
-      postId,
-      updatePostDto,
-      blog?.name || 'Name',
-    );
+    return this.postsRepository.updatePost(postId, updatePostDto, blogName);
   }
 
   removePost(postId: string): Promise<PostViewModel | null> {

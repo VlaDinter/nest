@@ -2,9 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { BlogsMongooseRepository } from '../infrastructure/mongo-repository/blogs.mongoose.repository';
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
-import { IsDefined, IsNotEmpty, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IFilters } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+  MaxLength,
+} from 'class-validator';
 
 export class BlogInputModelType {
   @MaxLength(15)
@@ -47,7 +53,7 @@ export class BlogPostInputModelType {
 export class BlogsService {
   constructor(private readonly blogsRepository: BlogsMongooseRepository) {}
 
-  getBlogs(filters: FiltersInterface): Promise<PaginationInterface<BlogViewModel>> {
+  getBlogs(filters: IFilters): Promise<IPagination<BlogViewModel>> {
     return this.blogsRepository.findBlogs(filters);
   }
 

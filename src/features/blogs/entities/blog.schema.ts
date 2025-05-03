@@ -1,9 +1,10 @@
-import { HydratedDocument, Model, Types, SortOrder } from 'mongoose';
+import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { BlogDto } from '../dto/blog.dto';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
+import { IFilters } from '../../../interfaces/filters.interface';
+import { ISortDirections } from '../../../interfaces/sort-directions.interface';
 
 @Schema()
 export class Blog {
@@ -69,25 +70,23 @@ export class Blog {
   }
 
   static async filterBlogs(
-    filters: FiltersInterface,
     BlogModel: BlogModelType,
-  ): Promise<PaginationInterface<BlogViewModel>> {
-    const sortBy =
-      typeof filters.sortBy === 'string' ? filters.sortBy : 'createdAt';
-    const sortDirection: SortOrder =
-      filters.sortDirection === 'asc' ? 'asc' : 'desc';
-    const pageNumber = Number.isInteger(Number(filters.pageNumber))
-      ? Number(filters.pageNumber)
-      : 1;
-    const pageSize = Number.isInteger(Number(filters.pageSize))
-      ? Number(filters.pageSize)
-      : 10;
+    filters: IFilters,
+  ): Promise<IPagination<BlogViewModel>> {
+    const searchNameTerm = filters.searchNameTerm;
+    const sortBy = filters.sortBy;
+    const sortDirection =
+      filters.sortDirection === ISortDirections.ASC
+        ? ISortDirections.ASC
+        : ISortDirections.DESC;
+    const pageSize = filters.pageSize > 0 ? filters.pageSize : 10;
+    const pageNumber = filters.pageNumber > 0 ? filters.pageNumber : 1;
     const skip = (pageNumber - 1) * pageSize;
-    const sort = { [sortBy]: sortDirection };
+    const sort = !sortBy ? {} : { [sortBy]: sortDirection };
     const query = BlogModel.find({}, { _id: 0, __v: 0 });
 
-    if (typeof filters.searchNameTerm === 'string' && filters.searchNameTerm) {
-      query.where('name').regex(new RegExp(filters.searchNameTerm, 'i'));
+    if (searchNameTerm) {
+      query.where('name').regex(new RegExp(searchNameTerm, 'i'));
     }
 
     const totalCount = await BlogModel.countDocuments(query.getFilter()).lean();
@@ -113,9 +112,9 @@ BlogSchema.methods = {
 type BlogModelStaticType = {
   setBlog: (BlogModel: BlogModelType, dto: BlogDto) => BlogDocument;
   filterBlogs: (
-    filters: FiltersInterface,
     BlogModel: BlogModelType,
-  ) => Promise<PaginationInterface<BlogViewModel>>;
+    filters: IFilters,
+  ) => Promise<IPagination<BlogViewModel>>;
 };
 
 const blogStaticMethods: BlogModelStaticType = {

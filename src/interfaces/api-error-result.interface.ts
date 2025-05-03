@@ -1,5 +1,5 @@
-import { FieldErrorInterface } from './field-error.interface';
+import { IFieldError } from './field-error.interface';
 
-export interface APIErrorResultInterface {
-  errorsMessages?: FieldErrorInterface[];
+export interface IAPIErrorResult {
+  errorsMessages?: IFieldError[];
 }

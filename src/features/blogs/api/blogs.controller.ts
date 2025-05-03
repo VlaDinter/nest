@@ -10,26 +10,53 @@ import {
   HttpCode,
   NotFoundException,
   HttpStatus,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { BlogInputModelType, BlogPostInputModelType, BlogsService } from '../application/blogs.service';
+import {
+  BlogInputModelType,
+  BlogPostInputModelType,
+  BlogsService,
+} from '../application/blogs.service';
 import { BlogViewModel } from '../view-models/blog-view-model';
 import { PostViewModel } from '../../posts/view-models/post-view-model';
 import { PostsService } from '../../posts/application/posts.service';
-import { PaginationInterface } from '../../../interfaces/pagination.interface';
-import { FiltersInterface } from '../../../interfaces/filters.interface';
+import { IPagination } from '../../../interfaces/pagination.interface';
+import { ParseStringPipe } from '../../../parse-string.pipe';
+import { ISortDirections } from '../../../interfaces/sort-directions.interface';
+import { CommandBus } from '@nestjs/cqrs';
+import { AddPostWithBlogNameCommand } from '../../posts/application/use-cases/add-post-with-blog-name-use-case';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly postsService: PostsService,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Get()
   getBlogs(
-    @Query() filters: FiltersInterface,
-  ): Promise<PaginationInterface<BlogViewModel>> {
-    return this.blogsService.getBlogs(filters);
+    @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
+    @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
+    @Query('pageNumber', new DefaultValuePipe(1), ParseIntPipe)
+    pageNumber: number,
+    @Query('sortBy', ParseStringPipe, new DefaultValuePipe('createdAt'))
+    sortBy: string,
+    @Query(
+      'sortDirection',
+      ParseStringPipe,
+      new DefaultValuePipe(ISortDirections.DESC),
+    )
+    sortDirection: ISortDirections,
+  ): Promise<IPagination<BlogViewModel>> {
+    return this.blogsService.getBlogs({
+      searchNameTerm,
+      sortDirection,
+      pageNumber,
+      pageSize,
+      sortBy,
+    });
   }
 
   @Get(':id')
@@ -53,7 +80,7 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async putBlog(
     @Param('id') blogId: string,
-    @Body() inputModel: BlogInputModelType
+    @Body() inputModel: BlogInputModelType,
   ): Promise<void> {
     const updatedBlog = await this.blogsService.editBlog(blogId, inputModel);
 
@@ -75,21 +102,39 @@ export class BlogsController {
   @Get(':blogId/posts')
   async getPosts(
     @Param('blogId') blogId: string,
-    @Query() filters: FiltersInterface,
-  ): Promise<PaginationInterface<PostViewModel>> {
+    @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
+    @Query('pageNumber', new DefaultValuePipe(1), ParseIntPipe)
+    pageNumber: number,
+    @Query('sortBy', ParseStringPipe, new DefaultValuePipe('createdAt'))
+    sortBy: string,
+    @Query(
+      'sortDirection',
+      ParseStringPipe,
+      new DefaultValuePipe(ISortDirections.DESC),
+    )
+    sortDirection: ISortDirections,
+  ): Promise<IPagination<PostViewModel>> {
     const foundBlog = await this.blogsService.getBlog(blogId);
 
     if (!foundBlog) {
       throw new NotFoundException('Blog not found');
     }
 
-    return this.postsService.getPosts(filters, blogId);
+    return this.postsService.getPosts(
+      {
+        sortDirection,
+        pageNumber,
+        pageSize,
+        sortBy,
+      },
+      blogId,
+    );
   }
 
   @Post(':blogId/posts')
   async postPosts(
     @Param('blogId') blogId: string,
-    @Body() inputModel: BlogPostInputModelType
+    @Body() inputModel: BlogPostInputModelType,
   ): Promise<PostViewModel> {
     const foundBlog = await this.blogsService.getBlog(blogId);
 
@@ -97,6 +142,14 @@ export class BlogsController {
       throw new NotFoundException('Blog not found');
     }
 
-    return this.postsService.addPost({ ...inputModel, blogId });
+    const createdPost = await this.commandBus.execute(
+      new AddPostWithBlogNameCommand({ ...inputModel, blogId }),
+    );
+
+    if (!createdPost) {
+      throw new NotFoundException('Blog not found');
+    }
+
+    return createdPost;
   }
 }

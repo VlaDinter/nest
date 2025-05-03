@@ -13,10 +13,6 @@ import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'swagger-static'),
-      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
-    }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(
       process.env.MONGO_URL || 'mongodb://127.0.0.1:27017',
@@ -24,6 +20,10 @@ import { AuthModule } from './features/auth/auth.module';
         dbName: process.env.MONGO_DB_NAME,
       },
     ),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'swagger-static'),
+      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
+    }),
     AuthModule,
     UsersModule,
     BlogsModule,

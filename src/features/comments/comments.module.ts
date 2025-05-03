@@ -5,6 +5,8 @@ import { CommentsService } from './application/comments.service';
 import { CommentsMongooseRepository } from './infrastructure/mongo-repository/comments.mongoose.repository';
 import { Comment, CommentSchema } from './entities/comment.schema';
 
+const adapters = [CommentsMongooseRepository];
+
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -15,7 +17,7 @@ import { Comment, CommentSchema } from './entities/comment.schema';
     ]),
   ],
   controllers: [CommentsController],
-  providers: [CommentsService, CommentsMongooseRepository],
+  providers: [CommentsService, ...adapters],
   exports: [CommentsService],
 })
 export class CommentsModule {}

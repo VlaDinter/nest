@@ -1,4 +1,4 @@
-export interface FieldErrorInterface {
+export interface IFieldError {
   message?: string;
   field?: string;
 }

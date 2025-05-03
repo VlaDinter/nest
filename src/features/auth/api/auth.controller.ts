@@ -1,107 +1,154 @@
 import {
+  Request,
   Controller,
   Get,
   Post,
   HttpCode,
   HttpStatus,
   Body,
-  UnauthorizedException,
   UseGuards,
-  BadRequestException
+  BadRequestException,
 } from '@nestjs/common';
 import {
   AuthService,
   EmailConfirmationInputModelType,
   LoginInputModelType,
   NewPasswordRecoveryInputModelType,
-  RegistrationConfirmationCodeInputModelType
+  RegistrationConfirmationCodeInputModelType,
 } from '../application/auth.service';
 import { LoginSuccessViewModel } from '../view-models/login-success-view-model';
 import { MeViewModel } from '../../users/view-models/me-view-model';
-import { CreateUserInputModelType } from '../../users/application/users.service';
+import {
+  CreateUserInputModelType,
+  UsersService,
+} from '../../users/application/users.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { CurrentUserId } from '../../../current-user-id.param.decorator';
+import { CurrentUserId } from '../../../current-user-id.decorator';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { SendConfirmationToCreatedUserCommand } from '../application/use-cases/send-confirmation-to-created-user-use-case';
+import { SendConfirmationToUpdatedUserCommand } from '../application/use-cases/send-confirmation-to-updated-user-use-case';
+import { SendRecoveryCodeToUserCommand } from '../application/use-cases/send-recovery-code-to-user-use-case';
+import { LoginUserCommand } from '../application/use-cases/login-user-use-case';
+import { AddUserWithValidateOrRejectModelCommand } from '../../users/application/use-cases/add-user-with-validate-or-reject-model-use-case';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
-  getMe(
-    @CurrentUserId() currentUserId,
-  ): Promise<MeViewModel | null> {
-    return this.authService.getMe(currentUserId);
+  getMe(@CurrentUserId() currentUserId): Promise<MeViewModel | null> {
+    return this.usersService.getMe(currentUserId);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
   @HttpCode(HttpStatus.OK)
-  async postLogin(@Body() inputModel: LoginInputModelType): Promise<LoginSuccessViewModel> {
-    const foundUser = await this.authService.validateUser(inputModel.loginOrEmail, inputModel.password);
-
-    if (!foundUser) {
-      throw new UnauthorizedException();
-    }
-
-    return this.authService.login(foundUser);
+  postLogin(
+    @Body() inputModel: LoginInputModelType,
+    @Request() req,
+  ): Promise<LoginSuccessViewModel> {
+    return this.commandBus.execute(new LoginUserCommand(req.user.userId));
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/registration')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async postRegistration(@Body() inputModel: CreateUserInputModelType): Promise<void> {
-    await this.authService.addUser(inputModel);
+  async postRegistration(
+    @Body() inputModel: CreateUserInputModelType,
+  ): Promise<void> {
+    const createdUser = await this.commandBus.execute(
+      new AddUserWithValidateOrRejectModelCommand(inputModel, false),
+    );
+
+    await this.commandBus.execute(
+      new SendConfirmationToCreatedUserCommand(createdUser.id),
+    );
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/registration-email-resending')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async postRegistrationEmailResending(@Body() inputModel: EmailConfirmationInputModelType): Promise<void> {
-    const foundUser = await this.authService.editUserEmailConfirmation(inputModel.email);
+  async postRegistrationEmailResending(
+    @Body() inputModel: EmailConfirmationInputModelType,
+  ): Promise<void> {
+    const foundUser = await this.commandBus.execute(
+      new SendConfirmationToUpdatedUserCommand(inputModel.email),
+    );
 
     if (!foundUser) {
-      throw new BadRequestException([{
-        message: 'email already confirmed or doesnt exist',
-        field: 'email'
-      }]);
+      throw new BadRequestException([
+        {
+          message: 'email has incorrect value',
+          field: 'email',
+        },
+      ]);
     }
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/registration-confirmation')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async postRegistrationConfirmation(@Body() inputModel: RegistrationConfirmationCodeInputModelType): Promise<void> {
+  async postRegistrationConfirmation(
+    @Body() inputModel: RegistrationConfirmationCodeInputModelType,
+  ): Promise<void> {
     const foundUser = await this.authService.getUserByCode(inputModel.code);
 
     if (!foundUser) {
-      throw new BadRequestException([{
-        message: 'confirmation code is incorrect, expired or already been applied',
-        field: 'code'
-      }]);
+      throw new BadRequestException([
+        {
+          message:
+            'confirmation code is incorrect, expired or already been applied',
+          field: 'code',
+        },
+      ]);
     }
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/password-recovery')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async postPasswordRecovery(@Body() inputModel: EmailConfirmationInputModelType): Promise<void> {
-    await this.authService.editUserPasswordRecovery(inputModel.email);
+  async postPasswordRecovery(
+    @Body() inputModel: EmailConfirmationInputModelType,
+  ): Promise<void> {
+    const foundUser = await this.commandBus.execute(
+      new SendRecoveryCodeToUserCommand(inputModel.email),
+    );
+
+    if (!foundUser) {
+      throw new BadRequestException([
+        {
+          message: 'email has incorrect value',
+          field: 'email',
+        },
+      ]);
+    }
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/new-password')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async postNewPassword(@Body() inputModel: NewPasswordRecoveryInputModelType): Promise<void> {
-    const updatedUser = await this.authService.editUserPassword(inputModel.newPassword, inputModel.recoveryCode);
+  async postNewPassword(
+    @Body() inputModel: NewPasswordRecoveryInputModelType,
+  ): Promise<void> {
+    const updatedUser = await this.authService.editUserPassword(
+      inputModel.newPassword,
+      inputModel.recoveryCode,
+    );
 
     if (!updatedUser) {
-      throw new BadRequestException([{
-        message: 'recoveryCode is incorrect or expired',
-        field: 'recoveryCode'
-      }]);
+      throw new BadRequestException([
+        {
+          message: 'recoveryCode is incorrect or expired',
+          field: 'recoveryCode',
+        },
+      ]);
     }
   }
 }

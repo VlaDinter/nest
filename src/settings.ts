@@ -1,11 +1,16 @@
-import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationPipe,
+  ValidationError,
+} from '@nestjs/common';
 import { ErrorExceptionFilter, HttpExceptionFilter } from './exception.filter';
 import cookieParser from 'cookie-parser';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
-import { FieldErrorInterface } from './interfaces/field-error.interface';
+import { IFieldError } from './interfaces/field-error.interface';
 
-export const appInit = (app: INestApplication) => {
+export const appInit = (app: INestApplication): void => {
   app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
@@ -13,16 +18,16 @@ export const appInit = (app: INestApplication) => {
       whitelist: true,
       transform: true,
       stopAtFirstError: true,
-      exceptionFactory: errors => {
-        const errorsForResp: FieldErrorInterface[] = [];
+      exceptionFactory: (errors: ValidationError[]): void => {
+        const errorsForResp: IFieldError[] = [];
 
-        errors.forEach(error => {
+        errors.forEach((error: ValidationError): void => {
           const keys = Object.keys(error.constraints || {});
 
-          keys.forEach(key => {
+          keys.forEach((key: string): void => {
             errorsForResp.push({
               message: error.constraints?.[key],
-              field: error.property
+              field: error.property,
             });
           });
         });
