@@ -38,7 +38,7 @@ const useCases = [
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '59m' },
+      signOptions: { expiresIn: '5m' },
     }),
     ThrottlerModule.forRoot([
       {
