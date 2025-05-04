@@ -29,8 +29,8 @@ import { ISortDirections } from '../../../interfaces/sort-directions.interface';
 import { CommandBus } from '@nestjs/cqrs';
 import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
 import { AddPostWithBlogNameCommand } from '../../posts/application/use-cases/add-post-with-blog-name-use-case';
-import { GetCommentsByPostIdCommand } from '../../posts/application/use-cases/get-comments-by-post-id-use-case';
 import { TokenAuthGuard } from '../../auth/guards/token-auth.guard';
+import { GetPostsByBlogIdCommand } from '../application/use-cases/get-posts-by-blog-id-use-case';
 
 @Controller('blogs')
 export class BlogsController {
@@ -125,7 +125,7 @@ export class BlogsController {
     @Request() req,
   ): Promise<IPagination<PostViewModel>> {
     const foundPosts = await this.commandBus.execute(
-      new GetCommentsByPostIdCommand(
+      new GetPostsByBlogIdCommand(
         {
           blogId,
           sortDirection,
