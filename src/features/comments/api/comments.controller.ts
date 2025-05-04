@@ -10,6 +10,7 @@ import {
   Body,
   Delete,
   Put,
+  Request,
 } from '@nestjs/common';
 import { CommentViewModel } from '../view-models/comment-view-model';
 import {
@@ -21,6 +22,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserId } from '../../../current-user-id.decorator';
 import { CommandBus } from '@nestjs/cqrs';
 import { EditCommentWithUserLoginCommand } from '../application/use-cases/edit-comment-with-user-login-use-case';
+import { TokenAuthGuard } from '../../auth/guards/token-auth.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -29,15 +31,15 @@ export class CommentsController {
     private readonly commandBus: CommandBus,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(TokenAuthGuard)
   @Get(':id')
   async getComment(
-    @CurrentUserId() currentUserId: string,
+    @Request() req,
     @Param('id') commentId: string,
   ): Promise<CommentViewModel | void> {
     const foundComment = await this.commentsService.getComment(
       commentId,
-      currentUserId,
+      req.user?.userId,
     );
 
     if (!foundComment) {

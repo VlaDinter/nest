@@ -15,8 +15,15 @@ import { SendConfirmationToCreatedUserUseCase } from './application/use-cases/se
 import { SendConfirmationToUpdatedUserUseCase } from './application/use-cases/send-confirmation-to-updated-user-use-case';
 import { SendRecoveryCodeToUserUseCase } from './application/use-cases/send-recovery-code-to-user-use-case';
 import { CqrsModule } from '@nestjs/cqrs';
+import { TokenStrategy } from './strategies/token.strategy';
 
-const adapters = [LocalStrategy, JwtStrategy, BasicStrategy, MailManager];
+const adapters = [
+  MailManager,
+  LocalStrategy,
+  JwtStrategy,
+  BasicStrategy,
+  TokenStrategy,
+];
 const useCases = [
   LoginUserUseCase,
   SendConfirmationToCreatedUserUseCase,
@@ -31,7 +38,7 @@ const useCases = [
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '5m' },
+      signOptions: { expiresIn: '59m' },
     }),
     ThrottlerModule.forRoot([
       {

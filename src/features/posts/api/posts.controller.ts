@@ -13,6 +13,7 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { PostViewModel } from '../view-models/post-view-model';
 import { PostInputModelType, PostsService } from '../application/posts.service';
@@ -33,6 +34,7 @@ import { AddCommentWithPostIdCommand } from '../application/use-cases/add-commen
 import { EditPostWithUserLoginCommand } from '../application/use-cases/edit-post-with-user-login-use-case';
 import { GetCommentsByPostIdCommand } from '../application/use-cases/get-comments-by-post-id-use-case';
 import { AddPostWithBlogNameCommand } from '../application/use-cases/add-post-with-blog-name-use-case';
+import { TokenAuthGuard } from '../../auth/guards/token-auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -41,7 +43,7 @@ export class PostsController {
     private readonly commandBus: CommandBus,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(TokenAuthGuard)
   @Get()
   getPosts(
     @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
@@ -55,7 +57,7 @@ export class PostsController {
       new DefaultValuePipe(ISortDirections.DESC),
     )
     sortDirection: ISortDirections,
-    @CurrentUserId() currentUserId: string,
+    @Request() req,
   ): Promise<IPagination<PostViewModel>> {
     return this.postsService.getPosts(
       {
@@ -64,17 +66,17 @@ export class PostsController {
         pageSize,
         sortBy,
       },
-      currentUserId,
+      req.user?.userId,
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(TokenAuthGuard)
   @Get(':id')
   async getPost(
     @Param('id') postId: string,
-    @CurrentUserId() currentUserId: string,
+    @Request() req,
   ): Promise<PostViewModel | void> {
-    const foundPost = await this.postsService.getPost(postId, currentUserId);
+    const foundPost = await this.postsService.getPost(postId, req.user?.userId);
 
     if (!foundPost) {
       throw new NotFoundException('Post not found');
@@ -144,7 +146,7 @@ export class PostsController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(TokenAuthGuard)
   @Get(':postId/comments')
   async getComments(
     @Param('postId') postId: string,
@@ -159,7 +161,7 @@ export class PostsController {
       new DefaultValuePipe(ISortDirections.DESC),
     )
     sortDirection: ISortDirections,
-    @CurrentUserId() currentUserId: string,
+    @Request() req,
   ): Promise<IPagination<CommentViewModel>> {
     const foundComments = await this.commandBus.execute(
       new GetCommentsByPostIdCommand(
@@ -170,7 +172,7 @@ export class PostsController {
           pageSize,
           sortBy,
         },
-        currentUserId,
+        req.user?.userId,
       ),
     );
 

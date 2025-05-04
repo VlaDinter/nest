@@ -13,6 +13,7 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import {
   BlogInputModelType,
@@ -29,8 +30,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
 import { AddPostWithBlogNameCommand } from '../../posts/application/use-cases/add-post-with-blog-name-use-case';
 import { GetCommentsByPostIdCommand } from '../../posts/application/use-cases/get-comments-by-post-id-use-case';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { CurrentUserId } from '../../../current-user-id.decorator';
+import { TokenAuthGuard } from '../../auth/guards/token-auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -107,7 +107,7 @@ export class BlogsController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(TokenAuthGuard)
   @Get(':blogId/posts')
   async getPosts(
     @Param('blogId') blogId: string,
@@ -122,7 +122,7 @@ export class BlogsController {
       new DefaultValuePipe(ISortDirections.DESC),
     )
     sortDirection: ISortDirections,
-    @CurrentUserId() currentUserId: string,
+    @Request() req,
   ): Promise<IPagination<PostViewModel>> {
     const foundPosts = await this.commandBus.execute(
       new GetCommentsByPostIdCommand(
@@ -133,7 +133,7 @@ export class BlogsController {
           pageSize,
           sortBy,
         },
-        currentUserId,
+        req.user?.userId,
       ),
     );
 
