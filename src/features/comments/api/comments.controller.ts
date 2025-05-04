@@ -10,7 +10,6 @@ import {
   Body,
   Delete,
   Put,
-  Request,
 } from '@nestjs/common';
 import { CommentViewModel } from '../view-models/comment-view-model';
 import {
@@ -30,14 +29,15 @@ export class CommentsController {
     private readonly commandBus: CommandBus,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getComment(
-    @Request() req,
+    @CurrentUserId() currentUserId: string,
     @Param('id') commentId: string,
   ): Promise<CommentViewModel | void> {
     const foundComment = await this.commentsService.getComment(
       commentId,
-      req.user?.userId,
+      currentUserId,
     );
 
     if (!foundComment) {

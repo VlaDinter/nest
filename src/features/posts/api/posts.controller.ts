@@ -13,7 +13,6 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { PostViewModel } from '../view-models/post-view-model';
 import { PostInputModelType, PostsService } from '../application/posts.service';
@@ -42,6 +41,7 @@ export class PostsController {
     private readonly commandBus: CommandBus,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   getPosts(
     @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
@@ -55,7 +55,7 @@ export class PostsController {
       new DefaultValuePipe(ISortDirections.DESC),
     )
     sortDirection: ISortDirections,
-    @Request() req,
+    @CurrentUserId() currentUserId: string,
   ): Promise<IPagination<PostViewModel>> {
     return this.postsService.getPosts(
       {
@@ -64,16 +64,17 @@ export class PostsController {
         pageSize,
         sortBy,
       },
-      req.user?.userId,
+      currentUserId,
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getPost(
     @Param('id') postId: string,
-    @Request() req,
+    @CurrentUserId() currentUserId: string,
   ): Promise<PostViewModel | void> {
-    const foundPost = await this.postsService.getPost(postId, req.user?.userId);
+    const foundPost = await this.postsService.getPost(postId, currentUserId);
 
     if (!foundPost) {
       throw new NotFoundException('Post not found');
@@ -143,6 +144,7 @@ export class PostsController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':postId/comments')
   async getComments(
     @Param('postId') postId: string,
@@ -157,7 +159,7 @@ export class PostsController {
       new DefaultValuePipe(ISortDirections.DESC),
     )
     sortDirection: ISortDirections,
-    @Request() req,
+    @CurrentUserId() currentUserId: string,
   ): Promise<IPagination<CommentViewModel>> {
     const foundComments = await this.commandBus.execute(
       new GetCommentsByPostIdCommand(
@@ -168,7 +170,7 @@ export class PostsController {
           pageSize,
           sortBy,
         },
-        req.user?.userId,
+        currentUserId,
       ),
     );
 
