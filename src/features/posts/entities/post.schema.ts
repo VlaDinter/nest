@@ -5,14 +5,14 @@ import { PostDto } from '../dto/post.dto';
 import { IFilters } from '../../../interfaces/filters.interface';
 import { IPagination } from '../../../interfaces/pagination.interface';
 import { ISortDirections } from '../../../interfaces/sort-directions.interface';
+import { ILikeStatus } from '../../../interfaces/like-status.interface';
+import { LikeDetailsViewModel } from '../view-models/like-details-view-model';
 
 @Schema()
 export class LikeDetails {
   @Prop({
     type: String,
-    default(): string {
-      return new Date().toISOString();
-    },
+    required: true,
   })
   addedAt: string;
 
@@ -30,36 +30,6 @@ export class LikeDetails {
 }
 
 export const LikeDetailsSchema = SchemaFactory.createForClass(LikeDetails);
-
-@Schema()
-export class ExtendedLikesInfo {
-  @Prop({
-    type: String,
-    default: 'None',
-  })
-  myStatus: string;
-
-  @Prop({
-    type: Number,
-    default: 0,
-  })
-  likesCount: number;
-
-  @Prop({
-    type: Number,
-    default: 0,
-  })
-  dislikesCount: number;
-
-  @Prop({
-    type: [LikeDetailsSchema],
-    default: [],
-  })
-  newestLikes: LikeDetails[];
-}
-
-export const ExtendedLikesInfoSchema =
-  SchemaFactory.createForClass(ExtendedLikesInfo);
 
 @Schema()
 export class Post {
@@ -110,12 +80,35 @@ export class Post {
   createdAt: string;
 
   @Prop({
-    type: ExtendedLikesInfoSchema,
-    default: {},
+    type: [LikeDetailsSchema],
+    default: [],
   })
-  extendedLikesInfo: ExtendedLikesInfo;
+  likes: LikeDetails[];
 
-  mapDBPostToPostViewModel(): PostViewModel {
+  @Prop({
+    type: [LikeDetailsSchema],
+    default: [],
+  })
+  dislikes: LikeDetails[];
+
+  mapDBPostToPostViewModel(userId?: string): PostViewModel {
+    let myStatus = ILikeStatus.NONE;
+    const isLiked = this.likes.some(
+      (item: LikeDetailsViewModel): boolean => item.userId === userId,
+    );
+
+    if (isLiked) {
+      myStatus = ILikeStatus.LIKE;
+    }
+
+    const isDisliked = this.dislikes.some(
+      (item: LikeDetailsViewModel): boolean => item.userId === userId,
+    );
+
+    if (isDisliked) {
+      myStatus = ILikeStatus.DISLIKE;
+    }
+
     return {
       id: this.id,
       title: this.title,
@@ -125,14 +118,19 @@ export class Post {
       blogName: this.blogName,
       createdAt: this.createdAt,
       extendedLikesInfo: {
-        likesCount: this.extendedLikesInfo.likesCount,
-        dislikesCount: this.extendedLikesInfo.dislikesCount,
-        myStatus: this.extendedLikesInfo.myStatus,
-        newestLikes: this.extendedLikesInfo.newestLikes.map((like) => ({
-          addedAt: like.addedAt,
-          userId: like.userId,
-          login: like.login,
-        })),
+        myStatus,
+        likesCount: this.likes.length,
+        dislikesCount: this.dislikes.length,
+        newestLikes: this.likes
+          .splice(-3)
+          .reverse()
+          .map(
+            (like: LikeDetailsViewModel): LikeDetailsViewModel => ({
+              addedAt: like.addedAt,
+              userId: like.userId,
+              login: like.login,
+            }),
+          ),
       },
     };
   }
@@ -156,8 +154,9 @@ export class Post {
   static async filterPosts(
     PostModel: PostModelType,
     filters: IFilters,
-    blogId?: string,
+    userId?: string,
   ): Promise<IPagination<PostViewModel>> {
+    const blogId = filters.blogId;
     const sortBy = filters.sortBy;
     const sortDirection =
       filters.sortDirection === ISortDirections.ASC
@@ -182,7 +181,7 @@ export class Post {
       pagesCount,
       totalCount,
       page: pageNumber,
-      items: result.map((post) => post.mapDBPostToPostViewModel()),
+      items: result.map((post) => post.mapDBPostToPostViewModel(userId)),
     };
   }
 }
@@ -202,7 +201,7 @@ type PostModelStaticType = {
   filterPosts: (
     PostModel: PostModelType,
     filters: IFilters,
-    blogId?: string,
+    userId?: string,
   ) => Promise<IPagination<PostViewModel>>;
 };
 

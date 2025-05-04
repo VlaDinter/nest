@@ -4,8 +4,12 @@ import { CommentsController } from './api/comments.controller';
 import { CommentsService } from './application/comments.service';
 import { CommentsMongooseRepository } from './infrastructure/mongo-repository/comments.mongoose.repository';
 import { Comment, CommentSchema } from './entities/comment.schema';
+import { CqrsModule } from '@nestjs/cqrs';
+import { EditCommentWithUserLoginUseCase } from './application/use-cases/edit-comment-with-user-login-use-case';
+import { UsersModule } from '../users/users.module';
 
 const adapters = [CommentsMongooseRepository];
+const useCases = [EditCommentWithUserLoginUseCase];
 
 @Module({
   imports: [
@@ -15,9 +19,11 @@ const adapters = [CommentsMongooseRepository];
         schema: CommentSchema,
       },
     ]),
+    UsersModule,
+    CqrsModule,
   ],
   controllers: [CommentsController],
-  providers: [CommentsService, ...adapters],
+  providers: [CommentsService, ...adapters, ...useCases],
   exports: [CommentsService],
 })
 export class CommentsModule {}

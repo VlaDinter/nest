@@ -3,7 +3,7 @@ import { createWriteStream } from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { appInit } from './settings';
+import { appSettings } from './settings';
 
 const PORT = process.env.PORT || 7000;
 const serverUrl = `http://localhost:${PORT}`;
@@ -11,7 +11,7 @@ const serverUrl = `http://localhost:${PORT}`;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  appInit(app);
+  appSettings(app);
 
   const config = new DocumentBuilder()
     .setTitle('Examples')

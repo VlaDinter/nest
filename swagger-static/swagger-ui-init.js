@@ -48,16 +48,6 @@ window.onload = function() {
         "post": {
           "operationId": "AuthController_postLogin",
           "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginInputModelType"
-                }
-              }
-            }
-          },
           "responses": {
             "200": {
               "description": ""
@@ -615,6 +605,36 @@ window.onload = function() {
           }
         }
       },
+      "/posts/{postId}/like-status": {
+        "put": {
+          "operationId": "PostsController_putLikeStatus",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LikeInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
       "/posts/{postId}/comments": {
         "get": {
           "operationId": "PostsController_getComments",
@@ -665,6 +685,34 @@ window.onload = function() {
               "description": ""
             }
           }
+        },
+        "post": {
+          "operationId": "PostsController_postComments",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          }
         }
       },
       "/comments/{id}": {
@@ -682,6 +730,84 @@ window.onload = function() {
           ],
           "responses": {
             "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/comments/{commentId}": {
+        "put": {
+          "operationId": "CommentsController_putComment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        },
+        "delete": {
+          "operationId": "CommentsController_deleteComment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/comments/{commentId}/like-status": {
+        "put": {
+          "operationId": "CommentsController_putLikeStatus",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LikeInputModelType"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
               "description": ""
             }
           }
@@ -719,10 +845,6 @@ window.onload = function() {
     "servers": [],
     "components": {
       "schemas": {
-        "LoginInputModelType": {
-          "type": "object",
-          "properties": {}
-        },
         "CreateUserInputModelType": {
           "type": "object",
           "properties": {}
@@ -748,6 +870,14 @@ window.onload = function() {
           "properties": {}
         },
         "PostInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "LikeInputModelType": {
+          "type": "object",
+          "properties": {}
+        },
+        "CommentInputModelType": {
           "type": "object",
           "properties": {}
         }

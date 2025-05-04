@@ -5,6 +5,7 @@ import { PostDto } from '../dto/Post.dto';
 import { IPagination } from '../../../interfaces/pagination.interface';
 import { IFilters } from '../../../interfaces/filters.interface';
 import { IsDefined, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { LikeDto } from '../../comments/dto/like.dto';
 
 export class PostInputModelType {
   @MaxLength(30)
@@ -34,13 +35,13 @@ export class PostsService {
 
   getPosts(
     filters: IFilters,
-    blogId?: string,
+    userId?: string,
   ): Promise<IPagination<PostViewModel>> {
-    return this.postsRepository.findPosts(filters, blogId);
+    return this.postsRepository.findPosts(filters, userId);
   }
 
-  getPost(postId: string): Promise<PostViewModel | null> {
-    return this.postsRepository.findPost(postId);
+  getPost(postId: string, userId?: string): Promise<PostViewModel | null> {
+    return this.postsRepository.findPost(postId, userId);
   }
 
   addPost(createPostDto, blogName): Promise<PostViewModel> {
@@ -53,6 +54,20 @@ export class PostsService {
     blogName: string,
   ): Promise<PostViewModel | null> {
     return this.postsRepository.updatePost(postId, updatePostDto, blogName);
+  }
+
+  editLike(
+    postId: string,
+    updateLikeDto: LikeDto,
+    userId: string,
+    userLogin: string,
+  ): Promise<PostViewModel | null> {
+    return this.postsRepository.updateLike(
+      postId,
+      updateLikeDto,
+      userId,
+      userLogin,
+    );
   }
 
   removePost(postId: string): Promise<PostViewModel | null> {

@@ -5,12 +5,11 @@ import { BlogsService } from './application/blogs.service';
 import { BlogsMongooseRepository } from './infrastructure/mongo-repository/blogs.mongoose.repository';
 import { Blog, BlogSchema } from './entities/blog.schema';
 import { PostsModule } from '../posts/posts.module';
-import { AddPostWithBlogNameUseCase } from '../posts/application/use-cases/add-post-with-blog-name-use-case';
-import { EditPostWithBlogNameUseCase } from '../posts/application/use-cases/edit-post-with-blog-name-use-case';
 import { CqrsModule } from '@nestjs/cqrs';
+import { GetPostsByBlogIdUseCase } from './application/use-cases/get-posts-by-blog-id-use-case';
 
 const adapters = [BlogsMongooseRepository];
-const useCases = [AddPostWithBlogNameUseCase, EditPostWithBlogNameUseCase];
+const useCases = [GetPostsByBlogIdUseCase];
 
 @Module({
   imports: [

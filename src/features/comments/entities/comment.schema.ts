@@ -4,6 +4,9 @@ import { CommentViewModel } from '../view-models/comment-view-model';
 import { IPagination } from '../../../interfaces/pagination.interface';
 import { IFilters } from '../../../interfaces/filters.interface';
 import { ISortDirections } from '../../../interfaces/sort-directions.interface';
+import { CommentDto } from '../dto/comment.dto';
+import { ILikeStatus } from '../../../interfaces/like-status.interface';
+import { LikeDetailsViewModel } from '../../posts/view-models/like-details-view-model';
 
 @Schema()
 export class CommentatorInfo {
@@ -24,27 +27,27 @@ export const CommentatorInfoSchema =
   SchemaFactory.createForClass(CommentatorInfo);
 
 @Schema()
-export class LikesInfo {
+export class LikeDetails {
   @Prop({
     type: String,
-    default: 'None',
+    required: true,
   })
-  myStatus: string;
+  addedAt: string;
 
   @Prop({
-    type: Number,
-    default: 0,
+    type: String,
+    required: true,
   })
-  likesCount: number;
+  userId: string;
 
   @Prop({
-    type: Number,
-    default: 0,
+    type: String,
+    required: true,
   })
-  dislikesCount: number;
+  login: string;
 }
 
-export const LikesInfoSchema = SchemaFactory.createForClass(LikesInfo);
+export const LikeDetailsSchema = SchemaFactory.createForClass(LikeDetails);
 
 @Schema()
 export class Comment {
@@ -55,6 +58,12 @@ export class Comment {
     },
   })
   id: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  postId: string;
 
   @Prop({
     type: String,
@@ -72,17 +81,40 @@ export class Comment {
 
   @Prop({
     type: CommentatorInfoSchema,
-    default: {},
+    required: true,
   })
   commentatorInfo: CommentatorInfo;
 
   @Prop({
-    type: LikesInfoSchema,
-    default: {},
+    type: [LikeDetailsSchema],
+    default: [],
   })
-  likesInfo: LikesInfo;
+  likes: LikeDetails[];
 
-  mapDBCommentToCommentViewModel(): CommentViewModel {
+  @Prop({
+    type: [LikeDetailsSchema],
+    default: [],
+  })
+  dislikes: LikeDetails[];
+
+  mapDBCommentToCommentViewModel(userId?: string): CommentViewModel {
+    let myStatus = ILikeStatus.NONE;
+    const isLiked = this.likes.some(
+      (item: LikeDetailsViewModel): boolean => item.userId === userId,
+    );
+
+    if (isLiked) {
+      myStatus = ILikeStatus.LIKE;
+    }
+
+    const isDisliked = this.dislikes.some(
+      (item: LikeDetailsViewModel): boolean => item.userId === userId,
+    );
+
+    if (isDisliked) {
+      myStatus = ILikeStatus.DISLIKE;
+    }
+
     return {
       id: this.id,
       content: this.content,
@@ -92,17 +124,38 @@ export class Comment {
         userLogin: this.commentatorInfo.userLogin,
       },
       likesInfo: {
-        myStatus: this.likesInfo.myStatus,
-        likesCount: this.likesInfo.likesCount,
-        dislikesCount: this.likesInfo.dislikesCount,
+        myStatus,
+        likesCount: this.likes.length,
+        dislikesCount: this.dislikes.length,
       },
     };
+  }
+
+  static setComment(
+    CommentModel: CommentModelType,
+    dto: CommentDto,
+    postId: string,
+    userId: string,
+    userLogin: string,
+  ): CommentDocument {
+    const createdComment = new CommentModel({
+      postId,
+      content: dto.content,
+      commentatorInfo: {
+        userId,
+        userLogin,
+      },
+    });
+
+    return createdComment;
   }
 
   static async filterComments(
     CommentModel: CommentModelType,
     filters: IFilters,
+    userId?: string,
   ): Promise<IPagination<CommentViewModel>> {
+    const postId = filters.postId;
     const sortBy = filters.sortBy;
     const sortDirection =
       filters.sortDirection === ISortDirections.ASC
@@ -113,6 +166,11 @@ export class Comment {
     const skip = (pageNumber - 1) * pageSize;
     const sort = !sortBy ? {} : { [sortBy]: sortDirection };
     const query = CommentModel.find();
+
+    if (postId) {
+      query.where({ postId });
+    }
+
     const totalCount = await CommentModel.countDocuments(
       query.getFilter(),
     ).lean();
@@ -124,7 +182,9 @@ export class Comment {
       pagesCount,
       totalCount,
       page: pageNumber,
-      items: result.map((comment) => comment.mapDBCommentToCommentViewModel()),
+      items: result.map((comment) =>
+        comment.mapDBCommentToCommentViewModel(userId),
+      ),
     };
   }
 }
@@ -137,13 +197,22 @@ CommentSchema.methods = {
 };
 
 type CommentModelStaticType = {
+  setComment: (
+    CommentModel: CommentModelType,
+    dto: CommentDto,
+    postId: string,
+    userId: string,
+    userLogin: string,
+  ) => CommentDocument;
   filterComments: (
     CommentModel: CommentModelType,
     filters: IFilters,
+    userId?: string,
   ) => Promise<IPagination<CommentViewModel>>;
 };
 
 const commentStaticMethods: CommentModelStaticType = {
+  setComment: Comment.setComment,
   filterComments: Comment.filterComments,
 };
 

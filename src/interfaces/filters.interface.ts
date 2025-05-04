@@ -1,6 +1,8 @@
 import { ISortDirections } from './sort-directions.interface';
 
 export interface IFilters {
+  blogId?: string;
+  postId?: string;
   searchEmailTerm?: string;
   searchLoginTerm?: string;
   searchNameTerm?: string;

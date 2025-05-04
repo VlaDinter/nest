@@ -4,6 +4,7 @@ import { UserViewModel } from '../../view-models/user-view-model';
 import { CreateUserInputModelType, UsersService } from '../users.service';
 import { BadRequestException } from '@nestjs/common';
 import { validateOrReject } from 'class-validator';
+import { IFieldError } from '../../../../interfaces/field-error.interface';
 
 export class AddUserWithValidateOrRejectModelCommand {
   constructor(
@@ -36,30 +37,31 @@ export class AddUserWithValidateOrRejectModelUseCase
     model: UserDto,
     ctor: { new (): CreateUserInputModelType },
   ): Promise<void> {
+    const errors: IFieldError[] = [];
     const userByEmail = await this.usersService.getUserByLoginOrEmail(
       model.email,
     );
-
-    if (userByEmail) {
-      throw new BadRequestException([
-        {
-          message: 'email already exists',
-          field: 'email',
-        },
-      ]);
-    }
 
     const userByLogin = await this.usersService.getUserByLoginOrEmail(
       model.login,
     );
 
+    if (userByEmail) {
+      errors.push({
+        message: 'email already exists',
+        field: 'email',
+      });
+    }
+
     if (userByLogin) {
-      throw new BadRequestException([
-        {
-          message: 'login already exists',
-          field: 'login',
-        },
-      ]);
+      errors.push({
+        message: 'login already exists',
+        field: 'login',
+      });
+    }
+
+    if (errors.length) {
+      throw new BadRequestException(errors);
     }
 
     if (model instanceof ctor === false) {

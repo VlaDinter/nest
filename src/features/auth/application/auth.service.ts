@@ -10,17 +10,6 @@ import {
   Length,
 } from 'class-validator';
 
-export class LoginInputModelType {
-  @IsNotEmpty()
-  @IsString()
-  @IsDefined()
-  loginOrEmail: string;
-  @IsNotEmpty()
-  @IsString()
-  @IsDefined()
-  password: string;
-}
-
 export class EmailConfirmationInputModelType {
   @IsEmail()
   @IsNotEmpty()

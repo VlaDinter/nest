@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../../../src/app.module';
-import { appInit } from '../../../dist/settings';
 import { EmailServiceMock } from '../../../src/features/email/application/email.service';
+import { appSettings } from '../../../src/settings';
 
 describe('Blogs e2e', () => {
   let app: INestApplication;
@@ -11,11 +11,14 @@ describe('Blogs e2e', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).overrideProvider(EmailService).useClass(EmailServiceMock).compile();
+      imports: [AppModule],
+    })
+      .overrideProvider(EmailService)
+      .useClass(EmailServiceMock)
+      .compile();
 
     app = moduleFixture.createNestApplication();
-    appInit(app);
+    appSettings(app);
 
     await app.init();
 

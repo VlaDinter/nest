@@ -1,5 +1,6 @@
 import {
   Request,
+  Response,
   Controller,
   Get,
   Post,
@@ -12,11 +13,9 @@ import {
 import {
   AuthService,
   EmailConfirmationInputModelType,
-  LoginInputModelType,
   NewPasswordRecoveryInputModelType,
   RegistrationConfirmationCodeInputModelType,
 } from '../application/auth.service';
-import { LoginSuccessViewModel } from '../view-models/login-success-view-model';
 import { MeViewModel } from '../../users/view-models/me-view-model';
 import {
   CreateUserInputModelType,
@@ -43,18 +42,26 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
-  getMe(@CurrentUserId() currentUserId): Promise<MeViewModel | null> {
+  getMe(@CurrentUserId() currentUserId: string): Promise<MeViewModel | null> {
     return this.usersService.getMe(currentUserId);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   @HttpCode(HttpStatus.OK)
-  postLogin(
-    @Body() inputModel: LoginInputModelType,
-    @Request() req,
-  ): Promise<LoginSuccessViewModel> {
-    return this.commandBus.execute(new LoginUserCommand(req.user.userId));
+  async postLogin(@Request() req, @Response() res): Promise<void> {
+    const result = await this.commandBus.execute(
+      new LoginUserCommand(req.user.userId),
+    );
+
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+
+    res.send({
+      accessToken: result.accessToken,
+    });
   }
 
   @UseGuards(ThrottlerGuard)

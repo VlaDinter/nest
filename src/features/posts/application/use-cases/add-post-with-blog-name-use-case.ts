@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { PostViewModel } from '../../view-models/post-view-model';
-import { PostDto } from '../../dto/post.dto';
 import { BlogsService } from '../../../blogs/application/blogs.service';
 import { PostsService } from '../posts.service';
+import { PostViewModel } from '../../view-models/post-view-model';
+import { PostDto } from '../../dto/post.dto';
 
 export class AddPostWithBlogNameCommand {
   constructor(public readonly createPostDto: PostDto) {}

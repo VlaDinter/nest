@@ -10,7 +10,7 @@ import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { IFieldError } from './interfaces/field-error.interface';
 
-export const appInit = (app: INestApplication): void => {
+export const appSettings = (app: INestApplication): void => {
   app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(

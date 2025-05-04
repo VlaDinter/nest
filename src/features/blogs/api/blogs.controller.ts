@@ -12,6 +12,8 @@ import {
   HttpStatus,
   DefaultValuePipe,
   ParseIntPipe,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import {
   BlogInputModelType,
@@ -25,7 +27,9 @@ import { IPagination } from '../../../interfaces/pagination.interface';
 import { ParseStringPipe } from '../../../parse-string.pipe';
 import { ISortDirections } from '../../../interfaces/sort-directions.interface';
 import { CommandBus } from '@nestjs/cqrs';
+import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
 import { AddPostWithBlogNameCommand } from '../../posts/application/use-cases/add-post-with-blog-name-use-case';
+import { GetCommentsByPostIdCommand } from '../../posts/application/use-cases/get-comments-by-post-id-use-case';
 
 @Controller('blogs')
 export class BlogsController {
@@ -70,12 +74,14 @@ export class BlogsController {
     return foundBlog;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   postBlogs(@Body() inputModel: BlogInputModelType): Promise<BlogViewModel> {
     return this.blogsService.addBlog(inputModel);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async putBlog(
@@ -89,6 +95,7 @@ export class BlogsController {
     }
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBlog(@Param('id') blogId: string): Promise<void> {
@@ -113,35 +120,34 @@ export class BlogsController {
       new DefaultValuePipe(ISortDirections.DESC),
     )
     sortDirection: ISortDirections,
+    @Request() req,
   ): Promise<IPagination<PostViewModel>> {
-    const foundBlog = await this.blogsService.getBlog(blogId);
+    const foundPosts = await this.commandBus.execute(
+      new GetCommentsByPostIdCommand(
+        {
+          blogId,
+          sortDirection,
+          pageNumber,
+          pageSize,
+          sortBy,
+        },
+        req.user.userId,
+      ),
+    );
 
-    if (!foundBlog) {
+    if (!foundPosts) {
       throw new NotFoundException('Blog not found');
     }
 
-    return this.postsService.getPosts(
-      {
-        sortDirection,
-        pageNumber,
-        pageSize,
-        sortBy,
-      },
-      blogId,
-    );
+    return foundPosts;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post(':blogId/posts')
   async postPosts(
     @Param('blogId') blogId: string,
     @Body() inputModel: BlogPostInputModelType,
   ): Promise<PostViewModel> {
-    const foundBlog = await this.blogsService.getBlog(blogId);
-
-    if (!foundBlog) {
-      throw new NotFoundException('Blog not found');
-    }
-
     const createdPost = await this.commandBus.execute(
       new AddPostWithBlogNameCommand({ ...inputModel, blogId }),
     );

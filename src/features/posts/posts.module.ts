@@ -7,8 +7,21 @@ import { PostsMongooseRepository } from './infrastructure/mongo-repository/posts
 import { Post, PostSchema } from './entities/post.schema';
 import { CommentsModule } from '../comments/comments.module';
 import { CqrsModule } from '@nestjs/cqrs';
+import { EditPostWithBlogNameUseCase } from './application/use-cases/edit-post-with-blog-name-use-case';
+import { AddCommentWithPostIdUseCase } from './application/use-cases/add-comment-with-post-id-use-case';
+import { UsersModule } from '../users/users.module';
+import { EditPostWithUserLoginUseCase } from './application/use-cases/edit-post-with-user-login-use-case';
+import { GetCommentsByPostIdUseCase } from './application/use-cases/get-comments-by-post-id-use-case';
+import { AddPostWithBlogNameUseCase } from './application/use-cases/add-post-with-blog-name-use-case';
 
 const adapters = [PostsMongooseRepository];
+const useCases = [
+  GetCommentsByPostIdUseCase,
+  AddCommentWithPostIdUseCase,
+  AddPostWithBlogNameUseCase,
+  EditPostWithBlogNameUseCase,
+  EditPostWithUserLoginUseCase,
+];
 
 @Module({
   imports: [
@@ -19,11 +32,12 @@ const adapters = [PostsMongooseRepository];
       },
     ]),
     forwardRef(() => BlogsModule),
-    CqrsModule,
     CommentsModule,
+    UsersModule,
+    CqrsModule,
   ],
   controllers: [PostsController],
-  providers: [PostsService, ...adapters],
+  providers: [PostsService, ...adapters, ...useCases],
   exports: [PostsService],
 })
 export class PostsModule {}
