@@ -10,21 +10,31 @@ import {
   IsString,
   IsUrl,
   MaxLength,
+  Matches,
 } from 'class-validator';
 
 export class BlogInputModelType {
   @MaxLength(15)
+  @Matches(/\S/, {
+    message: 'Incorrect Name',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   name: string;
   @MaxLength(500)
+  @Matches(/\S/, {
+    message: 'Incorrect Description',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   description: string;
   @IsUrl()
   @MaxLength(100)
+  @Matches(/\S/, {
+    message: 'Incorrect Website Url',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
@@ -33,16 +43,25 @@ export class BlogInputModelType {
 
 export class BlogPostInputModelType {
   @MaxLength(30)
+  @Matches(/\S/, {
+    message: 'Incorrect Title',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   title: string;
   @MaxLength(100)
+  @Matches(/\S/, {
+    message: 'Incorrect Short Description',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   shortDescription: string;
   @MaxLength(1000)
+  @Matches(/\S/, {
+    message: 'Incorrect Content',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()

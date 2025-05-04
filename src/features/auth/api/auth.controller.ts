@@ -51,7 +51,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async postLogin(@Request() req, @Response() res): Promise<void> {
     const result = await this.commandBus.execute(
-      new LoginUserCommand(req.user.userId),
+      new LoginUserCommand(req.user?.userId),
     );
 
     res.cookie('refreshToken', result.refreshToken, {

@@ -37,7 +37,7 @@ export class CommentsController {
   ): Promise<CommentViewModel | void> {
     const foundComment = await this.commentsService.getComment(
       commentId,
-      req.user.userId,
+      req.user?.userId,
     );
 
     if (!foundComment) {

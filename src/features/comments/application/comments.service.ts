@@ -9,6 +9,7 @@ import {
   IsNotEmpty,
   IsString,
   Length,
+  Matches,
 } from 'class-validator';
 import { CommentDto } from '../dto/comment.dto';
 import { LikeDto } from '../dto/like.dto';
@@ -16,6 +17,9 @@ import { ILikeStatus } from '../../../interfaces/like-status.interface';
 
 export class CommentInputModelType {
   @Length(20, 300)
+  @Matches(/\S/, {
+    message: 'Incorrect Content',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
@@ -24,6 +28,9 @@ export class CommentInputModelType {
 
 export class LikeInputModelType {
   @IsEnum(ILikeStatus)
+  @Matches(/\S/, {
+    message: 'Incorrect Like Status',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()

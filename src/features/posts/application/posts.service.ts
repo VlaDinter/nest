@@ -4,25 +4,43 @@ import { PostViewModel } from '../view-models/post-view-model';
 import { PostDto } from '../dto/Post.dto';
 import { IPagination } from '../../../interfaces/pagination.interface';
 import { IFilters } from '../../../interfaces/filters.interface';
-import { IsDefined, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsString,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 import { LikeDto } from '../../comments/dto/like.dto';
 
 export class PostInputModelType {
   @MaxLength(30)
+  @Matches(/\S/, {
+    message: 'Incorrect Title',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   title: string;
   @MaxLength(100)
+  @Matches(/\S/, {
+    message: 'Incorrect Short Description',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   shortDescription: string;
   @MaxLength(1000)
+  @Matches(/\S/, {
+    message: 'Incorrect Content',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   content: string;
+  @Matches(/\S/, {
+    message: 'Incorrect Blog Id',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()

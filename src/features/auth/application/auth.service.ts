@@ -8,10 +8,14 @@ import {
   IsNotEmpty,
   IsString,
   Length,
+  Matches,
 } from 'class-validator';
 
 export class EmailConfirmationInputModelType {
   @IsEmail()
+  @Matches(/\S/, {
+    message: 'Incorrect Email',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
@@ -19,6 +23,9 @@ export class EmailConfirmationInputModelType {
 }
 
 export class RegistrationConfirmationCodeInputModelType {
+  @Matches(/\S/, {
+    message: 'Incorrect Code',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
@@ -27,10 +34,16 @@ export class RegistrationConfirmationCodeInputModelType {
 
 export class NewPasswordRecoveryInputModelType {
   @Length(6, 20)
+  @Matches(/\S/, {
+    message: 'Incorrect New Password',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   newPassword: string;
+  @Matches(/\S/, {
+    message: 'Incorrect Recovery Code',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()

@@ -16,6 +16,9 @@ import { IFilters } from '../../../interfaces/filters.interface';
 
 export class CreateUserInputModelType {
   @IsEmail()
+  @Matches(/\S/, {
+    message: 'Incorrect Email',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
@@ -24,11 +27,17 @@ export class CreateUserInputModelType {
     message: 'Incorrect Login',
   })
   @Length(3, 10)
+  @Matches(/\S/, {
+    message: 'Incorrect Login',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()
   login: string;
   @Length(6, 20)
+  @Matches(/\S/, {
+    message: 'Incorrect Password',
+  })
   @IsNotEmpty()
   @IsString()
   @IsDefined()

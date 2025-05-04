@@ -64,7 +64,7 @@ export class PostsController {
         pageSize,
         sortBy,
       },
-      req.user.userId,
+      req.user?.userId,
     );
   }
 
@@ -73,7 +73,7 @@ export class PostsController {
     @Param('id') postId: string,
     @Request() req,
   ): Promise<PostViewModel | void> {
-    const foundPost = await this.postsService.getPost(postId, req.user.userId);
+    const foundPost = await this.postsService.getPost(postId, req.user?.userId);
 
     if (!foundPost) {
       throw new NotFoundException('Post not found');
@@ -168,7 +168,7 @@ export class PostsController {
           pageSize,
           sortBy,
         },
-        req.user.userId,
+        req.user?.userId,
       ),
     );
 

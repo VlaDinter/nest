@@ -131,7 +131,7 @@ export class BlogsController {
           pageSize,
           sortBy,
         },
-        req.user.userId,
+        req.user?.userId,
       ),
     );
 
