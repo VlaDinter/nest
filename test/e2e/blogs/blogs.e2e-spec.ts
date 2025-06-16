@@ -1,27 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Server } from 'http';
+import request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../../../src/app.module';
-import { EmailServiceMock } from '../../../src/features/email/application/email.service';
-import { appSettings } from '../../../src/settings';
+import { BlogsTestManager } from './blogs.test-manager';
+import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
-describe('Blogs e2e', () => {
+skipDescribe(skipTests.for('blogsTest'))('Blogs e2e', () => {
+  let httpServer: Server;
   let app: INestApplication;
-  let httpServer;
+  let blogsTestManager: BlogsTestManager;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(EmailService)
-      .useClass(EmailServiceMock)
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    appSettings(app);
-
-    await app.init();
-
+    app = await initApp();
+    blogsTestManager = new BlogsTestManager(app);
     httpServer = app.getHttpServer();
   });
 
@@ -31,31 +22,40 @@ describe('Blogs e2e', () => {
 
   describe('Create/update blog', () => {
     let blogId: string;
-    let userAccessTokens;
+    const createBlogBody = {
+      name: 'name',
+      description: 'description',
+      websiteUrl: 'https://exemple.com',
+    };
 
-    beforeAll(async () => {
-      userAccessTokens = await createAndLoginServeralUsers(2);
-    });
+    const expectedBlog = {
+      ...createBlogBody,
+      isMembership: false,
+      id: expect.any(String),
+      createdAt: expect.any(String),
+    };
 
-    it('blog should created', async function () {
-      const response = await request(httpServer)
-        .post('/blogs')
-        .set({ Authorization: `Bearer ${userAccessTokens[0].accessToken}` })
-        .send(createBlogBody)
-        .expect(HttpStatus.CREATED);
+    it('blog should created', async () => {
+      const response = await blogsTestManager.createBlog(createBlogBody);
 
       expect(response.body).toEqual(expectedBlog);
-      blogId = response.body.blogId;
+
+      blogId = response.body.id;
     });
 
-    it('blog should be updated', async function () {
-      const response = await request(httpServer)
-        .put(`/blogs/${blogId}`)
-        .set({ Authorization: `Bearer ${userAccessTokens[0].accessToken}` })
-        .send({ ...createBlogBody, title: 'new title' })
+    it('blog should be updated', async () => {
+      await request(httpServer)
+        .put(`/${GLOBAL_PREFIX}/blogs/${blogId}`)
+        .auth('sa', '123')
+        .send({ ...createBlogBody, name: 'new name' })
         .expect(HttpStatus.NO_CONTENT);
 
-      expect(response.body.title).toBe('new title');
+      const getBlogByIdResponse = await request(httpServer).get(
+        `/${GLOBAL_PREFIX}/blogs/${blogId}`,
+      );
+
+      expect(getBlogByIdResponse.body.isMembership).toBeFalsy();
+      expect(getBlogByIdResponse.body.name).toBe('new name');
     });
   });
 });

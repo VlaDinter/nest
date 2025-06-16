@@ -1,0 +1,36 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UsersConfig } from '@modules/users/config/users.config';
+import { UsersController } from '@modules/users/api/users.controller';
+import { User, UserSchema } from '@modules/users/entities/user.schema';
+import { UsersService } from '@modules/users/application/users.service';
+import { getUsersConfiguration } from '@modules/users/configuration/users.configuration';
+import { UsersMongooseRepository } from '@modules/users/infrastructure/mongo-repository/users.mongoose.repository';
+import { AddUserWithValidateOrRejectModelUseCase } from '@modules/users/usecases/add-user-with-validate-or-reject-model.usecase';
+
+const providers = [
+  UsersConfig,
+  {
+    provide: 'UsersRepository',
+    useClass: UsersMongooseRepository,
+  },
+];
+
+const useCases = [AddUserWithValidateOrRejectModelUseCase];
+
+@Module({
+  imports: [
+    ConfigModule.forFeature(getUsersConfiguration),
+    MongooseModule.forFeature([
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
+    ]),
+  ],
+  controllers: [UsersController],
+  providers: [UsersService, ...providers, ...useCases],
+  exports: [UsersService],
+})
+export class UsersModule {}

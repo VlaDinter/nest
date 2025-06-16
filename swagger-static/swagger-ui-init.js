@@ -11,60 +11,145 @@ window.onload = function() {
   "swaggerDoc": {
     "openapi": "3.0.0",
     "paths": {
-      "/": {
+      "/api": {
         "get": {
           "operationId": "AppController_getHello",
+          "summary": "Home",
           "parameters": [],
           "responses": {
             "200": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "App"
+          ]
         }
       },
-      "/testing/all-data": {
+      "/api/testing/all-data": {
         "delete": {
-          "operationId": "AppController_deleteAllData",
+          "operationId": "TestingController_deleteAllData",
+          "summary": "Delete all data",
           "parameters": [],
           "responses": {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Testing"
+          ]
         }
       },
-      "/auth/me": {
+      "/api/auth/me": {
         "get": {
           "operationId": "AuthController_getMe",
+          "summary": "Get info about current user",
           "parameters": [],
           "responses": {
             "200": {
-              "description": ""
+              "description": "The found record",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MeViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
         }
       },
-      "/auth/login": {
+      "/api/auth/login": {
         "post": {
           "operationId": "AuthController_postLogin",
+          "summary": "Post login",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loginOrEmail": {
+                      "type": "string",
+                      "example": "login123"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "superpassword"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LoginSuccessViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
+      },
+      "/api/auth/refresh-token": {
+        "post": {
+          "operationId": "AuthController_postRefreshToken",
+          "summary": "Post refresh token",
           "parameters": [],
           "responses": {
             "200": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LoginSuccessViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ]
         }
       },
-      "/auth/registration": {
+      "/api/auth/registration": {
         "post": {
           "operationId": "AuthController_postRegistration",
+          "summary": "Post registration",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateUserInputModelType"
+                  "$ref": "#/components/schemas/UserInputModel"
                 }
               }
             }
@@ -73,19 +158,23 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ]
         }
       },
-      "/auth/registration-email-resending": {
+      "/api/auth/registration-email-resending": {
         "post": {
           "operationId": "AuthController_postRegistrationEmailResending",
+          "summary": "Post registration email resending",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailConfirmationInputModelType"
+                  "$ref": "#/components/schemas/EmailConfirmationInputModel"
                 }
               }
             }
@@ -94,19 +183,23 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ]
         }
       },
-      "/auth/registration-confirmation": {
+      "/api/auth/registration-confirmation": {
         "post": {
           "operationId": "AuthController_postRegistrationConfirmation",
+          "summary": "Post registration confirmation",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationConfirmationCodeInputModelType"
+                  "$ref": "#/components/schemas/RegistrationConfirmationCodeInputModel"
                 }
               }
             }
@@ -115,19 +208,23 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ]
         }
       },
-      "/auth/password-recovery": {
+      "/api/auth/password-recovery": {
         "post": {
           "operationId": "AuthController_postPasswordRecovery",
+          "summary": "Post password recovery",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailConfirmationInputModelType"
+                  "$ref": "#/components/schemas/EmailConfirmationInputModel"
                 }
               }
             }
@@ -136,19 +233,23 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ]
         }
       },
-      "/auth/new-password": {
+      "/api/auth/new-password": {
         "post": {
           "operationId": "AuthController_postNewPassword",
+          "summary": "Post new password",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewPasswordRecoveryInputModelType"
+                  "$ref": "#/components/schemas/NewPasswordRecoveryInputModel"
                 }
               }
             }
@@ -157,12 +258,31 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Auth"
+          ]
         }
       },
-      "/users": {
+      "/api/auth/logout": {
+        "post": {
+          "operationId": "AuthController_postLogout",
+          "summary": "Post logout",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
+      },
+      "/api/users": {
         "get": {
           "operationId": "UsersController_getUsers",
+          "summary": "Get users",
           "parameters": [
             {
               "name": "searchLoginTerm",
@@ -217,31 +337,56 @@ window.onload = function() {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         },
         "post": {
           "operationId": "UsersController_postUsers",
+          "summary": "Post users",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateUserInputModelType"
+                  "$ref": "#/components/schemas/UserInputModel"
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/users/{id}": {
+      "/api/users/{id}": {
         "delete": {
           "operationId": "UsersController_deleteUser",
+          "summary": "Delete user",
           "parameters": [
             {
               "name": "id",
@@ -256,12 +401,21 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/blogs": {
+      "/api/blogs": {
         "get": {
           "operationId": "BlogsController_getBlogs",
+          "summary": "Get blogs",
           "parameters": [
             {
               "name": "searchNameTerm",
@@ -308,31 +462,51 @@ window.onload = function() {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ]
         },
         "post": {
           "operationId": "BlogsController_postBlogs",
+          "summary": "Post blogs",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlogInputModelType"
+                  "$ref": "#/components/schemas/BlogInputModel"
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BlogViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/blogs/{id}": {
+      "/api/blogs/{id}": {
         "get": {
           "operationId": "BlogsController_getBlog",
+          "summary": "Get blog",
           "parameters": [
             {
               "name": "id",
@@ -345,12 +519,23 @@ window.onload = function() {
           ],
           "responses": {
             "200": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ]
         },
         "put": {
           "operationId": "BlogsController_putBlog",
+          "summary": "Put blog",
           "parameters": [
             {
               "name": "id",
@@ -366,7 +551,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlogInputModelType"
+                  "$ref": "#/components/schemas/BlogInputModel"
                 }
               }
             }
@@ -375,10 +560,19 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         },
         "delete": {
           "operationId": "BlogsController_deleteBlog",
+          "summary": "Delete blog",
           "parameters": [
             {
               "name": "id",
@@ -393,15 +587,24 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/blogs/{blogId}/posts": {
+      "/api/blogs/{id}/posts": {
         "get": {
           "operationId": "BlogsController_getPosts",
+          "summary": "Get posts",
           "parameters": [
             {
-              "name": "blogId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -445,13 +648,17 @@ window.onload = function() {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ]
         },
         "post": {
           "operationId": "BlogsController_postPosts",
+          "summary": "Post posts",
           "parameters": [
             {
-              "name": "blogId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -464,21 +671,37 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlogPostInputModelType"
+                  "$ref": "#/components/schemas/BlogPostInputModel"
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/posts": {
+      "/api/posts": {
         "get": {
           "operationId": "PostsController_getPosts",
+          "summary": "Get posts",
           "parameters": [
             {
               "name": "pageSize",
@@ -517,31 +740,51 @@ window.onload = function() {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ]
         },
         "post": {
           "operationId": "PostsController_postPosts",
+          "summary": "Post posts",
           "parameters": [],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostInputModelType"
+                  "$ref": "#/components/schemas/PostInputModel"
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/posts/{id}": {
+      "/api/posts/{id}": {
         "get": {
           "operationId": "PostsController_getPost",
+          "summary": "Get post",
           "parameters": [
             {
               "name": "id",
@@ -554,12 +797,23 @@ window.onload = function() {
           ],
           "responses": {
             "200": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ]
         },
         "put": {
           "operationId": "PostsController_putPost",
+          "summary": "Put post",
           "parameters": [
             {
               "name": "id",
@@ -575,7 +829,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostInputModelType"
+                  "$ref": "#/components/schemas/PostInputModel"
                 }
               }
             }
@@ -584,10 +838,19 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         },
         "delete": {
           "operationId": "PostsController_deletePost",
+          "summary": "Delete post",
           "parameters": [
             {
               "name": "id",
@@ -602,15 +865,24 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
         }
       },
-      "/posts/{postId}/like-status": {
+      "/api/posts/{id}/like-status": {
         "put": {
           "operationId": "PostsController_putLikeStatus",
+          "summary": "Put like status",
           "parameters": [
             {
-              "name": "postId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -623,7 +895,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LikeInputModelType"
+                  "$ref": "#/components/schemas/LikeInputModel"
                 }
               }
             }
@@ -632,15 +904,24 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
         }
       },
-      "/posts/{postId}/comments": {
+      "/api/posts/{id}/comments": {
         "get": {
           "operationId": "PostsController_getComments",
+          "summary": "Get comments",
           "parameters": [
             {
-              "name": "postId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -684,13 +965,17 @@ window.onload = function() {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ]
         },
         "post": {
           "operationId": "PostsController_postComments",
+          "summary": "Post comments",
           "parameters": [
             {
-              "name": "postId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -703,21 +988,37 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CommentInputModelType"
+                  "$ref": "#/components/schemas/CommentInputModel"
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommentViewModel"
+                  }
+                }
+              }
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
         }
       },
-      "/comments/{id}": {
+      "/api/comments/{id}": {
         "get": {
           "operationId": "CommentsController_getComment",
+          "summary": "Get comment",
           "parameters": [
             {
               "name": "id",
@@ -730,17 +1031,26 @@ window.onload = function() {
           ],
           "responses": {
             "200": {
-              "description": ""
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
             }
-          }
-        }
-      },
-      "/comments/{commentId}": {
+          },
+          "tags": [
+            "Comments"
+          ]
+        },
         "put": {
           "operationId": "CommentsController_putComment",
+          "summary": "Put comment",
           "parameters": [
             {
-              "name": "commentId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -753,7 +1063,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CommentInputModelType"
+                  "$ref": "#/components/schemas/CommentInputModel"
                 }
               }
             }
@@ -762,13 +1072,22 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Comments"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
         },
         "delete": {
           "operationId": "CommentsController_deleteComment",
+          "summary": "Delete comment",
           "parameters": [
             {
-              "name": "commentId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -780,15 +1099,24 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Comments"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
         }
       },
-      "/comments/{commentId}/like-status": {
+      "/api/comments/{id}/like-status": {
         "put": {
           "operationId": "CommentsController_putLikeStatus",
+          "summary": "Put like status",
           "parameters": [
             {
-              "name": "commentId",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -801,7 +1129,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LikeInputModelType"
+                  "$ref": "#/components/schemas/LikeInputModel"
                 }
               }
             }
@@ -810,13 +1138,59 @@ window.onload = function() {
             "204": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Comments"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
+      "/api/security/devices": {
+        "get": {
+          "operationId": "DevicesController_getSecurityDevices",
+          "summary": "Get security devices",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/DeviceViewModel"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Devices"
+          ]
+        },
+        "delete": {
+          "operationId": "DevicesController_deleteSecurityDevices",
+          "summary": "Delete security devices",
+          "parameters": [],
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Devices"
+          ]
         }
       }
     },
     "info": {
       "title": "Examples",
-      "description": "The nest API description",
+      "description": "The nest api description",
       "version": "1.0",
       "contact": {}
     },
@@ -844,42 +1218,489 @@ window.onload = function() {
     ],
     "servers": [],
     "components": {
+      "securitySchemes": {
+        "basicAuth": {
+          "type": "http",
+          "scheme": "basic"
+        },
+        "bearer": {
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "type": "http"
+        }
+      },
       "schemas": {
-        "CreateUserInputModelType": {
+        "MeViewModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "login": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "email",
+            "login",
+            "userId"
+          ]
         },
-        "EmailConfirmationInputModelType": {
+        "LoginSuccessViewModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "refreshToken": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "accessToken"
+          ]
         },
-        "RegistrationConfirmationCodeInputModelType": {
+        "UserInputModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "ww@ww.ww"
+            },
+            "login": {
+              "type": "string",
+              "example": "dimych"
+            },
+            "password": {
+              "type": "string",
+              "minLength": 6,
+              "maxLength": 20
+            }
+          },
+          "required": [
+            "email",
+            "login",
+            "password"
+          ]
         },
-        "NewPasswordRecoveryInputModelType": {
+        "EmailConfirmationInputModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "email@gmail.com"
+            }
+          },
+          "required": [
+            "email"
+          ]
         },
-        "BlogInputModelType": {
+        "RegistrationConfirmationCodeInputModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "code": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code"
+          ]
         },
-        "BlogPostInputModelType": {
+        "NewPasswordRecoveryInputModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "newPassword": {
+              "type": "string",
+              "minLength": 6,
+              "maxLength": 20
+            },
+            "recoveryCode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "newPassword",
+            "recoveryCode"
+          ]
         },
-        "PostInputModelType": {
+        "EmailConfirmationViewModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "isConfirmed": {
+              "type": "boolean"
+            },
+            "expirationDate": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "confirmationCode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "isConfirmed",
+            "expirationDate",
+            "confirmationCode"
+          ]
         },
-        "LikeInputModelType": {
+        "UserViewModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "login": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "passwordHash": {
+              "type": "string"
+            },
+            "emailConfirmation": {
+              "$ref": "#/components/schemas/EmailConfirmationViewModel"
+            }
+          },
+          "required": [
+            "id",
+            "login",
+            "email",
+            "createdAt"
+          ]
         },
-        "CommentInputModelType": {
+        "BlogInputModel": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "websiteUrl": {
+              "type": "string",
+              "maxLength": 100,
+              "example": "https://exemple.com"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 15
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "websiteUrl",
+            "name",
+            "description"
+          ]
+        },
+        "BlogViewModel": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "websiteUrl": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "isMembership": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "createdAt",
+            "websiteUrl",
+            "description",
+            "isMembership"
+          ]
+        },
+        "BlogPostInputModel": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 30
+            },
+            "shortDescription": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "content": {
+              "type": "string",
+              "maxLength": 1000
+            }
+          },
+          "required": [
+            "title",
+            "shortDescription",
+            "content"
+          ]
+        },
+        "LikeDetailsViewModel": {
+          "type": "object",
+          "properties": {
+            "login": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "addedAt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "login",
+            "userId",
+            "addedAt"
+          ]
+        },
+        "ExtendedLikesInfoViewModel": {
+          "type": "object",
+          "properties": {
+            "myStatus": {
+              "type": "string"
+            },
+            "likesCount": {
+              "type": "number"
+            },
+            "dislikesCount": {
+              "type": "number"
+            },
+            "newestLikes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LikeDetailsViewModel"
+              }
+            }
+          },
+          "required": [
+            "myStatus",
+            "likesCount",
+            "dislikesCount",
+            "newestLikes"
+          ]
+        },
+        "PostViewModel": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "blogId": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "blogName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "shortDescription": {
+              "type": "string"
+            },
+            "likes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LikeDetailsViewModel"
+              }
+            },
+            "dislikes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LikeDetailsViewModel"
+              }
+            },
+            "extendedLikesInfo": {
+              "$ref": "#/components/schemas/ExtendedLikesInfoViewModel"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "blogId",
+            "content",
+            "blogName",
+            "createdAt",
+            "shortDescription",
+            "extendedLikesInfo"
+          ]
+        },
+        "PostInputModel": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 30
+            },
+            "shortDescription": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "content": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "blogId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "shortDescription",
+            "content",
+            "blogId"
+          ]
+        },
+        "LikeInputModel": {
+          "type": "object",
+          "properties": {
+            "likeStatus": {
+              "enum": [
+                "None",
+                "Like",
+                "Dislike"
+              ],
+              "type": "string",
+              "example": "None, Like, Dislike"
+            }
+          },
+          "required": [
+            "likeStatus"
+          ]
+        },
+        "CommentInputModel": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "minLength": 20,
+              "maxLength": 300
+            }
+          },
+          "required": [
+            "content"
+          ]
+        },
+        "LikesInfoViewModel": {
+          "type": "object",
+          "properties": {
+            "myStatus": {
+              "type": "string"
+            },
+            "likesCount": {
+              "type": "number"
+            },
+            "dislikesCount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "myStatus",
+            "likesCount",
+            "dislikesCount"
+          ]
+        },
+        "CommentatorInfoViewModel": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "userLogin": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "userId",
+            "userLogin"
+          ]
+        },
+        "CommentViewModel": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "postId": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "likesInfo": {
+              "$ref": "#/components/schemas/LikesInfoViewModel"
+            },
+            "likes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LikeDetailsViewModel"
+              }
+            },
+            "dislikes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LikeDetailsViewModel"
+              }
+            },
+            "commentatorInfo": {
+              "$ref": "#/components/schemas/CommentatorInfoViewModel"
+            }
+          },
+          "required": [
+            "id",
+            "content",
+            "createdAt",
+            "likesInfo",
+            "commentatorInfo"
+          ]
+        },
+        "DeviceViewModel": {
+          "type": "object",
+          "properties": {
+            "ip": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "deviceId": {
+              "type": "string"
+            },
+            "lastActiveDate": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ip",
+            "title",
+            "deviceId",
+            "lastActiveDate"
+          ]
         }
       }
     }

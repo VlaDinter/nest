@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="true" type="JavaScriptTestRunnerJest">
+    <node-interpreter value="project" />
+    <node-options value="" />
+    <working-dir value="" />
+    <jest-options value="--config ./test/e2e/jest-e2e.json  --runInBand" />
+    <envs>
+      <env name="NODE_ENV" value="testing" />
+    </envs>
+    <scope-kind value="ALL" />
+    <method v="2" />
+  </configuration>
+</component>

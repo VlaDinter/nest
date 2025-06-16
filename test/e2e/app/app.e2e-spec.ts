@@ -1,25 +1,26 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../../../src/app.module';
+import { Server } from 'http';
+import request from 'supertest';
+import { HttpStatus, INestApplication } from '@nestjs/common';
+import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
-describe('AppController (e2e)', () => {
+skipDescribe(skipTests.for('appTest'))('AppController (e2e)', () => {
+  let httpServer: Server;
   let app: INestApplication;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile();
+  beforeAll(async () => {
+    app = await initApp();
+    httpServer = app.getHttpServer();
+  });
 
-    app = moduleFixture.createNestApplication();
-
-    await app.init();
+  afterAll(async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+    return request(httpServer)
+      .get(`/${GLOBAL_PREFIX}`)
+      .expect(HttpStatus.OK)
+      .expect('Hello World! Hello IT-INCUBATOR');
   });
 });
