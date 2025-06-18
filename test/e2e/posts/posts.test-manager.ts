@@ -1,6 +1,5 @@
 import request, { Response } from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { PostDto } from '../../../src/features/modules/posts/dto/post.dto';
 
 export class PostsTestManager {
@@ -13,7 +12,7 @@ export class PostsTestManager {
     },
   ): Promise<Response> {
     const response = await request(this.app.getHttpServer())
-      .post(`/${GLOBAL_PREFIX}/posts`)
+      .post('/posts')
       .auth('sa', '123')
       .send(createPostDto)
       .expect(options?.expectedStatusCode ?? HttpStatus.CREATED);

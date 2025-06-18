@@ -4,7 +4,6 @@ import { Types } from 'mongoose';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { PostsTestManager } from './posts.test-manager';
 import { BlogsTestManager } from '../blogs/blogs.test-manager';
-import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
@@ -56,7 +55,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
 
   it("/posts/:id (POST) shouldn't create an post with blogId because incorrect post data", async () => {
     await request(httpServer)
-      .post(`/${GLOBAL_PREFIX}/posts`)
+      .post('/posts')
       .auth('sa', '123')
       .send({
         title: 789,
@@ -68,9 +67,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
 
   it('/posts (GET) should return all posts', async () => {
     const { createdBlogId } = expect.getState();
-    const postsResponse = await request(httpServer).get(
-      `/${GLOBAL_PREFIX}/posts`,
-    );
+    const postsResponse = await request(httpServer).get('/posts');
 
     expect(postsResponse.status).toBe(HttpStatus.OK);
     expect(postsResponse.body.items).toBeInstanceOf(Array);
@@ -87,9 +84,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
     });
 
     const postId = postResponse.body.id;
-    const response = await request(httpServer).get(
-      `/${GLOBAL_PREFIX}/posts/${postId}`,
-    );
+    const response = await request(httpServer).get(`/posts/${postId}`);
 
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body.id).toBe(postId);
@@ -107,7 +102,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
 
     const postId = postResponse.body.id;
     const response = await request(httpServer)
-      .put(`/${GLOBAL_PREFIX}/posts/${postId}`)
+      .put(`/posts/${postId}`)
       .auth('sa', '123')
       .send({
         title: 'Updated',
@@ -119,7 +114,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
     expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
     const getPostByIdResponse = await request(httpServer).get(
-      `/${GLOBAL_PREFIX}/posts/${postId}`,
+      `/posts/${postId}`,
     );
 
     expect(getPostByIdResponse.body.title).toBe('Updated');
@@ -136,7 +131,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
 
     const postId = postResponse.body.id;
     const response = await request(httpServer)
-      .put(`/${GLOBAL_PREFIX}/posts/${postId}`)
+      .put(`/posts/${postId}`)
       .auth('sa', '123')
       .send({
         title: 'Updated',
@@ -148,7 +143,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
     expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
     const getPostByIdResponse = await request(httpServer).get(
-      `/${GLOBAL_PREFIX}/posts/${postId}`,
+      `/posts/${postId}`,
     );
 
     expect(getPostByIdResponse.body.title).toBe('Updated');
@@ -164,14 +159,12 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
     });
 
     const postId = postResponse.body.id;
-    const response = await request(httpServer)
-      .put(`/${GLOBAL_PREFIX}/posts/${postId}`)
-      .send({
-        title: 'Unauthorized',
-        blogId: createdBlogId,
-        content: 'Unauthorized',
-        shortDescription: 'Unauthorized',
-      });
+    const response = await request(httpServer).put(`/posts/${postId}`).send({
+      title: 'Unauthorized',
+      blogId: createdBlogId,
+      content: 'Unauthorized',
+      shortDescription: 'Unauthorized',
+    });
 
     expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
   });
@@ -187,7 +180,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
 
     const postId = new Types.ObjectId();
     const response = await request(httpServer)
-      .put(`/${GLOBAL_PREFIX}/posts/${postId}`)
+      .put(`/posts/${postId}`)
       .auth('sa', '123')
       .send({
         title: 'Forbidden',
@@ -212,7 +205,7 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
     const postId = postResponse.body.id;
 
     await request(httpServer)
-      .put(`/${GLOBAL_PREFIX}/posts/${postId}`)
+      .put(`/posts/${postId}`)
       .auth('sa', '123')
       .send({
         title: 789,
@@ -233,13 +226,13 @@ skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {
 
     const postId = postResponse.body.id;
     const deleteResponse = await request(httpServer)
-      .delete(`/${GLOBAL_PREFIX}/posts/${postId}`)
+      .delete(`/posts/${postId}`)
       .auth('sa', '123');
 
     expect(deleteResponse.status).toBe(HttpStatus.NO_CONTENT);
 
     const getPostByIdResponse = await request(httpServer).get(
-      `/${GLOBAL_PREFIX}/posts/${postId}`,
+      `/posts/${postId}`,
     );
 
     expect(getPostByIdResponse.status).toBe(HttpStatus.NOT_FOUND);

@@ -11,7 +11,7 @@ window.onload = function() {
   "swaggerDoc": {
     "openapi": "3.0.0",
     "paths": {
-      "/api": {
+      "/": {
         "get": {
           "operationId": "AppController_getHello",
           "summary": "Home",
@@ -33,7 +33,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/testing/all-data": {
+      "/testing/all-data": {
         "delete": {
           "operationId": "TestingController_deleteAllData",
           "summary": "Delete all data",
@@ -48,7 +48,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/me": {
+      "/auth/me": {
         "get": {
           "operationId": "AuthController_getMe",
           "summary": "Get info about current user",
@@ -75,7 +75,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/login": {
+      "/auth/login": {
         "post": {
           "operationId": "AuthController_postLogin",
           "summary": "Post login",
@@ -117,7 +117,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/refresh-token": {
+      "/auth/refresh-token": {
         "post": {
           "operationId": "AuthController_postRefreshToken",
           "summary": "Post refresh token",
@@ -139,7 +139,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/registration": {
+      "/auth/registration": {
         "post": {
           "operationId": "AuthController_postRegistration",
           "summary": "Post registration",
@@ -164,7 +164,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/registration-email-resending": {
+      "/auth/registration-email-resending": {
         "post": {
           "operationId": "AuthController_postRegistrationEmailResending",
           "summary": "Post registration email resending",
@@ -189,7 +189,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/registration-confirmation": {
+      "/auth/registration-confirmation": {
         "post": {
           "operationId": "AuthController_postRegistrationConfirmation",
           "summary": "Post registration confirmation",
@@ -214,7 +214,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/password-recovery": {
+      "/auth/password-recovery": {
         "post": {
           "operationId": "AuthController_postPasswordRecovery",
           "summary": "Post password recovery",
@@ -239,7 +239,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/new-password": {
+      "/auth/new-password": {
         "post": {
           "operationId": "AuthController_postNewPassword",
           "summary": "Post new password",
@@ -264,7 +264,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/logout": {
+      "/auth/logout": {
         "post": {
           "operationId": "AuthController_postLogout",
           "summary": "Post logout",
@@ -279,7 +279,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/users": {
+      "/users": {
         "get": {
           "operationId": "UsersController_getUsers",
           "summary": "Get users",
@@ -383,7 +383,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/users/{id}": {
+      "/users/{id}": {
         "delete": {
           "operationId": "UsersController_deleteUser",
           "summary": "Delete user",
@@ -412,7 +412,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/blogs": {
+      "/blogs": {
         "get": {
           "operationId": "BlogsController_getBlogs",
           "summary": "Get blogs",
@@ -503,7 +503,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/blogs/{id}": {
+      "/blogs/{id}": {
         "get": {
           "operationId": "BlogsController_getBlog",
           "summary": "Get blog",
@@ -598,7 +598,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/blogs/{id}/posts": {
+      "/blogs/{id}/posts": {
         "get": {
           "operationId": "BlogsController_getPosts",
           "summary": "Get posts",
@@ -698,7 +698,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/posts": {
+      "/posts": {
         "get": {
           "operationId": "PostsController_getPosts",
           "summary": "Get posts",
@@ -781,7 +781,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/posts/{id}": {
+      "/posts/{id}": {
         "get": {
           "operationId": "PostsController_getPost",
           "summary": "Get post",
@@ -876,7 +876,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/posts/{id}/like-status": {
+      "/posts/{id}/like-status": {
         "put": {
           "operationId": "PostsController_putLikeStatus",
           "summary": "Put like status",
@@ -915,7 +915,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/posts/{id}/comments": {
+      "/posts/{id}/comments": {
         "get": {
           "operationId": "PostsController_getComments",
           "summary": "Get comments",
@@ -1015,7 +1015,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/comments/{id}": {
+      "/comments/{id}": {
         "get": {
           "operationId": "CommentsController_getComment",
           "summary": "Get comment",
@@ -1110,7 +1110,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/comments/{id}/like-status": {
+      "/comments/{id}/like-status": {
         "put": {
           "operationId": "CommentsController_putLikeStatus",
           "summary": "Put like status",
@@ -1149,7 +1149,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/security/devices": {
+      "/security/devices": {
         "get": {
           "operationId": "DevicesController_getSecurityDevices",
           "summary": "Get security devices",

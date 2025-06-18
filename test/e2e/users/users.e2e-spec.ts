@@ -5,7 +5,6 @@ import { TestingModuleBuilder } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UsersTestManager } from './users.test-manager';
 import { CoreConfig } from '../../../src/core/core.config';
-import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { MailNotifications } from '../../../src/features/base/adapters/mail-notifications';
 import {
   delay,
@@ -55,7 +54,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
     };
 
     const createResponse = await request(httpServer)
-      .post(`/${GLOBAL_PREFIX}/users`)
+      .post('/users')
       .auth('sa', '123')
       .send(body)
       .expect(HttpStatus.CREATED);
@@ -70,7 +69,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
     );
 
     const response = await request(httpServer)
-      .get(`/${GLOBAL_PREFIX}/users`)
+      .get('/users')
       .auth('sa', '123')
       .expect(HttpStatus.OK);
 
@@ -80,7 +79,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
   it('should get users with paging', async () => {
     const users = await usersTestManager.createTestUsers(12);
     const { body: responseBody } = await request(httpServer)
-      .get(`/${GLOBAL_PREFIX}/users?pageNumber=2&sortDirection=asc`)
+      .get('/users?pageNumber=2&sortDirection=asc')
       .auth('sa', '123')
       .expect(HttpStatus.OK);
 
@@ -94,7 +93,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
   it('should return users info while "me" request with correct accessTokens', async () => {
     const tokens = await usersTestManager.createAndLoginTestUsers(1);
     const response = await request(httpServer)
-      .get(`/${GLOBAL_PREFIX}/auth/me`)
+      .get('/auth/me')
       .auth(tokens[0].accessToken, { type: 'bearer' })
       .expect(HttpStatus.OK);
 
@@ -110,14 +109,14 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
 
     await delay(2000);
     await request(httpServer)
-      .get(`/${GLOBAL_PREFIX}/auth/me`)
+      .get('/auth/me')
       .auth(tokens[0].accessToken, { type: 'bearer' })
       .expect(HttpStatus.UNAUTHORIZED);
   });
 
   it(`should register user without really send email`, async () => {
     await request(httpServer)
-      .post(`/${GLOBAL_PREFIX}/auth/registration`)
+      .post('/auth/registration')
       .send({
         login: 'login123',
         password: '123123123',
@@ -137,7 +136,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
     );
 
     await request(httpServer)
-      .post(`/${GLOBAL_PREFIX}/auth/registration`)
+      .post('/auth/registration')
       .send({
         login: 'login123',
         password: '123123123',
