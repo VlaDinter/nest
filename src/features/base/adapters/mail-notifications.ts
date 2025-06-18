@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Logger } from '@src/features/base/adapters/logger';
+import { Logger } from './logger';
 
 export class IMailNotifications {
   async sendEmail(

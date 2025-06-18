@@ -1,9 +1,9 @@
 import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BlogDto } from '@modules/blogs/dto/blog.dto';
-import { BlogViewModel } from '@modules/blogs/models/output/blog-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { BlogDto } from '../dto/blog.dto';
+import { BlogViewModel } from '../models/output/blog-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 @Schema({ timestamps: true })
 export class Blog {

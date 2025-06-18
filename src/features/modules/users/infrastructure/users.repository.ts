@@ -1,9 +1,9 @@
-import { UserDto } from '@modules/users/dto/user.dto';
-import { DeviceDto } from '@modules/users/dto/device.dto';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { DeviceViewModel } from '@modules/users/models/output/device-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { UserDto } from '../dto/user.dto';
+import { DeviceDto } from '../dto/device.dto';
+import { UserViewModel } from '../models/output/user-view.model';
+import { DeviceViewModel } from '../models/output/device-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 export abstract class UsersRepository {
   abstract findUsers(

@@ -1,7 +1,7 @@
 import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from '@src/app.service';
-import { Api } from '@src/features/common/decorators/validation/api.decorator';
+import { AppService } from './app.service';
+import { Api } from './features/common/decorators/validation/api.decorator';
 
 @ApiTags('App')
 @Controller()

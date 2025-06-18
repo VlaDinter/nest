@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { UsersService } from '@modules/users/application/users.service';
-import { LoginSuccessViewModel } from '@modules/auth/models/output/login-success-view.model';
+import { UsersService } from '../../modules/users/application/users.service';
+import { LoginSuccessViewModel } from '../../modules/auth/models/output/login-success-view.model';
 
 @Injectable()
 export class DeviceInterceptor implements NestInterceptor {

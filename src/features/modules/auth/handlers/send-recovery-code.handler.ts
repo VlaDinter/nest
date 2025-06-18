@@ -1,7 +1,7 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger } from '@src/features/base/adapters/logger';
-import { MailNotifications } from '@src/features/base/adapters/mail-notifications';
-import { SendRecoveryCodeEvent } from '@modules/auth/handlers/events/send-recovery-code.event';
+import { Logger } from '../../../base/adapters/logger';
+import { SendRecoveryCodeEvent } from './events/send-recovery-code.event';
+import { MailNotifications } from '../../../base/adapters/mail-notifications';
 
 @EventsHandler(SendRecoveryCodeEvent)
 export class SendRecoveryCodeHandler

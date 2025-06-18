@@ -1,15 +1,15 @@
-import { Request } from 'express';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { CoreConfig } from '@core/core.config';
-import { UsersService } from '@modules/users/application/users.service';
-import { IPayload } from '@src/features/base/interfaces/payload.interface';
 import {
   Injectable,
   NotFoundException,
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Request } from 'express';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { CoreConfig } from '../../../core/core.config';
+import { IPayload } from '../../base/interfaces/payload.interface';
+import { UsersService } from '../../modules/users/application/users.service';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {

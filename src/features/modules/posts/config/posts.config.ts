@@ -1,8 +1,8 @@
 import { IsNumber } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BaseConfig } from '@src/config/base.config';
-import { PostsConfigType } from '@modules/posts/configuration/posts.configuration';
+import { BaseConfig } from '../../../../config/base.config';
+import { PostsConfigType } from '../configuration/posts.configuration';
 
 @Injectable()
 export class PostsConfig extends BaseConfig {

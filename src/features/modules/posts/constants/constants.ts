@@ -1,4 +1,4 @@
-import { getPostsConfiguration } from '@modules/posts/configuration/posts.configuration';
+import { getPostsConfiguration } from '../configuration/posts.configuration';
 
 export const titleConstraints = {
   maxLength: getPostsConfiguration().titleMaxLength,

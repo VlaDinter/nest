@@ -1,4 +1,4 @@
-import { ISortDirections } from '@src/features/base/interfaces/sort-directions.interface';
+import { ISortDirections } from './sort-directions.interface';
 
 export interface IPaginationParams {
   sortBy: string;

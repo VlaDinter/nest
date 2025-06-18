@@ -1,12 +1,12 @@
 import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CommentDto } from '@modules/comments/dto/comment.dto';
-import { commentConstraints } from '@modules/comments/constants/constants';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { ILikeStatus } from '@src/features/base/interfaces/like-status.interface';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { CommentDto } from '../dto/comment.dto';
+import { commentConstraints } from '../constants/constants';
+import { CommentViewModel } from '../models/output/comment-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { ILikeStatus } from '../../../base/interfaces/like-status.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
+import { LikeDetailsViewModel } from '../../posts/models/output/like-details-view.model';
 
 @Schema()
 export class CommentatorInfo {

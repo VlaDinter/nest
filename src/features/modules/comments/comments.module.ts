@@ -1,16 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from '@modules/users/users.module';
-import { CommentsController } from '@modules/comments/api/comments.controller';
-import { CommentsService } from '@modules/comments/application/comments.service';
-import { getCommentsConfiguration } from '@modules/comments/configuration/comments.configuration';
-import { EditCommentWithUserLoginUseCase } from '@modules/comments/usecases/edit-comment-with-user-login.usecase';
-import { CommentsMongooseRepository } from '@modules/comments/infrastructure/mongo-repository/comments.mongoose.repository';
-import {
-  Comment,
-  CommentSchema,
-} from '@modules/comments/entities/comment.schema';
+import { UsersModule } from '../users/users.module';
+import { CommentsController } from './api/comments.controller';
+import { CommentsService } from './application/comments.service';
+import { Comment, CommentSchema } from './entities/comment.schema';
+import { getCommentsConfiguration } from './configuration/comments.configuration';
+import { EditCommentWithUserLoginUseCase } from './usecases/edit-comment-with-user-login.usecase';
+import { CommentsMongooseRepository } from './infrastructure/mongo-repository/comments.mongoose.repository';
 
 const providers = [
   {

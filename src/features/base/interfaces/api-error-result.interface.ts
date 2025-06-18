@@ -1,4 +1,4 @@
-import { IFieldError } from '@src/features/base/interfaces/field-error.interface';
+import { IFieldError } from './field-error.interface';
 
 export interface IAPIErrorResult {
   errorsMessages?: IFieldError[];

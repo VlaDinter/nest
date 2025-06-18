@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { CoreConfig } from '@core/core.config';
-import { appSettings } from '@src/settings/app.settings';
-import { initAppModule } from '@src/init/app-module.init';
-import { Logger } from '@src/features/base/adapters/logger';
+import { CoreConfig } from './core/core.config';
+import { appSettings } from './settings/app.settings';
+import { initAppModule } from './init/app-module.init';
+import { Logger } from './features/base/adapters/logger';
 
 async function bootstrap() {
   const logger = new Logger();

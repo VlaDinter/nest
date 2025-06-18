@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UserDto } from '@modules/users/dto/user.dto';
-import { DeviceDto } from '@modules/users/dto/device.dto';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { UsersRepository } from '@modules/users/infrastructure/users.repository';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { DeviceViewModel } from '@modules/users/models/output/device-view.model';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { UserDto } from '../dto/user.dto';
+import { DeviceDto } from '../dto/device.dto';
+import { UserViewModel } from '../models/output/user-view.model';
+import { DeviceViewModel } from '../models/output/device-view.model';
+import { UsersRepository } from '../infrastructure/users.repository';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class UsersService {

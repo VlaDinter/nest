@@ -1,7 +1,7 @@
 import { QueryBus } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { ValidateUserByLoginOrEmailPayload } from '@modules/auth/queries/payloads/validate-user-by-login-or-email.payload';
+import { UserViewModel } from '../../users/models/output/user-view.model';
+import { ValidateUserByLoginOrEmailPayload } from '../queries/payloads/validate-user-by-login-or-email.payload';
 
 @Injectable()
 export class AuthService {

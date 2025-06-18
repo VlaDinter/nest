@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { PostsService } from '@modules/posts/application/posts.service';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { EditPostWithUserLoginCommand } from '@modules/posts/usecases/commands/edit-post-with-user-login.command';
+import { PostsService } from '../application/posts.service';
+import { PostViewModel } from '../models/output/post-view.model';
+import { UsersService } from '../../users/application/users.service';
+import { EditPostWithUserLoginCommand } from './commands/edit-post-with-user-login.command';
 
 @CommandHandler(EditPostWithUserLoginCommand)
 export class EditPostWithUserLoginUseCase

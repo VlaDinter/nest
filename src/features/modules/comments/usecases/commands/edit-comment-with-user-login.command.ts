@@ -1,4 +1,4 @@
-import { LikeDto } from '@modules/comments/dto/like.dto';
+import { LikeDto } from '../../dto/like.dto';
 
 export class EditCommentWithUserLoginCommand {
   constructor(

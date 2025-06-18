@@ -15,15 +15,15 @@ import {
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
-import { Api } from '@src/features/common/decorators/validation/api.decorator';
-import { JwtAuthGuard } from '@src/features/common/guards/bearer/jwt-auth.guard';
-import { LikeInputModel } from '@modules/comments/models/input/like-input.model';
-import { CommentsService } from '@modules/comments/application/comments.service';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { CommentInputModel } from '@modules/comments/models/input/comment-input.model';
-import { CurrentUserId } from '@src/features/common/decorators/current-user-id.decorator';
-import { ObjectIdValidationPipe } from '@src/features/common/pipes/object-id-validation.pipe';
-import { EditCommentWithUserLoginCommand } from '@modules/comments/usecases/commands/edit-comment-with-user-login.command';
+import { LikeInputModel } from '../models/input/like-input.model';
+import { CommentsService } from '../application/comments.service';
+import { CommentViewModel } from '../models/output/comment-view.model';
+import { CommentInputModel } from '../models/input/comment-input.model';
+import { Api } from '../../../common/decorators/validation/api.decorator';
+import { JwtAuthGuard } from '../../../common/guards/bearer/jwt-auth.guard';
+import { CurrentUserId } from '../../../common/decorators/current-user-id.decorator';
+import { ObjectIdValidationPipe } from '../../../common/pipes/object-id-validation.pipe';
+import { EditCommentWithUserLoginCommand } from '../usecases/commands/edit-comment-with-user-login.command';
 
 @ApiTags('Comments')
 @Controller('comments')

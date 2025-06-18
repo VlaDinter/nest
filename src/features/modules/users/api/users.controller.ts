@@ -14,19 +14,19 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-import { getConfiguration } from '@src/configuration/configuration';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { UserInputModel } from '@modules/users/models/input/user-input.model';
-import { Api } from '@src/features/common/decorators/validation/api.decorator';
-import { ParseStringPipe } from '@src/features/common/pipes/parse-string.pipe';
-import { ParseNumberPipe } from '@src/features/common/pipes/parse-number.pipe';
-import { ParseValuesPipe } from '@src/features/common/pipes/parse-values.pipe';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { BasicAuthGuard } from '@src/features/common/guards/basic/basic-auth.guard';
-import { ISortDirections } from '@src/features/base/interfaces/sort-directions.interface';
-import { ObjectIdValidationPipe } from '@src/features/common/pipes/object-id-validation.pipe';
-import { AddUserWithValidateOrRejectModelCommand } from '@modules/users/usecases/commands/add-user-with-validate-or-reject-model.command';
+import { UsersService } from '../application/users.service';
+import { UserViewModel } from '../models/output/user-view.model';
+import { UserInputModel } from '../models/input/user-input.model';
+import { Api } from '../../../common/decorators/validation/api.decorator';
+import { ParseStringPipe } from '../../../common/pipes/parse-string.pipe';
+import { ParseNumberPipe } from '../../../common/pipes/parse-number.pipe';
+import { ParseValuesPipe } from '../../../common/pipes/parse-values.pipe';
+import { getConfiguration } from '../../../../configuration/configuration';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { BasicAuthGuard } from '../../../common/guards/basic/basic-auth.guard';
+import { ISortDirections } from '../../../base/interfaces/sort-directions.interface';
+import { ObjectIdValidationPipe } from '../../../common/pipes/object-id-validation.pipe';
+import { AddUserWithValidateOrRejectModelCommand } from '../usecases/commands/add-user-with-validate-or-reject-model.command';
 
 @ApiTags('Users')
 @UseGuards(BasicAuthGuard)

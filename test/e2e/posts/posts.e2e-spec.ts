@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { PostsTestManager } from './posts.test-manager';
 import { BlogsTestManager } from '../blogs/blogs.test-manager';
-import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('postsTest'))('PostsController (e2e)', () => {

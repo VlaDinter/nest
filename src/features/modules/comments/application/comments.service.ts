@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LikeDto } from '@modules/comments/dto/like.dto';
-import { CommentDto } from '@modules/comments/dto/comment.dto';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { CommentsRepository } from '@modules/comments/infrastructure/comments.repository';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { LikeDto } from '../dto/like.dto';
+import { CommentDto } from '../dto/comment.dto';
+import { CommentViewModel } from '../models/output/comment-view.model';
+import { CommentsRepository } from '../infrastructure/comments.repository';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class CommentsService {

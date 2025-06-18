@@ -1,11 +1,11 @@
 import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PostDto } from '@modules/posts/dto/post.dto';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { ILikeStatus } from '@src/features/base/interfaces/like-status.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
+import { PostDto } from '../dto/post.dto';
+import { PostViewModel } from '../models/output/post-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { ILikeStatus } from '../../../base/interfaces/like-status.interface';
+import { LikeDetailsViewModel } from '../models/output/like-details-view.model';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 @Schema()
 export class LikeDetails {

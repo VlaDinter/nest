@@ -2,20 +2,19 @@ import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserDto } from '@modules/users/dto/user.dto';
-import { Add } from '@src/features/base/utils/date/add.utils';
-import { loginConstraints } from '@modules/users/constants/constants';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
-import { EmailConfirmationViewModel } from '@modules/users/models/output/email-confirmation-view.model';
+import { UserDto } from '../dto/user.dto';
+import { Add } from '../../../base/utils/date/add.utils';
+import { loginConstraints } from '../constants/constants';
+import { UserViewModel } from '../models/output/user-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
+import { EmailConfirmationViewModel } from '../models/output/email-confirmation-view.model';
 
 @Schema({
   _id: false,
 })
 export class Device {
   @Prop({
-    unique: true,
     type: String,
     default(): Types.ObjectId {
       return new Types.ObjectId();

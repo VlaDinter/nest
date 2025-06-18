@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LoginUserCommand } from '@modules/auth/usecases/commands/login-user.command';
-import { LoginSuccessViewModel } from '@modules/auth/models/output/login-success-view.model';
+import { LoginUserCommand } from './commands/login-user.command';
+import { LoginSuccessViewModel } from '../models/output/login-success-view.model';
 
 @CommandHandler(LoginUserCommand)
 export class LoginUserUseCase

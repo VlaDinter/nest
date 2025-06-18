@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BlogDto } from '@modules/blogs/dto/blog.dto';
-import { BlogViewModel } from '@modules/blogs/models/output/blog-view.model';
-import { BlogsRepository } from '@modules/blogs/infrastructure/blogs.repository';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { BlogDto } from '../dto/blog.dto';
+import { BlogViewModel } from '../models/output/blog-view.model';
+import { BlogsRepository } from '../infrastructure/blogs.repository';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class BlogsService {

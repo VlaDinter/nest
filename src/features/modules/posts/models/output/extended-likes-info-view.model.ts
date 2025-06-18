@@ -1,4 +1,4 @@
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
+import { LikeDetailsViewModel } from './like-details-view.model';
 
 export class ExtendedLikesInfoViewModel {
   myStatus: string;

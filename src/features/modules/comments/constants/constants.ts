@@ -1,4 +1,4 @@
-import { getCommentsConfiguration } from '@modules/comments/configuration/comments.configuration';
+import { getCommentsConfiguration } from '../configuration/comments.configuration';
 
 export const commentConstraints = {
   minLength: getCommentsConfiguration().commentMinLength,

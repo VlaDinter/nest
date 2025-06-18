@@ -3,8 +3,8 @@ import {
   ValidationError,
   INestApplication,
 } from '@nestjs/common';
-import { IFieldError } from '@src/features/base/interfaces/field-error.interface';
-import { BadFieldsException } from '@src/features/common/exceptions/bad-fields.exception';
+import { IFieldError } from '../features/base/interfaces/field-error.interface';
+import { BadFieldsException } from '../features/common/exceptions/bad-fields.exception';
 
 const errorFormatter = (errors: ValidationError[]): IFieldError[] => {
   const errorsForResp: IFieldError[] = [];

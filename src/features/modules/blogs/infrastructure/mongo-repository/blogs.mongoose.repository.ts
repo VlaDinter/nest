@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogDto } from '@modules/blogs/dto/blog.dto';
-import { Blog, BlogModelType } from '@modules/blogs/entities/blog.schema';
-import { BlogViewModel } from '@modules/blogs/models/output/blog-view.model';
-import { BlogsRepository } from '@modules/blogs/infrastructure/blogs.repository';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { BlogDto } from '../../dto/blog.dto';
+import { BlogsRepository } from '../blogs.repository';
+import { Blog, BlogModelType } from '../../entities/blog.schema';
+import { BlogViewModel } from '../../models/output/blog-view.model';
+import { IPagination } from '../../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class BlogsMongooseRepository extends BlogsRepository {

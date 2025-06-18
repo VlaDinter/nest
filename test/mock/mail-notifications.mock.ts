@@ -1,4 +1,4 @@
-import { IMailNotifications } from '@src/features/base/adapters/mail-notifications';
+import { IMailNotifications } from '../../src/features/base/adapters/mail-notifications';
 
 export class MailNotificationsMock implements IMailNotifications {
   async sendConfirmation(

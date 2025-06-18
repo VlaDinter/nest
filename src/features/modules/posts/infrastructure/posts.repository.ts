@@ -1,8 +1,8 @@
-import { PostDto } from '@modules/posts/dto/post.dto';
-import { LikeDto } from '@modules/comments/dto/like.dto';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { PostDto } from '../dto/post.dto';
+import { LikeDto } from '../../comments/dto/like.dto';
+import { PostViewModel } from '../models/output/post-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 export abstract class PostsRepository {
   abstract findPosts(

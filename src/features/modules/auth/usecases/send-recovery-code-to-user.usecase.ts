@@ -1,8 +1,8 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { SendRecoveryCodeEvent } from '@modules/auth/handlers/events/send-recovery-code.event';
-import { SendRecoveryCodeToUserCommand } from '@modules/auth/usecases/commands/send-recovery-code-to-user.command';
+import { UsersService } from '../../users/application/users.service';
+import { UserViewModel } from '../../users/models/output/user-view.model';
+import { SendRecoveryCodeEvent } from '../handlers/events/send-recovery-code.event';
+import { SendRecoveryCodeToUserCommand } from './commands/send-recovery-code-to-user.command';
 
 @CommandHandler(SendRecoveryCodeToUserCommand)
 export class SendRecoveryCodeToUserUseCase

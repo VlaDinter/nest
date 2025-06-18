@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { PostsService } from '@modules/posts/application/posts.service';
-import { CommentsService } from '@modules/comments/application/comments.service';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { AddCommentWithPostIdCommand } from '@modules/posts/usecases/commands/add-comment-with-post-id.command';
+import { PostsService } from '../application/posts.service';
+import { UsersService } from '../../users/application/users.service';
+import { CommentsService } from '../../comments/application/comments.service';
+import { CommentViewModel } from '../../comments/models/output/comment-view.model';
+import { AddCommentWithPostIdCommand } from './commands/add-comment-with-post-id.command';
 
 @CommandHandler(AddCommentWithPostIdCommand)
 export class AddCommentWithPostIdUseCase

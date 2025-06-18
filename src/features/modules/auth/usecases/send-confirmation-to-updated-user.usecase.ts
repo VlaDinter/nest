@@ -1,8 +1,8 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { SendConfirmationEvent } from '@modules/auth/handlers/events/send-confirmation.event';
-import { SendConfirmationToUpdatedUserCommand } from '@modules/auth/usecases/commands/send-confirmation-to-updated-user.command';
+import { UsersService } from '../../users/application/users.service';
+import { UserViewModel } from '../../users/models/output/user-view.model';
+import { SendConfirmationEvent } from '../handlers/events/send-confirmation.event';
+import { SendConfirmationToUpdatedUserCommand } from './commands/send-confirmation-to-updated-user.command';
 
 @CommandHandler(SendConfirmationToUpdatedUserCommand)
 export class SendConfirmationToUpdatedUserUseCase

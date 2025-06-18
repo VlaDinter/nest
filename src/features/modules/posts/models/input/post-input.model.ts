@@ -1,11 +1,11 @@
 import { IsMongoId, MaxLength } from 'class-validator';
-import { IsRequired } from '@src/features/common/decorators/validation/is-required.decorator';
-import { BlogIsExit } from '@src/features/common/decorators/validation/blog-is-exist.decorator';
+import { IsRequired } from '../../../../common/decorators/validation/is-required.decorator';
+import { BlogIsExit } from '../../../../common/decorators/validation/blog-is-exist.decorator';
 import {
   titleConstraints,
   contentConstraints,
   shortDescriptionConstraints,
-} from '@modules/posts/constants/constants';
+} from '../../constants/constants';
 
 export class PostInputModel {
   @MaxLength(titleConstraints.maxLength)

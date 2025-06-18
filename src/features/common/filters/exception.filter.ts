@@ -6,10 +6,10 @@ import {
   ExceptionFilter,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { IFieldError } from '@src/features/base/interfaces/field-error.interface';
-import { IEnvironments } from '@src/features/base/interfaces/environments.interface';
-import { BadFieldsException } from '@src/features/common/exceptions/bad-fields.exception';
-import { IAPIErrorResult } from '@src/features/base/interfaces/api-error-result.interface';
+import { BadFieldsException } from '../exceptions/bad-fields.exception';
+import { IFieldError } from '../../base/interfaces/field-error.interface';
+import { IEnvironments } from '../../base/interfaces/environments.interface';
+import { IAPIErrorResult } from '../../base/interfaces/api-error-result.interface';
 
 @Catch(Error)
 export class ErrorExceptionFilter implements ExceptionFilter {

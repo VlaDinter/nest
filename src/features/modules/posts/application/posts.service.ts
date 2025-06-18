@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PostDto } from '@modules/posts/dto/post.dto';
-import { LikeDto } from '@modules/comments/dto/like.dto';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { PostsRepository } from '@modules/posts/infrastructure/posts.repository';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { PostDto } from '../dto/post.dto';
+import { LikeDto } from '../../comments/dto/like.dto';
+import { PostViewModel } from '../models/output/post-view.model';
+import { PostsRepository } from '../infrastructure/posts.repository';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class PostsService {

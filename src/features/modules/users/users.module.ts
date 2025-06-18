@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersConfig } from '@modules/users/config/users.config';
-import { UsersController } from '@modules/users/api/users.controller';
-import { User, UserSchema } from '@modules/users/entities/user.schema';
-import { UsersService } from '@modules/users/application/users.service';
-import { getUsersConfiguration } from '@modules/users/configuration/users.configuration';
-import { UsersMongooseRepository } from '@modules/users/infrastructure/mongo-repository/users.mongoose.repository';
-import { AddUserWithValidateOrRejectModelUseCase } from '@modules/users/usecases/add-user-with-validate-or-reject-model.usecase';
+import { UsersConfig } from './config/users.config';
+import { UsersController } from './api/users.controller';
+import { User, UserSchema } from './entities/user.schema';
+import { UsersService } from './application/users.service';
+import { getUsersConfiguration } from './configuration/users.configuration';
+import { UsersMongooseRepository } from './infrastructure/mongo-repository/users.mongoose.repository';
+import { AddUserWithValidateOrRejectModelUseCase } from './usecases/add-user-with-validate-or-reject-model.usecase';
 
 const providers = [
   UsersConfig,

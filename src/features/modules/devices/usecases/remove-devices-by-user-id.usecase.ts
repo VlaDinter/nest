@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { DeviceViewModel } from '@modules/users/models/output/device-view.model';
-import { RemoveDevicesByUserIdCommand } from '@modules/devices/usecases/commands/remove-devices-by-user-id.command';
+import { UsersService } from '../../users/application/users.service';
+import { DeviceViewModel } from '../../users/models/output/device-view.model';
+import { RemoveDevicesByUserIdCommand } from './commands/remove-devices-by-user-id.command';
 
 @CommandHandler(RemoveDevicesByUserIdCommand)
 export class RemoveDevicesByUserIdUseCase

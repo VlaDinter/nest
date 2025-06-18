@@ -1,4 +1,4 @@
-import { getBlogsConfiguration } from '@modules/blogs/configuration/blogs.configuration';
+import { getBlogsConfiguration } from '../configuration/blogs.configuration';
 
 export const nameConstraints = {
   maxLength: getBlogsConfiguration().nameMaxLength,

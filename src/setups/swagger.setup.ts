@@ -2,8 +2,8 @@ import { createWriteStream } from 'fs';
 import { get, IncomingMessage } from 'http';
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CoreConfig } from '@core/core.config';
-import { Logger } from '@src/features/base/adapters/logger';
+import { CoreConfig } from '../core/core.config';
+import { Logger } from '../features/base/adapters/logger';
 
 export const swaggerSetup = (app: INestApplication): void => {
   const logger = new Logger();

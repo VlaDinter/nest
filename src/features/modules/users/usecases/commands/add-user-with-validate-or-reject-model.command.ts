@@ -1,4 +1,4 @@
-import { UserDto } from '@modules/users/dto/user.dto';
+import { UserDto } from '../../dto/user.dto';
 
 export class AddUserWithValidateOrRejectModelCommand {
   constructor(

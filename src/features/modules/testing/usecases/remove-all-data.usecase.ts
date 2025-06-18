@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { BlogsService } from '@modules/blogs/application/blogs.service';
-import { PostsService } from '@modules/posts/application/posts.service';
-import { CommentsService } from '@modules/comments/application/comments.service';
-import { RemoveAllDataCommand } from '@modules/testing/usecases/commands/remove-all-data.command';
+import { UsersService } from '../../users/application/users.service';
+import { BlogsService } from '../../blogs/application/blogs.service';
+import { PostsService } from '../../posts/application/posts.service';
+import { RemoveAllDataCommand } from './commands/remove-all-data.command';
+import { CommentsService } from '../../comments/application/comments.service';
 
 @CommandHandler(RemoveAllDataCommand)
 export class RemoveAllDataUseCase

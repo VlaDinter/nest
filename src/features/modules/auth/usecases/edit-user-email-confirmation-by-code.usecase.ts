@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { EditUserEmailConfirmationByCodeCommand } from '@modules/auth/usecases/commands/edit-user-email-confirmation-by-code.command';
+import { UsersService } from '../../users/application/users.service';
+import { UserViewModel } from '../../users/models/output/user-view.model';
+import { EditUserEmailConfirmationByCodeCommand } from './commands/edit-user-email-confirmation-by-code.command';
 
 @CommandHandler(EditUserEmailConfirmationByCodeCommand)
 export class EditUserEmailConfirmationByCodeUseCase

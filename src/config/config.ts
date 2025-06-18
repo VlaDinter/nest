@@ -1,8 +1,8 @@
 import Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
-import { configUtility } from '@src/config/config.utility';
-import { getConfiguration } from '@src/configuration/configuration';
-import { ISortDirections } from '@src/features/base/interfaces/sort-directions.interface';
+import { configUtility } from './config.utility';
+import { getConfiguration } from '../configuration/configuration';
+import { ISortDirections } from '../features/base/interfaces/sort-directions.interface';
 
 export const configModule = ConfigModule.forRoot({
   isGlobal: true,

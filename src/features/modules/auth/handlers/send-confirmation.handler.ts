@@ -1,7 +1,7 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger } from '@src/features/base/adapters/logger';
-import { MailNotifications } from '@src/features/base/adapters/mail-notifications';
-import { SendConfirmationEvent } from '@modules/auth/handlers/events/send-confirmation.event';
+import { Logger } from '../../../base/adapters/logger';
+import { SendConfirmationEvent } from './events/send-confirmation.event';
+import { MailNotifications } from '../../../base/adapters/mail-notifications';
 
 @EventsHandler(SendConfirmationEvent)
 export class SendConfirmationHandler

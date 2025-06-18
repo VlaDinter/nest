@@ -1,6 +1,6 @@
-import { LikesInfoViewModel } from '@modules/comments/models/output/likes-info-view.model';
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
-import { CommentatorInfoViewModel } from '@modules/comments/models/output/commentator-info-view.model';
+import { LikesInfoViewModel } from './likes-info-view.model';
+import { CommentatorInfoViewModel } from './commentator-info-view.model';
+import { LikeDetailsViewModel } from '../../../posts/models/output/like-details-view.model';
 
 export class CommentViewModel {
   id: string;

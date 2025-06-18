@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PostDto } from '@modules/posts/dto/post.dto';
-import { LikeDto } from '@modules/comments/dto/like.dto';
-import { PostsConfig } from '@modules/posts/config/posts.config';
-import { Post, PostModelType } from '@modules/posts/entities/post.schema';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { PostsRepository } from '@modules/posts/infrastructure/posts.repository';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { ILikeStatus } from '@src/features/base/interfaces/like-status.interface';
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { PostDto } from '../../dto/post.dto';
+import { PostsRepository } from '../posts.repository';
+import { PostsConfig } from '../../config/posts.config';
+import { LikeDto } from '../../../comments/dto/like.dto';
+import { Post, PostModelType } from '../../entities/post.schema';
+import { PostViewModel } from '../../models/output/post-view.model';
+import { IPagination } from '../../../../base/interfaces/pagination.interface';
+import { ILikeStatus } from '../../../../base/interfaces/like-status.interface';
+import { LikeDetailsViewModel } from '../../models/output/like-details-view.model';
+import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class PostsMongooseRepository extends PostsRepository {

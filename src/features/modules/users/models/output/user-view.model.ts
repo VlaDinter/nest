@@ -1,4 +1,4 @@
-import { EmailConfirmationViewModel } from '@modules/users/models/output/email-confirmation-view.model';
+import { EmailConfirmationViewModel } from './email-confirmation-view.model';
 
 export class UserViewModel {
   id: string;

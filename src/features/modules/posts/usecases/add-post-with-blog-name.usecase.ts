@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BlogsService } from '@modules/blogs/application/blogs.service';
-import { PostsService } from '@modules/posts/application/posts.service';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { AddPostWithBlogNameCommand } from '@modules/posts/usecases/commands/add-post-with-blog-name.command';
+import { PostsService } from '../application/posts.service';
+import { PostViewModel } from '../models/output/post-view.model';
+import { BlogsService } from '../../blogs/application/blogs.service';
+import { AddPostWithBlogNameCommand } from './commands/add-post-with-blog-name.command';
 
 @CommandHandler(AddPostWithBlogNameCommand)
 export class AddPostWithBlogNameUseCase

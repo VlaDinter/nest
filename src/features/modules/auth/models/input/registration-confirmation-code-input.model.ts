@@ -1,4 +1,4 @@
-import { IsRequired } from '@src/features/common/decorators/validation/is-required.decorator';
+import { IsRequired } from '../../../../common/decorators/validation/is-required.decorator';
 
 export class RegistrationConfirmationCodeInputModel {
   @IsRequired()

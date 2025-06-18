@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
-import { Api } from '@src/features/common/decorators/validation/api.decorator';
-import { RemoveAllDataCommand } from '@modules/testing/usecases/commands/remove-all-data.command';
+import { Api } from '../../../common/decorators/validation/api.decorator';
+import { RemoveAllDataCommand } from '../usecases/commands/remove-all-data.command';
 
 @ApiTags('Testing')
 @Controller({ path: 'testing', scope: Scope.REQUEST })

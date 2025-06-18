@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { IFieldError } from '@src/features/base/interfaces/field-error.interface';
-import { BadFieldsException } from '@src/features/common/exceptions/bad-fields.exception';
+import { IFieldError } from '../../base/interfaces/field-error.interface';
+import { BadFieldsException } from '../exceptions/bad-fields.exception';
 
 @Injectable()
 export class LoginMiddleware implements NestMiddleware {

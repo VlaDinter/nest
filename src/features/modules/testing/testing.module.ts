@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PostsModule } from '@modules/posts/posts.module';
-import { BlogsModule } from '@modules/blogs/blogs.module';
-import { UsersModule } from '@modules/users/users.module';
-import { CommentsModule } from '@modules/comments/comments.module';
-import { TestingController } from '@modules/testing/api/testing.controller';
-import { RemoveAllDataUseCase } from '@modules/testing/usecases/remove-all-data.usecase';
+import { UsersModule } from '../users/users.module';
+import { BlogsModule } from '../blogs/blogs.module';
+import { PostsModule } from '../posts/posts.module';
+import { CommentsModule } from '../comments/comments.module';
+import { TestingController } from './api/testing.controller';
+import { RemoveAllDataUseCase } from './usecases/remove-all-data.usecase';
 
 const useCases = [RemoveAllDataUseCase];
 

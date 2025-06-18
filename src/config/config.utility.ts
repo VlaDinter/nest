@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { IEnvironments } from '@src/features/base/interfaces/environments.interface';
+import { IEnvironments } from '../features/base/interfaces/environments.interface';
 
 export const configUtility = {
   detectENVFile: (): string[] => {

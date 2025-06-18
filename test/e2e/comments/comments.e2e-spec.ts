@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
-import { PostsController } from '@src/features/modules/posts/api/posts.controller';
+import { PostsController } from '../../../src/features/modules/posts/api/posts.controller';
 
 skipDescribe(skipTests.for('commentsTest'))('CommentsController', () => {
   let app: INestApplication;

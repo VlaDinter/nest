@@ -1,24 +1,24 @@
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { DynamicModule, Module } from '@nestjs/common';
-import { AppService } from '@src/app.service';
-import { CoreModule } from '@core/core.module';
-import { CoreConfig } from '@core/core.config';
-import { configModule } from '@src/config/config';
-import { AppController } from '@src/app.controller';
-import { AuthModule } from '@modules/auth/auth.module';
-import { PostsModule } from '@modules/posts/posts.module';
-import { BlogsModule } from '@modules/blogs/blogs.module';
-import { UsersModule } from '@modules/users/users.module';
-import { DevicesModule } from '@modules/devices/devices.module';
-import { TestingModule } from '@modules/testing/testing.module';
-import { CommentsModule } from '@modules/comments/comments.module';
-import { AuthGuard } from '@src/features/common/guards/auth.guard';
-import { JwtStrategy } from '@src/features/common/strategies/jwt.strategy';
-import { BasicStrategy } from '@src/features/common/strategies/basic.strategy';
-import { LocalStrategy } from '@src/features/common/strategies/local.strategy';
-import { RefreshStrategy } from '@src/features/common/strategies/refresh.strategy';
-import { BadFieldsExceptionFilter } from '@src/features/common/filters/exception.filter';
-import { BlogIsExistConstraint } from '@src/features/common/decorators/validation/blog-is-exist.decorator';
+import { AppService } from './app.service';
+import { configModule } from './config/config';
+import { CoreModule } from './core/core.module';
+import { CoreConfig } from './core/core.config';
+import { AppController } from './app.controller';
+import { AuthGuard } from './features/common/guards/auth.guard';
+import { AuthModule } from './features/modules/auth/auth.module';
+import { UsersModule } from './features/modules/users/users.module';
+import { BlogsModule } from './features/modules/blogs/blogs.module';
+import { PostsModule } from './features/modules/posts/posts.module';
+import { JwtStrategy } from './features/common/strategies/jwt.strategy';
+import { DevicesModule } from './features/modules/devices/devices.module';
+import { TestingModule } from './features/modules/testing/testing.module';
+import { BasicStrategy } from './features/common/strategies/basic.strategy';
+import { LocalStrategy } from './features/common/strategies/local.strategy';
+import { CommentsModule } from './features/modules/comments/comments.module';
+import { RefreshStrategy } from './features/common/strategies/refresh.strategy';
+import { BadFieldsExceptionFilter } from './features/common/filters/exception.filter';
+import { BlogIsExistConstraint } from './features/common/decorators/validation/blog-is-exist.decorator';
 
 const providers = [
   JwtStrategy,

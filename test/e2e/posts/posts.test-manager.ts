@@ -1,7 +1,7 @@
 import request, { Response } from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { PostDto } from '@modules/posts/dto/post.dto';
-import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
+import { PostDto } from '../../../src/features/modules/posts/dto/post.dto';
 
 export class PostsTestManager {
   constructor(private readonly app: INestApplication) {}

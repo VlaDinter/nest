@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, Length, Matches } from 'class-validator';
-import { IsRequired } from '@src/features/common/decorators/validation/is-required.decorator';
+import { IsRequired } from '../../../../common/decorators/validation/is-required.decorator';
 import {
   loginConstraints,
   passwordConstraints,
-} from '@modules/users/constants/constants';
+} from '../../constants/constants';
 
 export class UserInputModel {
   @ApiProperty({

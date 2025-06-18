@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { EditUserPasswordByCodeCommand } from '@modules/auth/usecases/commands/edit-user-password-by-code.command';
+import { UsersService } from '../../users/application/users.service';
+import { UserViewModel } from '../../users/models/output/user-view.model';
+import { EditUserPasswordByCodeCommand } from './commands/edit-user-password-by-code.command';
 
 @CommandHandler(EditUserPasswordByCodeCommand)
 export class EditUserPasswordByCodeUseCase

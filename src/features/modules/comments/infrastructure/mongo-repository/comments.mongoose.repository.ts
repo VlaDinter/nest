@@ -1,17 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LikeDto } from '@modules/comments/dto/like.dto';
-import { CommentDto } from '@modules/comments/dto/comment.dto';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { ILikeStatus } from '@src/features/base/interfaces/like-status.interface';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { CommentsRepository } from '@modules/comments/infrastructure/comments.repository';
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
-import {
-  Comment,
-  CommentModelType,
-} from '@modules/comments/entities/comment.schema';
+import { LikeDto } from '../../dto/like.dto';
+import { CommentDto } from '../../dto/comment.dto';
+import { CommentsRepository } from '../comments.repository';
+import { CommentViewModel } from '../../models/output/comment-view.model';
+import { Comment, CommentModelType } from '../../entities/comment.schema';
+import { IPagination } from '../../../../base/interfaces/pagination.interface';
+import { ILikeStatus } from '../../../../base/interfaces/like-status.interface';
+import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
+import { LikeDetailsViewModel } from '../../../posts/models/output/like-details-view.model';
 
 @Injectable()
 export class CommentsMongooseRepository extends CommentsRepository {

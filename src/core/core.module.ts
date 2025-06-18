@@ -1,13 +1,13 @@
 import { join } from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CoreConfig } from '@core/core.config';
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { CoreConfig } from './core.config';
 
 @Global()
 @Module({

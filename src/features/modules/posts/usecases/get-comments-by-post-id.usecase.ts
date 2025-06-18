@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { PostsService } from '@modules/posts/application/posts.service';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { CommentsService } from '@modules/comments/application/comments.service';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { GetCommentsByPostIdCommand } from '@modules/posts/usecases/commands/get-comments-by-post-id.command';
+import { PostsService } from '../application/posts.service';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { CommentsService } from '../../comments/application/comments.service';
+import { CommentViewModel } from '../../comments/models/output/comment-view.model';
+import { GetCommentsByPostIdCommand } from './commands/get-comments-by-post-id.command';
 
 @CommandHandler(GetCommentsByPostIdCommand)
 export class GetCommentsByPostIdUseCase

@@ -1,7 +1,7 @@
 import request, { Response } from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { delay } from '../../helpers/helper';
-import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 
 export class UsersTestManager {
   constructor(private readonly app: INestApplication) {}

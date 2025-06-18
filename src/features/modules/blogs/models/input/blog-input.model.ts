@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUrl, MaxLength } from 'class-validator';
-import { IsRequired } from '@src/features/common/decorators/validation/is-required.decorator';
+import { IsRequired } from '../../../../common/decorators/validation/is-required.decorator';
 import {
   nameConstraints,
   websiteUrlConstraints,
   descriptionConstraints,
-} from '@modules/blogs/constants/constants';
+} from '../../constants/constants';
 
 export class BlogInputModel {
   @MaxLength(nameConstraints.maxLength)

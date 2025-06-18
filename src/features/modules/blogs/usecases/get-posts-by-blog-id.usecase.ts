@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BlogsService } from '@modules/blogs/application/blogs.service';
-import { PostsService } from '@modules/posts/application/posts.service';
-import { PostViewModel } from '@modules/posts/models/output/post-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { GetPostsByBlogIdCommand } from '@modules/blogs/usecases/commands/get-posts-by-blog-id.command';
+import { BlogsService } from '../application/blogs.service';
+import { PostsService } from '../../posts/application/posts.service';
+import { PostViewModel } from '../../posts/models/output/post-view.model';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { GetPostsByBlogIdCommand } from './commands/get-posts-by-blog-id.command';
 
 @CommandHandler(GetPostsByBlogIdCommand)
 export class GetPostsByBlogIdUseCase

@@ -10,12 +10,12 @@ import {
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
-import { Api } from '@src/features/common/decorators/validation/api.decorator';
-import { DeviceViewModel } from '@modules/users/models/output/device-view.model';
-import { RefreshAuthGuard } from '@src/features/common/guards/bearer/refresh-auth.guard';
-import { GetDevicesByUserIdCommand } from '@modules/devices/usecases/commands/get-devices-by-user-id.command';
-import { RemoveDeviceByUserIdCommand } from '@modules/devices/usecases/commands/remove-device-by-user-id.command';
-import { RemoveDevicesByUserIdCommand } from '@modules/devices/usecases/commands/remove-devices-by-user-id.command';
+import { Api } from '../../../common/decorators/validation/api.decorator';
+import { DeviceViewModel } from '../../users/models/output/device-view.model';
+import { RefreshAuthGuard } from '../../../common/guards/bearer/refresh-auth.guard';
+import { GetDevicesByUserIdCommand } from '../usecases/commands/get-devices-by-user-id.command';
+import { RemoveDeviceByUserIdCommand } from '../usecases/commands/remove-device-by-user-id.command';
+import { RemoveDevicesByUserIdCommand } from '../usecases/commands/remove-devices-by-user-id.command';
 
 @ApiTags('Devices')
 @UseGuards(RefreshAuthGuard)

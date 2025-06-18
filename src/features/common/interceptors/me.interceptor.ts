@@ -1,7 +1,7 @@
 import { map, Observable } from 'rxjs';
 import { CallHandler, Injectable, NestInterceptor } from '@nestjs/common';
-import { MeViewModel } from '@modules/users/models/output/me-view.model';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
+import { MeViewModel } from '../../modules/users/models/output/me-view.model';
+import { UserViewModel } from '../../modules/users/models/output/user-view.model';
 
 @Injectable()
 export class MeInterceptor implements NestInterceptor {

@@ -1,4 +1,4 @@
-import { PostDto } from '@modules/posts/dto/post.dto';
+import { PostDto } from '../../dto/post.dto';
 
 export class EditPostWithBlogNameCommand {
   constructor(

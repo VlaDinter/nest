@@ -1,4 +1,4 @@
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
 export class GetPostsByBlogIdCommand {
   constructor(

@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { TestingModuleBuilder } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UsersTestManager } from '../users/users.test-manager';
-import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('authTest'))('AuthController (e2e)', () => {

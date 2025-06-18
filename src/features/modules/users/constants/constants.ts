@@ -1,4 +1,4 @@
-import { getUsersConfiguration } from '@modules/users/configuration/users.configuration';
+import { getUsersConfiguration } from '../configuration/users.configuration';
 
 export const loginConstraints = {
   match: /^[a-zA-Z0-9_-]*$/,

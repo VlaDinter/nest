@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { ValidateUserByLoginOrEmailPayload } from '@modules/auth/queries/payloads/validate-user-by-login-or-email.payload';
+import { UsersService } from '../../users/application/users.service';
+import { UserViewModel } from '../../users/models/output/user-view.model';
+import { ValidateUserByLoginOrEmailPayload } from './payloads/validate-user-by-login-or-email.payload';
 
 @QueryHandler(ValidateUserByLoginOrEmailPayload)
 export class ValidateUserByLoginOrEmailQuery

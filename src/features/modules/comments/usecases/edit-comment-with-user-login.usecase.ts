@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { CommentsService } from '@modules/comments/application/comments.service';
-import { CommentViewModel } from '@modules/comments/models/output/comment-view.model';
-import { EditCommentWithUserLoginCommand } from '@modules/comments/usecases/commands/edit-comment-with-user-login.command';
+import { CommentsService } from '../application/comments.service';
+import { UsersService } from '../../users/application/users.service';
+import { CommentViewModel } from '../models/output/comment-view.model';
+import { EditCommentWithUserLoginCommand } from './commands/edit-comment-with-user-login.command';
 
 @CommandHandler(EditCommentWithUserLoginCommand)
 export class EditCommentWithUserLoginUseCase

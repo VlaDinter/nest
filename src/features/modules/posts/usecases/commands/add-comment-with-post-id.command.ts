@@ -1,4 +1,4 @@
-import { CommentDto } from '@modules/comments/dto/comment.dto';
+import { CommentDto } from '../../../comments/dto/comment.dto';
 
 export class AddCommentWithPostIdCommand {
   constructor(

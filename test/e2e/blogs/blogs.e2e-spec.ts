@@ -2,7 +2,7 @@ import { Server } from 'http';
 import request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { BlogsTestManager } from './blogs.test-manager';
-import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('blogsTest'))('Blogs e2e', () => {

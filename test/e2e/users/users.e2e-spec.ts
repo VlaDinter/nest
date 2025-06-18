@@ -3,10 +3,10 @@ import request from 'supertest';
 import { JwtService } from '@nestjs/jwt';
 import { TestingModuleBuilder } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { CoreConfig } from '@core/core.config';
 import { UsersTestManager } from './users.test-manager';
-import { GLOBAL_PREFIX } from '@src/setups/global-prefix.setup';
-import { MailNotifications } from '@src/features/base/adapters/mail-notifications';
+import { CoreConfig } from '../../../src/core/core.config';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
+import { MailNotifications } from '../../../src/features/base/adapters/mail-notifications';
 import {
   delay,
   initApp,

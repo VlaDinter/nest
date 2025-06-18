@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { IFieldError } from '@src/features/base/interfaces/field-error.interface';
+import { IFieldError } from '../../base/interfaces/field-error.interface';
 
 export class BadFieldsException {
   code: HttpStatus;

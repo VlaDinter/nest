@@ -1,5 +1,5 @@
-import { LikeDetailsViewModel } from '@modules/posts/models/output/like-details-view.model';
-import { ExtendedLikesInfoViewModel } from '@modules/posts/models/output/extended-likes-info-view.model';
+import { LikeDetailsViewModel } from './like-details-view.model';
+import { ExtendedLikesInfoViewModel } from './extended-likes-info-view.model';
 
 export class PostViewModel {
   id: string;

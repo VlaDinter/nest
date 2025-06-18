@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '@modules/users/application/users.service';
-import { DeviceViewModel } from '@modules/users/models/output/device-view.model';
-import { LogoutUserCommand } from '@modules/auth/usecases/commands/logout-user.command';
+import { LogoutUserCommand } from './commands/logout-user.command';
+import { UsersService } from '../../users/application/users.service';
+import { DeviceViewModel } from '../../users/models/output/device-view.model';
 
 @CommandHandler(LogoutUserCommand)
 export class LogoutUserUseCase

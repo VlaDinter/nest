@@ -1,12 +1,12 @@
 import { validateOrReject } from 'class-validator';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserDto } from '@modules/users/dto/user.dto';
-import { UsersService } from '@modules/users/application/users.service';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { UserInputModel } from '@modules/users/models/input/user-input.model';
-import { IFieldError } from '@src/features/base/interfaces/field-error.interface';
-import { BadFieldsException } from '@src/features/common/exceptions/bad-fields.exception';
-import { AddUserWithValidateOrRejectModelCommand } from '@modules/users/usecases/commands/add-user-with-validate-or-reject-model.command';
+import { UserDto } from '../dto/user.dto';
+import { UsersService } from '../application/users.service';
+import { UserViewModel } from '../models/output/user-view.model';
+import { UserInputModel } from '../models/input/user-input.model';
+import { IFieldError } from '../../../base/interfaces/field-error.interface';
+import { BadFieldsException } from '../../../common/exceptions/bad-fields.exception';
+import { AddUserWithValidateOrRejectModelCommand } from './commands/add-user-with-validate-or-reject-model.command';
 
 @CommandHandler(AddUserWithValidateOrRejectModelCommand)
 export class AddUserWithValidateOrRejectModelUseCase

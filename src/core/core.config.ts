@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IsBoolean, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
-import { BaseConfig } from '@src/config/base.config';
-import { ConfigType } from '@src/configuration/configuration';
-import { IEnvironments } from '@src/features/base/interfaces/environments.interface';
+import { BaseConfig } from '../config/base.config';
+import { ConfigType } from '../configuration/configuration';
+import { IEnvironments } from '../features/base/interfaces/environments.interface';
 
 @Injectable()
 export class CoreConfig extends BaseConfig {

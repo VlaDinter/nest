@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserDto } from '@modules/users/dto/user.dto';
-import { DeviceDto } from '@modules/users/dto/device.dto';
-import { UsersConfig } from '@modules/users/config/users.config';
-import { User, UserModelType } from '@modules/users/entities/user.schema';
-import { UserViewModel } from '@modules/users/models/output/user-view.model';
-import { UsersRepository } from '@modules/users/infrastructure/users.repository';
-import { DeviceViewModel } from '@modules/users/models/output/device-view.model';
-import { IPagination } from '@src/features/base/interfaces/pagination.interface';
-import { IPaginationParams } from '@src/features/base/interfaces/pagination-params.interface';
+import { UserDto } from '../../dto/user.dto';
+import { DeviceDto } from '../../dto/device.dto';
+import { UsersRepository } from '../users.repository';
+import { UsersConfig } from '../../config/users.config';
+import { User, UserModelType } from '../../entities/user.schema';
+import { UserViewModel } from '../../models/output/user-view.model';
+import { DeviceViewModel } from '../../models/output/device-view.model';
+import { IPagination } from '../../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
 export class UsersMongooseRepository extends UsersRepository {
