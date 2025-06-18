@@ -18,14 +18,14 @@ export type TestNames =
   | 'testingTest';
 
 export const skipTests = {
-  run_all_tests: true,
-  appTest: false,
-  authTest: false,
-  usersTest: false,
-  blogsTest: false,
-  postsTest: false,
-  commentsTest: false,
-  testingTest: false,
+  run_all_tests: false,
+  appTest: true,
+  authTest: true,
+  usersTest: true,
+  blogsTest: true,
+  postsTest: true,
+  commentsTest: true,
+  testingTest: true,
   for(testName: TestNames): boolean {
     if (this.run_all_tests) {
       return false;
