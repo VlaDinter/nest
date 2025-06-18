@@ -27,6 +27,7 @@ export const swaggerSetup = (app: INestApplication): void => {
       .addTag('users')
       .addTag('blogs')
       .addTag('posts')
+      .addTag('devices')
       .addTag('comments')
       .build();
 
