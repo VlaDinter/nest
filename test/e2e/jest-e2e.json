@@ -6,9 +6,4 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   }
-//  "moduleNameMapper": {
-//    "^@src/(.*)$": "<rootDir>/src/$1",
-//    "^@core/(.*)$": "<rootDir>/src/core/$1",
-//    "^@modules/(.*)$": "<rootDir>/src/features/modules/$1"
-//  }
 }
