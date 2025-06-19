@@ -29,7 +29,7 @@ export class SendRecoveryCodeToUserUseCase
     );
 
     if (updatedUser?.emailConfirmation?.confirmationCode) {
-      this.eventBus.publish(
+      await this.eventBus.publish(
         new SendRecoveryCodeEvent(
           updatedUser.email,
           updatedUser.emailConfirmation.confirmationCode,

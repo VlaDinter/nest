@@ -29,7 +29,7 @@ export class SendConfirmationToUpdatedUserUseCase
     );
 
     if (updatedUser?.emailConfirmation?.confirmationCode) {
-      this.eventBus.publish(
+      await this.eventBus.publish(
         new SendConfirmationEvent(
           updatedUser.email,
           updatedUser.emailConfirmation.confirmationCode,

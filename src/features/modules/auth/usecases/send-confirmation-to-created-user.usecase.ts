@@ -16,7 +16,7 @@ export class SendConfirmationToCreatedUserUseCase
     const user = await this.usersService.getUser(command.userId);
 
     if (user?.emailConfirmation?.confirmationCode) {
-      this.eventBus.publish(
+      await this.eventBus.publish(
         new SendConfirmationEvent(
           user.email,
           user.emailConfirmation.confirmationCode,
