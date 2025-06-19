@@ -57,7 +57,7 @@ import { CoreConfig } from './core.config';
         return {
           throttlers: [
             {
-              ttl: 60000,
+              ttl: 15000,
               limit: 5,
             },
           ],
