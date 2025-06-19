@@ -110,16 +110,9 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<LoginSuccessViewModel> {
-    const device = {
-      ip: req.ip!,
-      title: req.headers['user-agent']!,
-      lastActiveDate: new Date().toISOString(),
-    };
-
     const command = new EditDeviceByUserIdCommand(
       req.user?.['userId'],
       req.user?.['deviceId'],
-      device,
     );
 
     const updatedDevice = await this.commandBus.execute<
@@ -129,7 +122,8 @@ export class AuthController {
 
     const loginCommand = new LoginUserCommand(
       req.user?.['userId'],
-      updatedDevice.deviceId,
+      req.user?.['deviceId'],
+      updatedDevice.lastActiveDate,
     );
 
     const result = await this.commandBus.execute<

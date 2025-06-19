@@ -35,7 +35,6 @@ export abstract class UsersRepository {
   abstract updateDevice(
     userId: string,
     deviceId: string,
-    updateDeviceDto: DeviceDto,
   ): Promise<DeviceViewModel | null>;
   abstract deleteUser(userId: string): Promise<UserViewModel | null>;
   abstract deleteDevice(

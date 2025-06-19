@@ -140,21 +140,22 @@ export class UsersMongooseRepository extends UsersRepository {
   async updateDevice(
     userId: string,
     deviceId: string,
-    updateDeviceDto: DeviceDto,
   ): Promise<DeviceViewModel | null> {
     const userInstance = await this.UserModel.findOne({ id: userId }).exec();
 
     if (!userInstance) return null;
 
-    userInstance.devices = userInstance.devices.filter(
-      (device: DeviceViewModel): boolean => device.deviceId !== deviceId,
+    const foundDevice = userInstance.devices.find(
+      (device: DeviceViewModel): boolean => device.deviceId === deviceId,
     );
 
-    userInstance.devices.push(updateDeviceDto as DeviceViewModel);
+    if (!foundDevice) return null;
+
+    foundDevice.lastActiveDate = new Date().toISOString();
 
     await userInstance.save();
 
-    return userInstance.devices[userInstance.devices.length - 1];
+    return foundDevice;
   }
 
   async deleteUser(userId: string): Promise<UserViewModel | null> {

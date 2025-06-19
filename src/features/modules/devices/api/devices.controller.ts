@@ -42,7 +42,7 @@ export class DevicesController {
 
   @Api('Delete security device', true)
   @Delete(':id')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSecurityDevice(
     @Req() req: Request,
     @Param('id', ObjectIdValidationPipe) deviceId: string,
@@ -74,7 +74,7 @@ export class DevicesController {
 
   @Api('Delete security devices')
   @Delete()
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSecurityDevices(@Req() req: Request): Promise<void> {
     const command = new RemoveDevicesByUserIdCommand(
       req.user?.['userId'],

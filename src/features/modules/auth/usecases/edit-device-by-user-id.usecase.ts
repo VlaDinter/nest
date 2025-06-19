@@ -10,10 +10,6 @@ export class EditDeviceByUserIdUseCase
   constructor(private readonly usersService: UsersService) {}
 
   execute(command: EditDeviceByUserIdCommand): Promise<DeviceViewModel | null> {
-    return this.usersService.editDevice(
-      command.userId,
-      command.deviceId,
-      command.updateDeviceDto,
-    );
+    return this.usersService.editDevice(command.userId, command.deviceId);
   }
 }

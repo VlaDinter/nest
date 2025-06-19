@@ -20,6 +20,7 @@ export class LoginUserUseCase
     const refreshTokenPayload = {
       userId: command.userId,
       deviceId: command.deviceId,
+      lastActiveDate: command.lastActiveDate,
     };
 
     return {

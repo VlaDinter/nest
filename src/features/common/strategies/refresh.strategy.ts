@@ -30,8 +30,12 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     ) {
       const user = await this.usersService.getUser(payload.userId);
       const device = await this.usersService.getDevice(payload.deviceId);
+      const isLastActiveDate =
+        !payload.lastActiveDate ||
+        !device ||
+        device.lastActiveDate === payload.lastActiveDate;
 
-      if (user?.emailConfirmation?.isConfirmed && device) {
+      if (user?.emailConfirmation?.isConfirmed && device && isLastActiveDate) {
         return { userId: payload.userId, deviceId: payload.deviceId };
       }
     }
