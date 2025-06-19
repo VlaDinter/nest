@@ -8,6 +8,7 @@ import {
   HttpStatus,
   NotFoundException,
   ForbiddenException,
+  Param,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,10 +16,11 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Api } from '../../../common/decorators/validation/api.decorator';
 import { DeviceViewModel } from '../../users/models/output/device-view.model';
 import { RefreshAuthGuard } from '../../../common/guards/bearer/refresh-auth.guard';
+import { ObjectIdValidationPipe } from '../../../common/pipes/object-id-validation.pipe';
+import { GetDeviceByUserIdCommand } from '../usecases/commands/get-device-by-user-id.command';
 import { GetDevicesByUserIdCommand } from '../usecases/commands/get-devices-by-user-id.command';
 import { RemoveDeviceByUserIdCommand } from '../usecases/commands/remove-device-by-user-id.command';
 import { RemoveDevicesByUserIdCommand } from '../usecases/commands/remove-devices-by-user-id.command';
-import { GetDeviceByUserIdCommand } from '../usecases/commands/get-device-by-user-id.command';
 
 @ApiTags('Devices')
 @UseGuards(RefreshAuthGuard)
@@ -38,11 +40,14 @@ export class DevicesController {
     >(command);
   }
 
-  @Api('Delete security device')
-  @Delete()
+  @Api('Delete security device', true)
+  @Delete(':id')
   @HttpCode(HttpStatus.CREATED)
-  async deleteSecurityDevice(@Req() req: Request): Promise<void> {
-    const deviceCommand = new GetDeviceByUserIdCommand(req.user?.['deviceId']);
+  async deleteSecurityDevice(
+    @Req() req: Request,
+    @Param('id', ObjectIdValidationPipe) deviceId: string,
+  ): Promise<void> {
+    const deviceCommand = new GetDeviceByUserIdCommand(deviceId);
     const foundDevice = await this.commandBus.execute<
       GetDeviceByUserIdCommand,
       DeviceViewModel | null
