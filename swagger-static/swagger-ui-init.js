@@ -1178,7 +1178,7 @@ window.onload = function() {
           "summary": "Delete security devices",
           "parameters": [],
           "responses": {
-            "201": {
+            "204": {
               "description": ""
             }
           },
@@ -1202,7 +1202,7 @@ window.onload = function() {
             }
           ],
           "responses": {
-            "201": {
+            "204": {
               "description": ""
             }
           },

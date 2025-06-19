@@ -35,6 +35,7 @@ import { EditDeviceByUserIdCommand } from '../usecases/commands/edit-device-by-u
 import { NewPasswordRecoveryInputModel } from '../models/input/new-password-recovery-input.model';
 import { SendRecoveryCodeToUserCommand } from '../usecases/commands/send-recovery-code-to-user.command';
 import { EditUserPasswordByCodeCommand } from '../usecases/commands/edit-user-password-by-code.command';
+import { GetDeviceByUserIdCommand } from '../../devices/usecases/commands/get-device-by-user-id.command';
 import { RegistrationConfirmationCodeInputModel } from '../models/input/registration-confirmation-code-input.model';
 import { SendConfirmationToCreatedUserCommand } from '../usecases/commands/send-confirmation-to-created-user.command';
 import { SendConfirmationToUpdatedUserCommand } from '../usecases/commands/send-confirmation-to-updated-user.command';
@@ -81,15 +82,22 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<LoginSuccessViewModel> {
-    const command = new LoginUserCommand(
+    const deviceCommand = new GetDeviceByUserIdCommand(req.user?.['deviceId']);
+    const foundDevice = await this.commandBus.execute<
+      GetDeviceByUserIdCommand,
+      DeviceViewModel
+    >(deviceCommand);
+
+    const loginCommand = new LoginUserCommand(
       req.user?.['userId'],
       req.user?.['deviceId'],
+      foundDevice.lastActiveDate,
     );
 
     const result = await this.commandBus.execute<
       LoginUserCommand,
       LoginSuccessViewModel
-    >(command);
+    >(loginCommand);
 
     res.cookie('refreshToken', result.refreshToken, {
       secure: true,
