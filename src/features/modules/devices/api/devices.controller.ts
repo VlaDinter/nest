@@ -59,7 +59,7 @@ export class DevicesController {
 
     const command = new RemoveDeviceByUserIdCommand(
       req.user?.['userId'],
-      req.user?.['deviceId'],
+      deviceId,
     );
 
     const deletedDevice = await this.commandBus.execute<
