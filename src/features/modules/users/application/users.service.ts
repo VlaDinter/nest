@@ -72,8 +72,9 @@ export class UsersService {
   editDevice(
     userId: string,
     deviceId: string,
+    updateDeviceDto: DeviceDto,
   ): Promise<DeviceViewModel | null> {
-    return this.usersRepository.updateDevice(userId, deviceId);
+    return this.usersRepository.updateDevice(userId, deviceId, updateDeviceDto);
   }
 
   removeUser(userId: string): Promise<UserViewModel | null> {

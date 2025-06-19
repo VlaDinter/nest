@@ -1,12 +1,7 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-  UnauthorizedException,
-} from '@nestjs/common';
 import { Request } from 'express';
-import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CoreConfig } from '../../../core/core.config';
 import { IPayload } from '../../base/interfaces/payload.interface';
 import { UsersService } from '../../modules/users/application/users.service';
@@ -33,22 +28,12 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
       typeof payload?.userId === 'string' &&
       typeof payload?.deviceId === 'string'
     ) {
-      const foundDevice = await this.usersService.getDevice(payload.deviceId);
+      const user = await this.usersService.getUser(payload.userId);
+      const device = await this.usersService.getDevice(payload.deviceId);
 
-      if (!foundDevice) {
-        throw new NotFoundException('Device not found');
+      if (user?.emailConfirmation?.isConfirmed && device) {
+        return { userId: payload.userId, deviceId: payload.deviceId };
       }
-
-      const updatedDevice = await this.usersService.editDevice(
-        payload.userId,
-        payload.deviceId,
-      );
-
-      if (!updatedDevice) {
-        throw new ForbiddenException('Device not found');
-      }
-
-      return { userId: payload.userId, deviceId: payload.deviceId };
     }
 
     throw new UnauthorizedException();

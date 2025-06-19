@@ -31,6 +31,7 @@ import { CurrentUserId } from '../../../common/decorators/current-user-id.decora
 import { BadFieldsException } from '../../../common/exceptions/bad-fields.exception';
 import { GetMeByUserIdCommand } from '../usecases/commands/get-me-by-user-id.command';
 import { EmailConfirmationInputModel } from '../models/input/email-confirmation-input.model';
+import { EditDeviceByUserIdCommand } from '../usecases/commands/edit-device-by-user-id.command';
 import { NewPasswordRecoveryInputModel } from '../models/input/new-password-recovery-input.model';
 import { SendRecoveryCodeToUserCommand } from '../usecases/commands/send-recovery-code-to-user.command';
 import { EditUserPasswordByCodeCommand } from '../usecases/commands/edit-user-password-by-code.command';
@@ -109,15 +110,32 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<LoginSuccessViewModel> {
-    const command = new LoginUserCommand(
+    const device = {
+      ip: req.ip!,
+      title: req.headers['user-agent']!,
+      lastActiveDate: new Date().toISOString(),
+    };
+
+    const command = new EditDeviceByUserIdCommand(
       req.user?.['userId'],
       req.user?.['deviceId'],
+      device,
+    );
+
+    const updatedDevice = await this.commandBus.execute<
+      EditDeviceByUserIdCommand,
+      DeviceViewModel
+    >(command);
+
+    const loginCommand = new LoginUserCommand(
+      req.user?.['userId'],
+      updatedDevice.deviceId,
     );
 
     const result = await this.commandBus.execute<
       LoginUserCommand,
       LoginSuccessViewModel
-    >(command);
+    >(loginCommand);
 
     res.cookie('refreshToken', result.refreshToken, {
       secure: true,

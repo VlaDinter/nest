@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { TestingModuleBuilder } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UsersTestManager } from '../users/users.test-manager';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('authTest'))('AuthController (e2e)', () => {
@@ -49,7 +50,7 @@ skipDescribe(skipTests.for('authTest'))('AuthController (e2e)', () => {
 
   it('/auth/login (POST) should return accessToken', async () => {
     const response = await request(httpServer)
-      .post('/auth/login')
+      .post(`/${GLOBAL_PREFIX}/auth/login`)
       .send({
         password: 'test123',
         loginOrEmail: 'test@example.com',
@@ -62,14 +63,14 @@ skipDescribe(skipTests.for('authTest'))('AuthController (e2e)', () => {
 
   it('/auth/login (POST) should return 401 for invalid password', async () => {
     await request(httpServer)
-      .post('/auth/login')
+      .post(`/${GLOBAL_PREFIX}/auth/login`)
       .send({ password: 'any_password', loginOrEmail: 'test@example.com' })
       .expect(HttpStatus.UNAUTHORIZED);
   });
 
   it('/auth/login (POST) should return 401 for invalid login', async () => {
     const response = await request(httpServer)
-      .post('/auth/login')
+      .post(`/${GLOBAL_PREFIX}/auth/login`)
       .send({ password: 'test123', loginOrEmail: 'wrong@example.com' })
       .expect(HttpStatus.UNAUTHORIZED);
 
@@ -79,7 +80,7 @@ skipDescribe(skipTests.for('authTest'))('AuthController (e2e)', () => {
   it('/auth/login (POST) should return a valid JWT token', async () => {
     const { testUserId } = expect.getState();
     const response = await request(httpServer)
-      .post('/auth/login')
+      .post(`/${GLOBAL_PREFIX}/auth/login`)
       .send({ password: 'test123', loginOrEmail: 'test@example.com' })
       .expect(HttpStatus.OK);
 

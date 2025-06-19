@@ -2,6 +2,7 @@ import { Server } from 'http';
 import request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { BlogsTestManager } from './blogs.test-manager';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('blogsTest'))('Blogs e2e', () => {
@@ -44,13 +45,13 @@ skipDescribe(skipTests.for('blogsTest'))('Blogs e2e', () => {
 
     it('blog should be updated', async () => {
       await request(httpServer)
-        .put(`/blogs/${blogId}`)
+        .put(`/${GLOBAL_PREFIX}/blogs/${blogId}`)
         .auth('sa', '123')
         .send({ ...createBlogBody, name: 'new name' })
         .expect(HttpStatus.NO_CONTENT);
 
       const getBlogByIdResponse = await request(httpServer).get(
-        `/blogs/${blogId}`,
+        `/${GLOBAL_PREFIX}/blogs/${blogId}`,
       );
 
       expect(getBlogByIdResponse.body.isMembership).toBeFalsy();

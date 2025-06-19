@@ -6,6 +6,8 @@ import {
   UseGuards,
   Controller,
   HttpStatus,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,6 +18,7 @@ import { RefreshAuthGuard } from '../../../common/guards/bearer/refresh-auth.gua
 import { GetDevicesByUserIdCommand } from '../usecases/commands/get-devices-by-user-id.command';
 import { RemoveDeviceByUserIdCommand } from '../usecases/commands/remove-device-by-user-id.command';
 import { RemoveDevicesByUserIdCommand } from '../usecases/commands/remove-devices-by-user-id.command';
+import { GetDeviceByUserIdCommand } from '../usecases/commands/get-device-by-user-id.command';
 
 @ApiTags('Devices')
 @UseGuards(RefreshAuthGuard)
@@ -39,15 +42,29 @@ export class DevicesController {
   @Delete()
   @HttpCode(HttpStatus.CREATED)
   async deleteSecurityDevice(@Req() req: Request): Promise<void> {
+    const deviceCommand = new GetDeviceByUserIdCommand(req.user?.['deviceId']);
+    const foundDevice = await this.commandBus.execute<
+      GetDeviceByUserIdCommand,
+      DeviceViewModel | null
+    >(deviceCommand);
+
+    if (!foundDevice) {
+      throw new NotFoundException('Device not found');
+    }
+
     const command = new RemoveDeviceByUserIdCommand(
       req.user?.['userId'],
       req.user?.['deviceId'],
     );
 
-    await this.commandBus.execute<
+    const deletedDevice = await this.commandBus.execute<
       RemoveDeviceByUserIdCommand,
       DeviceViewModel | null
     >(command);
+
+    if (!deletedDevice) {
+      throw new ForbiddenException('Device not found');
+    }
   }
 
   @Api('Delete security devices')

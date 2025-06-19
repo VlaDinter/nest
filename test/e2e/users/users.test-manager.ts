@@ -1,13 +1,14 @@
 import request, { Response } from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { delay } from '../../helpers/helper';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 
 export class UsersTestManager {
   constructor(private readonly app: INestApplication) {}
 
   async createMainTestUser(): Promise<Response> {
     const userResponse = await request(this.app.getHttpServer())
-      .post('/users')
+      .post(`/${GLOBAL_PREFIX}/users`)
       .auth('sa', '123')
       .send({
         login: 'user',
@@ -25,7 +26,7 @@ export class UsersTestManager {
     statusCode: number = HttpStatus.OK,
   ): Promise<{ accessToken: string }> {
     const response = await request(this.app.getHttpServer())
-      .post('/auth/login')
+      .post(`/${GLOBAL_PREFIX}/auth/login`)
       .send({ loginOrEmail: login, password })
       .expect(statusCode);
 
@@ -41,7 +42,7 @@ export class UsersTestManager {
       await delay(50);
 
       const response = await request(this.app.getHttpServer())
-        .post('/users')
+        .post(`/${GLOBAL_PREFIX}/users`)
         .auth('sa', '123')
         .send({
           login: 'test' + i,

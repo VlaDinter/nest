@@ -13,6 +13,7 @@ import { GetMeByUserIdUseCase } from './usecases/get-me-by-user-id.usecase';
 import { LoginMiddleware } from '../../common/middlewares/login.middleware';
 import { SendConfirmationHandler } from './handlers/send-confirmation.handler';
 import { SendRecoveryCodeHandler } from './handlers/send-recovery-code.handler';
+import { EditDeviceByUserIdUseCase } from './usecases/edit-device-by-user-id.usecase';
 import { EditUserPasswordByCodeUseCase } from './usecases/edit-user-password-by-code.usecase';
 import { SendRecoveryCodeToUserUseCase } from './usecases/send-recovery-code-to-user.usecase';
 import { ValidateUserByLoginOrEmailQuery } from './queries/validate-user-by-login-or-email.query';
@@ -52,6 +53,7 @@ const useCases = [
   GetMeByUserIdUseCase,
   SendConfirmationHandler,
   SendRecoveryCodeHandler,
+  EditDeviceByUserIdUseCase,
   EditUserPasswordByCodeUseCase,
   SendRecoveryCodeToUserUseCase,
   ValidateUserByLoginOrEmailQuery,

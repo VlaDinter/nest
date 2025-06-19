@@ -11,7 +11,7 @@ window.onload = function() {
   "swaggerDoc": {
     "openapi": "3.0.0",
     "paths": {
-      "/": {
+      "/api": {
         "get": {
           "operationId": "AppController_getHello",
           "summary": "Home",
@@ -33,7 +33,7 @@ window.onload = function() {
           ]
         }
       },
-      "/testing/all-data": {
+      "/api/testing/all-data": {
         "delete": {
           "operationId": "TestingController_deleteAllData",
           "summary": "Delete all data",
@@ -48,7 +48,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/me": {
+      "/api/auth/me": {
         "get": {
           "operationId": "AuthController_getMe",
           "summary": "Get info about current user",
@@ -75,7 +75,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/login": {
+      "/api/auth/login": {
         "post": {
           "operationId": "AuthController_postLogin",
           "summary": "Post login",
@@ -117,7 +117,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/refresh-token": {
+      "/api/auth/refresh-token": {
         "post": {
           "operationId": "AuthController_postRefreshToken",
           "summary": "Post refresh token",
@@ -139,7 +139,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/registration": {
+      "/api/auth/registration": {
         "post": {
           "operationId": "AuthController_postRegistration",
           "summary": "Post registration",
@@ -164,7 +164,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/registration-email-resending": {
+      "/api/auth/registration-email-resending": {
         "post": {
           "operationId": "AuthController_postRegistrationEmailResending",
           "summary": "Post registration email resending",
@@ -189,7 +189,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/registration-confirmation": {
+      "/api/auth/registration-confirmation": {
         "post": {
           "operationId": "AuthController_postRegistrationConfirmation",
           "summary": "Post registration confirmation",
@@ -214,7 +214,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/password-recovery": {
+      "/api/auth/password-recovery": {
         "post": {
           "operationId": "AuthController_postPasswordRecovery",
           "summary": "Post password recovery",
@@ -239,7 +239,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/new-password": {
+      "/api/auth/new-password": {
         "post": {
           "operationId": "AuthController_postNewPassword",
           "summary": "Post new password",
@@ -264,7 +264,7 @@ window.onload = function() {
           ]
         }
       },
-      "/auth/logout": {
+      "/api/auth/logout": {
         "post": {
           "operationId": "AuthController_postLogout",
           "summary": "Post logout",
@@ -279,7 +279,7 @@ window.onload = function() {
           ]
         }
       },
-      "/users": {
+      "/api/users": {
         "get": {
           "operationId": "UsersController_getUsers",
           "summary": "Get users",
@@ -383,7 +383,7 @@ window.onload = function() {
           ]
         }
       },
-      "/users/{id}": {
+      "/api/users/{id}": {
         "delete": {
           "operationId": "UsersController_deleteUser",
           "summary": "Delete user",
@@ -412,7 +412,7 @@ window.onload = function() {
           ]
         }
       },
-      "/blogs": {
+      "/api/blogs": {
         "get": {
           "operationId": "BlogsController_getBlogs",
           "summary": "Get blogs",
@@ -503,7 +503,7 @@ window.onload = function() {
           ]
         }
       },
-      "/blogs/{id}": {
+      "/api/blogs/{id}": {
         "get": {
           "operationId": "BlogsController_getBlog",
           "summary": "Get blog",
@@ -598,7 +598,7 @@ window.onload = function() {
           ]
         }
       },
-      "/blogs/{id}/posts": {
+      "/api/blogs/{id}/posts": {
         "get": {
           "operationId": "BlogsController_getPosts",
           "summary": "Get posts",
@@ -698,7 +698,7 @@ window.onload = function() {
           ]
         }
       },
-      "/posts": {
+      "/api/posts": {
         "get": {
           "operationId": "PostsController_getPosts",
           "summary": "Get posts",
@@ -781,7 +781,7 @@ window.onload = function() {
           ]
         }
       },
-      "/posts/{id}": {
+      "/api/posts/{id}": {
         "get": {
           "operationId": "PostsController_getPost",
           "summary": "Get post",
@@ -876,7 +876,7 @@ window.onload = function() {
           ]
         }
       },
-      "/posts/{id}/like-status": {
+      "/api/posts/{id}/like-status": {
         "put": {
           "operationId": "PostsController_putLikeStatus",
           "summary": "Put like status",
@@ -915,7 +915,7 @@ window.onload = function() {
           ]
         }
       },
-      "/posts/{id}/comments": {
+      "/api/posts/{id}/comments": {
         "get": {
           "operationId": "PostsController_getComments",
           "summary": "Get comments",
@@ -1015,7 +1015,7 @@ window.onload = function() {
           ]
         }
       },
-      "/comments/{id}": {
+      "/api/comments/{id}": {
         "get": {
           "operationId": "CommentsController_getComment",
           "summary": "Get comment",
@@ -1110,7 +1110,7 @@ window.onload = function() {
           ]
         }
       },
-      "/comments/{id}/like-status": {
+      "/api/comments/{id}/like-status": {
         "put": {
           "operationId": "CommentsController_putLikeStatus",
           "summary": "Put like status",
@@ -1149,7 +1149,7 @@ window.onload = function() {
           ]
         }
       },
-      "/security/devices": {
+      "/api/security/devices": {
         "get": {
           "operationId": "DevicesController_getSecurityDevices",
           "summary": "Get security devices",
@@ -1209,6 +1209,10 @@ window.onload = function() {
       },
       {
         "name": "posts",
+        "description": ""
+      },
+      {
+        "name": "devices",
         "description": ""
       },
       {

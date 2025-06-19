@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipDescribe, skipTests } from '../../helpers/helper';
 
 skipDescribe(skipTests.for('appTest'))('AppController (e2e)', () => {
@@ -18,7 +19,7 @@ skipDescribe(skipTests.for('appTest'))('AppController (e2e)', () => {
 
   it('/ (GET)', () => {
     return request(httpServer)
-      .get('/')
+      .get(`/${GLOBAL_PREFIX}`)
       .expect(HttpStatus.OK)
       .expect('Hello World! Hello IT-INCUBATOR');
   });

@@ -5,6 +5,7 @@ import { getConnectionToken } from '@nestjs/mongoose';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { appSettings } from '../../src/settings/app.settings';
 import { initAppModule } from '../../src/init/app-module.init';
+import { GLOBAL_PREFIX } from '../../src/setups/global-prefix.setup';
 import { MailNotificationsMock } from '../mock/mail-notifications.mock';
 import { MailNotifications } from '../../src/features/base/adapters/mail-notifications';
 
@@ -18,14 +19,14 @@ export type TestNames =
   | 'testingTest';
 
 export const skipTests = {
-  run_all_tests: false,
-  appTest: true,
-  authTest: true,
-  usersTest: true,
-  blogsTest: true,
-  postsTest: true,
-  commentsTest: true,
-  testingTest: true,
+  run_all_tests: true,
+  appTest: false,
+  authTest: false,
+  usersTest: false,
+  blogsTest: false,
+  postsTest: false,
+  commentsTest: false,
+  testingTest: false,
   for(testName: TestNames): boolean {
     if (this.run_all_tests) {
       return false;
@@ -85,7 +86,9 @@ export const skipDescribe = (skip: boolean): jest.Describe => {
 export const deleteAllData = async (
   app: INestApplication,
 ): Promise<Response> => {
-  return request(app.getHttpServer()).delete('/testing/all-data');
+  return request(app.getHttpServer()).delete(
+    `/${GLOBAL_PREFIX}/testing/all-data`,
+  );
 };
 
 export const delay = (ms: number) => {
