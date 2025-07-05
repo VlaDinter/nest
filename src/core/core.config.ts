@@ -169,7 +169,7 @@ export class CoreConfig extends BaseConfig {
     this.login = this.configService.get('SA_LOGIN', { infer: true });
     this.env =
       this.configService.get('NODE_ENV', { infer: true }) ??
-      IEnvironments.DEVELOPMENT;
+      IEnvironments.PRODUCTION;
 
     this.mongoURI = this.configService.get('MONGO_URI', { infer: true });
     this.pgDatabase = this.configService.get('PGDATABASE', { infer: true });
