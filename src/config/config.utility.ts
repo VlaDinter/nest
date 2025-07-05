@@ -9,11 +9,11 @@ export const configUtility = {
       case IEnvironments.TESTING:
       case IEnvironments.DEVELOPMENT:
         envFilePath.push(join(__dirname, '..', 'env', '.env.local'));
-        envFilePath.push(join(__dirname, '..', 'env', '.env'));
         envFilePath.push(
           join(__dirname, '..', 'env', `.env.${process.env.NODE_ENV}.local`),
         );
 
+        envFilePath.push(join(__dirname, '..', 'env', '.env'));
         envFilePath.push(
           join(__dirname, '..', 'env', `.env.${process.env.NODE_ENV}`),
         );

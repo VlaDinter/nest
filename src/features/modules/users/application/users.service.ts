@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserDto } from '../dto/user.dto';
-import { DeviceDto } from '../dto/device.dto';
+import { DeviceDto } from '../../devices/dto/device.dto';
 import { UserViewModel } from '../models/output/user-view.model';
 import { DeviceViewModel } from '../models/output/device-view.model';
 import { UsersRepository } from '../infrastructure/users.repository';

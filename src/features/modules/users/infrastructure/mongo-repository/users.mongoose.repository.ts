@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDto } from '../../dto/user.dto';
-import { DeviceDto } from '../../dto/device.dto';
 import { UsersRepository } from '../users.repository';
 import { UsersConfig } from '../../config/users.config';
+import { DeviceDto } from '../../../devices/dto/device.dto';
 import { User, UserModelType } from '../../entities/user.schema';
 import { UserViewModel } from '../../models/output/user-view.model';
 import { DeviceViewModel } from '../../models/output/device-view.model';

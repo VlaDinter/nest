@@ -85,13 +85,13 @@ export class AuthController {
     const deviceCommand = new GetDeviceByUserIdCommand(req.user?.['deviceId']);
     const foundDevice = await this.commandBus.execute<
       GetDeviceByUserIdCommand,
-      DeviceViewModel
+      DeviceViewModel | null
     >(deviceCommand);
 
     const loginCommand = new LoginUserCommand(
       req.user?.['userId'],
       req.user?.['deviceId'],
-      foundDevice.lastActiveDate,
+      foundDevice?.lastActiveDate,
     );
 
     const result = await this.commandBus.execute<

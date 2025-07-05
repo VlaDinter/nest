@@ -15,6 +15,24 @@ export class CoreConfig extends BaseConfig {
   )
   port: number;
 
+  @IsNumber(
+    {},
+    {
+      message: 'Set Env variable PGPORT, example: 5432',
+    },
+  )
+  pgPort: number;
+
+  @IsNotEmpty({
+    message: 'Set Env variable PGHOST, example: localhost',
+  })
+  pgHost: string;
+
+  @IsNotEmpty({
+    message: 'Set Env variable PGUSER, example: nestjs',
+  })
+  pgUser: string;
+
   @IsNotEmpty({
     message: 'Set Env variable SA_LOGIN, example: sa',
   })
@@ -32,6 +50,16 @@ export class CoreConfig extends BaseConfig {
       'Set Env variable MONGO_URI, example: mongodb://localhost:27017/myapp_dev',
   })
   mongoURI: string;
+
+  @IsNotEmpty({
+    message: 'Set Env variable PGDATABASE, example: nest',
+  })
+  pgDatabase: string;
+
+  @IsNotEmpty({
+    message: 'Set Env variable PGPASSWORD, example: nodejs',
+  })
+  pgPassword: string;
 
   @IsNotEmpty({
     message:
@@ -129,12 +157,23 @@ export class CoreConfig extends BaseConfig {
       3000,
     );
 
+    this.pgPort = this.getNumber(
+      'PGPORT',
+      this.configService.get('PGPORT', { infer: true }),
+      5432,
+    );
+
+    this.pgHost = this.configService.get('PGHOST', { infer: true });
+    this.pgUser = this.configService.get('PGUSER', { infer: true });
+
     this.login = this.configService.get('SA_LOGIN', { infer: true });
     this.env =
       this.configService.get('NODE_ENV', { infer: true }) ??
-      IEnvironments.PRODUCTION;
+      IEnvironments.DEVELOPMENT;
 
     this.mongoURI = this.configService.get('MONGO_URI', { infer: true });
+    this.pgDatabase = this.configService.get('PGDATABASE', { infer: true });
+    this.pgPassword = this.configService.get('PGPASSWORD', { infer: true });
     this.emailFrom =
       this.configService.get('EMAIL_FROM', { infer: true }) ??
       'Dimych <dimychdeveloper@gmail.com>';
