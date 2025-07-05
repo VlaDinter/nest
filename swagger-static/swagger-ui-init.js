@@ -279,7 +279,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/users": {
+      "/api/sa/users": {
         "get": {
           "operationId": "UsersController_getUsers",
           "summary": "Get users",
@@ -383,7 +383,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/users/{id}": {
+      "/api/sa/users/{id}": {
         "delete": {
           "operationId": "UsersController_deleteUser",
           "summary": "Delete user",

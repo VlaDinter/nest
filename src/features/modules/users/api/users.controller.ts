@@ -30,7 +30,7 @@ import { AddUserWithValidateOrRejectModelCommand } from '../usecases/commands/ad
 
 @ApiTags('Users')
 @UseGuards(BasicAuthGuard)
-@Controller('users')
+@Controller('sa/users')
 export class UsersController {
   constructor(
     private readonly commandBus: CommandBus,
