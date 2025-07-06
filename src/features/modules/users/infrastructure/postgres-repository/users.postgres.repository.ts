@@ -74,10 +74,10 @@ export class UsersPostgresRepository extends UsersRepository {
 
     return {
       pagesCount,
-      page: params.pageNumber,
-      pageSize: params.pageSize,
       totalCount,
       items: result,
+      page: params.pageNumber,
+      pageSize: params.pageSize,
     };
   }
 
