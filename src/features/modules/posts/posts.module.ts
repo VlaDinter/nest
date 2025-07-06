@@ -14,6 +14,7 @@ import { AddPostWithBlogNameUseCase } from './usecases/add-post-with-blog-name.u
 import { AddCommentWithPostIdUseCase } from './usecases/add-comment-with-post-id.usecase';
 import { EditPostWithBlogNameUseCase } from './usecases/edit-post-with-blog-name.usecase';
 import { EditPostWithUserLoginUseCase } from './usecases/edit-post-with-user-login.usecase';
+import { RemovePostWithBlogNameUseCase } from './usecases/remove-post-with-blog-name.usecase';
 import { PostsMongooseRepository } from './infrastructure/mongo-repository/posts.mongoose.repository';
 
 const providers = [
@@ -30,6 +31,7 @@ const useCases = [
   AddCommentWithPostIdUseCase,
   EditPostWithBlogNameUseCase,
   EditPostWithUserLoginUseCase,
+  RemovePostWithBlogNameUseCase,
 ];
 
 @Module({

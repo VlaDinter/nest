@@ -33,6 +33,8 @@ import { ISortDirections } from '../../../base/interfaces/sort-directions.interf
 import { ObjectIdValidationPipe } from '../../../common/pipes/object-id-validation.pipe';
 import { GetPostsByBlogIdCommand } from '../usecases/commands/get-posts-by-blog-id.command';
 import { AddPostWithBlogNameCommand } from '../../posts/usecases/commands/add-post-with-blog-name.command';
+import { EditPostWithBlogNameCommand } from '../../posts/usecases/commands/edit-post-with-blog-name.command';
+import { RemovePostWithBlogNameCommand } from '../../posts/usecases/commands/remove-post-with-blog-name.command';
 
 @ApiTags('Blogs')
 @Controller('blogs')
@@ -43,6 +45,7 @@ export class BlogsController {
   ) {}
 
   @Api('Get blogs')
+  @UseGuards(BasicAuthGuard)
   @Get()
   getBlogs(
     @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
@@ -133,6 +136,7 @@ export class BlogsController {
   }
 
   @Api('Get posts', true)
+  @UseGuards(BasicAuthGuard)
   @Get(':id/posts')
   async getPosts(
     @Req() req: Request,
@@ -204,5 +208,49 @@ export class BlogsController {
     }
 
     return createdPost;
+  }
+
+  @Api('Put posts', true, true)
+  @UseGuards(BasicAuthGuard)
+  @Put(':blogId/posts/:postId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async putPosts(
+    @Body() inputModel: BlogPostInputModel,
+    @Param('blogId', ObjectIdValidationPipe) blogId: string,
+    @Param('postId', ObjectIdValidationPipe) postId: string,
+  ): Promise<void> {
+    const command = new EditPostWithBlogNameCommand(postId, {
+      blogId,
+      ...inputModel,
+    });
+
+    const updatedPost = await this.commandBus.execute<
+      EditPostWithBlogNameCommand,
+      PostViewModel | null
+    >(command);
+
+    if (!updatedPost) {
+      throw new NotFoundException('Blog not found');
+    }
+  }
+
+  @Api('Delete post', true, true)
+  @UseGuards(BasicAuthGuard)
+  @Delete(':blogId/posts/:postId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePost(
+    @Param('blogId', ObjectIdValidationPipe) blogId: string,
+    @Param('postId', ObjectIdValidationPipe) postId: string,
+  ): Promise<void> {
+    const command = new RemovePostWithBlogNameCommand(postId, blogId);
+
+    const deletedPost = await this.commandBus.execute<
+      RemovePostWithBlogNameCommand,
+      PostViewModel | null
+    >(command);
+
+    if (!deletedPost) {
+      throw new NotFoundException('Post not found');
+    }
   }
 }
