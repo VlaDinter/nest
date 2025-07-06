@@ -33,7 +33,7 @@ export class MailNotifications implements IMailNotifications {
   ): Promise<void> {
     await this.sendEmail(
       email,
-      'Email confirmation',
+      'Test',
       `
       <h1>Thank for your registration</h1>
         <p>To finish registration please follow the link below:
