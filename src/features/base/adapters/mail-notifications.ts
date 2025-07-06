@@ -64,14 +64,30 @@ export class MailNotifications implements IMailNotifications {
     title: string,
     message: string,
   ): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to: email,
-        html: message,
-        subject: title,
-      });
-    } catch (error) {
-      this.logger.warn(error);
-    }
+    // try {
+    //   await this.mailerService.sendMail({
+    //     to: email,
+    //     html: message,
+    //     subject: title,
+    //   });
+    // } catch (error) {
+    //   this.logger.warn(error);
+    // }
+
+    await new Promise(async (resolve, reject) => {
+      try {
+        await this.mailerService.sendMail({
+          from: 'Dimych <dimychdeveloper@gmail.com>',
+          to: email,
+          subject: title,
+          html: message,
+        });
+
+        resolve('success');
+      } catch (error) {
+        this.logger.warn(error);
+        reject(error);
+      }
+    });
   }
 }
