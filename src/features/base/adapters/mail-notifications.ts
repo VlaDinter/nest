@@ -33,12 +33,9 @@ export class MailNotifications implements IMailNotifications {
   ): Promise<void> {
     await this.sendEmail(
       email,
-      'Test',
+      'Test 2',
       `
-      <h1>Thank for your registration</h1>
-        <p>To finish registration please follow the link below:
-          <a href='https://some-front.com/confirm-registration?code=${confirmationCode}'>complete registration</a>
-        </p>
+     <a href='https://some-front.com/confirm-registration?code=${confirmationCode}'>test</a>
     `,
     );
   }
@@ -73,6 +70,17 @@ export class MailNotifications implements IMailNotifications {
     // } catch (error) {
     //   this.logger.warn(error);
     // }
+
+    await new Promise(async (resolve, reject) => {
+      try {
+        await this.mailerService['transporter'].verify();
+
+        resolve('success');
+      } catch (error) {
+        this.logger.warn(error);
+        reject(error);
+      }
+    });
 
     await new Promise(async (resolve, reject) => {
       try {
