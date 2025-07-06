@@ -33,9 +33,12 @@ export class MailNotifications implements IMailNotifications {
   ): Promise<void> {
     await this.sendEmail(
       email,
-      'Test 2',
+      'Email confirmation',
       `
-     <a href='https://some-front.com/confirm-registration?code=${confirmationCode}'>test</a>
+      <h1>Thank for your registration</h1>
+      <p>To finish registration please follow the link below:
+        <a href='https://some-front.com/confirm-registration?code=${confirmationCode}'>complete registration</a>
+      </p>
     `,
     );
   }
@@ -61,41 +64,14 @@ export class MailNotifications implements IMailNotifications {
     title: string,
     message: string,
   ): Promise<void> {
-    // try {
-    //   await this.mailerService.sendMail({
-    //     to: email,
-    //     html: message,
-    //     subject: title,
-    //   });
-    // } catch (error) {
-    //   this.logger.warn(error);
-    // }
-
-    await new Promise(async (resolve, reject) => {
-      try {
-        await this.mailerService['transporter'].verify();
-
-        resolve('success');
-      } catch (error) {
-        this.logger.warn(error);
-        reject(error);
-      }
-    });
-
-    await new Promise(async (resolve, reject) => {
-      try {
-        await this.mailerService.sendMail({
-          from: 'Dimych <dimychdeveloper@gmail.com>',
-          to: email,
-          subject: title,
-          html: message,
-        });
-
-        resolve('success');
-      } catch (error) {
-        this.logger.warn(error);
-        reject(error);
-      }
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        html: message,
+        subject: title,
+      });
+    } catch (error) {
+      this.logger.warn(error);
+    }
   }
 }
