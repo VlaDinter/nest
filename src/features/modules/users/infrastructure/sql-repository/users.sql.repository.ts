@@ -14,7 +14,7 @@ import { IPagination } from '../../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
 @Injectable()
-export class UsersPostgresRepository extends UsersRepository {
+export class UsersSQLRepository extends UsersRepository {
   constructor(
     private readonly usersConfig: UsersConfig,
     @InjectDataSource() private readonly datasource: DataSource,

@@ -56,7 +56,7 @@ import { IRepoType } from '../features/base/interfaces/repo-type.interface';
         autoLoadEntities: false,
         synchronize: false,
         ssl:
-          getConfiguration().repoType === IRepoType.PG
+          getConfiguration().repoType === IRepoType.SQL
             ? {
                 rejectUnauthorized: false,
               }

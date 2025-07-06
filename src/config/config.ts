@@ -28,7 +28,7 @@ export const configModule = ConfigModule.forRoot({
     DESCRIPTION_MAX_LENGTH: Joi.number().greater(0).default(500),
     SHORT_DESCRIPTION_MAX_LENGTH: Joi.number().greater(0).default(100),
     REPO_TYPE: Joi.string()
-      .valid(IRepoType.MONGO, IRepoType.PG)
+      .valid(IRepoType.MONGO, IRepoType.SQL)
       .default(IRepoType.MONGO),
     SORT_DIRECTION: Joi.string()
       .valid(ISortDirections.ASC, ISortDirections.DESC)

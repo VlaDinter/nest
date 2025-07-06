@@ -8,8 +8,8 @@ import { UsersService } from './application/users.service';
 import { IRepoType } from '../../base/interfaces/repo-type.interface';
 import { getConfiguration } from '../../../configuration/configuration';
 import { getUsersConfiguration } from './configuration/users.configuration';
+import { UsersSQLRepository } from './infrastructure/sql-repository/users.sql.repository';
 import { UsersMongooseRepository } from './infrastructure/mongo-repository/users.mongoose.repository';
-import { UsersPostgresRepository } from './infrastructure/postgres-repository/users.postgres.repository';
 import { AddUserWithValidateOrRejectModelUseCase } from './usecases/add-user-with-validate-or-reject-model.usecase';
 
 const providers = [
@@ -19,7 +19,7 @@ const providers = [
     useClass:
       getConfiguration().repoType === IRepoType.MONGO
         ? UsersMongooseRepository
-        : UsersPostgresRepository,
+        : UsersSQLRepository,
   },
 ];
 

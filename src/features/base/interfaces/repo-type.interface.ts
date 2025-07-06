@@ -1,4 +1,4 @@
 export enum IRepoType {
-  PG = 'PG',
+  SQL = 'SQL',
   MONGO = 'MONGO',
 }
