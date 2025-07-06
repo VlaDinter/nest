@@ -8,7 +8,7 @@ export class UsersTestManager {
 
   async createMainTestUser(): Promise<Response> {
     const userResponse = await request(this.app.getHttpServer())
-      .post(`/${GLOBAL_PREFIX}/users`)
+      .post(`/${GLOBAL_PREFIX}/sa/users`)
       .auth('sa', '123')
       .send({
         login: 'user',
@@ -42,7 +42,7 @@ export class UsersTestManager {
       await delay(50);
 
       const response = await request(this.app.getHttpServer())
-        .post(`/${GLOBAL_PREFIX}/users`)
+        .post(`/${GLOBAL_PREFIX}/sa/users`)
         .auth('sa', '123')
         .send({
           login: 'test' + i,

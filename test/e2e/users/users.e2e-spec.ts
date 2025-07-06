@@ -55,7 +55,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
     };
 
     const createResponse = await request(httpServer)
-      .post(`/${GLOBAL_PREFIX}/users`)
+      .post(`/${GLOBAL_PREFIX}/sa/users`)
       .auth('sa', '123')
       .send(body)
       .expect(HttpStatus.CREATED);
@@ -70,7 +70,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
     );
 
     const response = await request(httpServer)
-      .get(`/${GLOBAL_PREFIX}/users`)
+      .get(`/${GLOBAL_PREFIX}/sa/users`)
       .auth('sa', '123')
       .expect(HttpStatus.OK);
 
@@ -80,7 +80,7 @@ skipDescribe(skipTests.for('usersTest'))('UsersController', () => {
   it('should get users with paging', async () => {
     const users = await usersTestManager.createTestUsers(12);
     const { body: responseBody } = await request(httpServer)
-      .get(`/${GLOBAL_PREFIX}/users?pageNumber=2&sortDirection=asc`)
+      .get(`/${GLOBAL_PREFIX}/sa/users?pageNumber=2&sortDirection=asc`)
       .auth('sa', '123')
       .expect(HttpStatus.OK);
 

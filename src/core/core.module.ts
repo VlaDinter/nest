@@ -1,22 +1,63 @@
 import { join } from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
-import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { CoreConfig } from './core.config';
 import { getConfiguration } from '../configuration/configuration';
 import { IRepoType } from '../features/base/interfaces/repo-type.interface';
+
+const getRepoModule = (): DynamicModule[] => {
+  const repoModule = [
+    MongooseModule.forRootAsync({
+      inject: [CoreConfig],
+      imports: [CoreModule],
+      useFactory: (coreConfig: CoreConfig) => ({
+        uri: coreConfig.mongoURI,
+        dbName: coreConfig.mongoDBName,
+      }),
+    }),
+  ];
+
+  if (getConfiguration().repoType === IRepoType.SQL) {
+    repoModule.push(
+      TypeOrmModule.forRootAsync({
+        inject: [CoreConfig],
+        imports: [CoreModule],
+        useFactory: (coreConfig: CoreConfig) => ({
+          type: 'postgres',
+          host: coreConfig.pgHost,
+          port: coreConfig.pgPort,
+          username: coreConfig.pgUser,
+          password: coreConfig.pgPassword,
+          database: coreConfig.pgDatabase,
+          autoLoadEntities: false,
+          synchronize: false,
+          ssl:
+            coreConfig.pgHost === 'localhost'
+              ? undefined
+              : {
+                  rejectUnauthorized: false,
+                },
+        }),
+      }),
+    );
+  }
+
+  return repoModule;
+};
 
 @Global()
 @Module({
   imports: [
     CqrsModule,
     PassportModule,
+    ...getRepoModule(),
     JwtModule.registerAsync({
       inject: [CoreConfig],
       imports: [CoreModule],
@@ -41,34 +82,6 @@ import { IRepoType } from '../features/base/interfaces/repo-type.interface';
             pass: coreConfig.emailFromPassword,
           },
         },
-      }),
-    }),
-    TypeOrmModule.forRootAsync({
-      inject: [CoreConfig],
-      imports: [CoreModule],
-      useFactory: (coreConfig: CoreConfig) => ({
-        type: 'postgres',
-        host: coreConfig.pgHost,
-        port: coreConfig.pgPort,
-        username: coreConfig.pgUser,
-        password: coreConfig.pgPassword,
-        database: coreConfig.pgDatabase,
-        autoLoadEntities: false,
-        synchronize: false,
-        ssl:
-          getConfiguration().repoType === IRepoType.SQL
-            ? {
-                rejectUnauthorized: false,
-              }
-            : undefined,
-      }),
-    }),
-    MongooseModule.forRootAsync({
-      inject: [CoreConfig],
-      imports: [CoreModule],
-      useFactory: (coreConfig: CoreConfig) => ({
-        uri: coreConfig.mongoURI,
-        dbName: coreConfig.mongoDBName,
       }),
     }),
     ThrottlerModule.forRootAsync({
