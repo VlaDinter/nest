@@ -295,7 +295,7 @@ export class UsersPostgresRepository extends UsersRepository {
       [passwordHash, userId],
     );
 
-    return result[0] ?? null;
+    return result[0][0] ?? null;
   }
 
   async updateUserEmailConfirmation(
@@ -371,7 +371,7 @@ export class UsersPostgresRepository extends UsersRepository {
       [lastActiveDate, userId, deviceId],
     );
 
-    return result[0] ?? null;
+    return result[0][0] ?? null;
   }
 
   async deleteUser(userId: string): Promise<UserViewModel | null> {
