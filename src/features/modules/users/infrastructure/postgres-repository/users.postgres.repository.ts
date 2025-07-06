@@ -382,7 +382,7 @@ export class UsersPostgresRepository extends UsersRepository {
       [userId],
     );
 
-    return result[0] ?? null;
+    return result[0][0] ?? null;
   }
 
   async deleteDevice(
@@ -396,7 +396,7 @@ export class UsersPostgresRepository extends UsersRepository {
       [userId, deviceId],
     );
 
-    return result[0] ?? null;
+    return result[0][0] ?? null;
   }
 
   async deleteDevices(
