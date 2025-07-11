@@ -46,7 +46,7 @@ export class BlogsController {
 
   @Api('Get blogs')
   @UseGuards(BasicAuthGuard)
-  @Get('sa/blogs')
+  @Get('blogs')
   getBlogs(
     @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
     @Query(
@@ -136,7 +136,6 @@ export class BlogsController {
   }
 
   @Api('Get posts', true)
-  @UseGuards(BasicAuthGuard)
   @Get('blogs/:id/posts')
   async getPosts(
     @Req() req: Request,
