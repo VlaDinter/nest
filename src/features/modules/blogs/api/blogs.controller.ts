@@ -37,7 +37,7 @@ import { EditPostWithBlogNameCommand } from '../../posts/usecases/commands/edit-
 import { RemovePostWithBlogNameCommand } from '../../posts/usecases/commands/remove-post-with-blog-name.command';
 
 @ApiTags('Blogs')
-@Controller('blogs')
+@Controller('sa/blogs')
 export class BlogsController {
   constructor(
     private readonly commandBus: CommandBus,
