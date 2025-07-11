@@ -1,4 +1,4 @@
-import { IsMongoId, MaxLength } from 'class-validator';
+import { MaxLength } from 'class-validator';
 import { IsRequired } from '../../../../common/decorators/validation/is-required.decorator';
 import { BlogIsExit } from '../../../../common/decorators/validation/blog-is-exist.decorator';
 import {
@@ -18,7 +18,6 @@ export class PostInputModel {
   @IsRequired()
   content: string;
   @BlogIsExit()
-  @IsMongoId()
   @IsRequired()
   blogId: string;
 }
