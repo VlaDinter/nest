@@ -99,7 +99,7 @@ export class BlogsSqlRepository extends BlogsRepository {
        SET name = $2, description = $3, website_url = $4
        WHERE id = $1
        RETURNING id, name, description, website_url AS "websiteUrl", is_membership AS "isMembership", created_at AS "createdAt"`,
-      [blogId, dto.name, dto.websiteUrl, dto.description],
+      [blogId, dto.name, dto.description, dto.websiteUrl],
     );
 
     return result[0][0] ?? null;

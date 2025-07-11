@@ -46,7 +46,7 @@ export class BlogsController {
 
   @Api('Get blogs')
   @UseGuards(BasicAuthGuard)
-  @Get('blogs')
+  @Get('sa/blogs')
   getBlogs(
     @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
     @Query(
