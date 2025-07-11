@@ -17,7 +17,7 @@ import { IPaginationParams } from '../../../../base/interfaces/pagination-params
 export class UsersSQLRepository extends UsersRepository {
   constructor(
     private readonly usersConfig: UsersConfig,
-    @InjectDataSource() private readonly datasource: DataSource,
+    @InjectDataSource() private readonly dataSource: DataSource,
   ) {
     super();
   }
@@ -42,7 +42,7 @@ export class UsersSQLRepository extends UsersRepository {
     }
 
     const where = !filters.length ? '' : `WHERE ${filters.join(' OR ')}`;
-    const count = await this.datasource.query(
+    const count = await this.dataSource.query(
       `SELECT COUNT(*) 
        FROM public."Users" 
        ${where}`,
@@ -63,7 +63,7 @@ export class UsersSQLRepository extends UsersRepository {
     skip.push(`OFFSET $${values.length}`);
 
     const limit = skip.join(' ');
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT id, login, email, created_at AS "createdAt"
        FROM public."Users"
        ${where}
@@ -82,7 +82,7 @@ export class UsersSQLRepository extends UsersRepository {
   }
 
   async findDevices(userId: string): Promise<Array<DeviceViewModel> | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate" 
        FROM public."Devices" 
        WHERE user_id = $1`,
@@ -93,7 +93,7 @@ export class UsersSQLRepository extends UsersRepository {
   }
 
   async findUser(userId: string): Promise<UserViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT 
        users.id,
        users.login,
@@ -134,7 +134,7 @@ export class UsersSQLRepository extends UsersRepository {
   async findUserByLoginOrEmail(
     loginOrEmail: string,
   ): Promise<UserViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT 
        users.id,
        users.login,
@@ -173,7 +173,7 @@ export class UsersSQLRepository extends UsersRepository {
   }
 
   async findUserByCode(code: string): Promise<UserViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT 
        users.id,
        users.login,
@@ -212,7 +212,7 @@ export class UsersSQLRepository extends UsersRepository {
   }
 
   async findDevice(deviceId: string): Promise<DeviceViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate" 
        FROM public."Devices" 
        WHERE device_id = $1`,
@@ -231,7 +231,7 @@ export class UsersSQLRepository extends UsersRepository {
       this.usersConfig.saltRounds,
     );
 
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `INSERT INTO public."Users" 
        (login, email, password_hash)
        VALUES ($1, $2, $3)
@@ -248,7 +248,7 @@ export class UsersSQLRepository extends UsersRepository {
       this.usersConfig.emailConfirmationExpirationDateHours,
     );
 
-    await this.datasource.query(
+    await this.dataSource.query(
       `INSERT INTO public."Confirmations"
        (user_id, confirmation_code, expiration_date, is_confirmed)
        VALUES ($1, $2, $3, $4)`,
@@ -262,7 +262,7 @@ export class UsersSQLRepository extends UsersRepository {
     userId: string,
     createDeviceDto: DeviceDto,
   ): Promise<DeviceViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `INSERT INTO public."Devices" 
        (user_id, ip, title, last_active_date)
        VALUES ($1, $2, $3, $4)
@@ -287,12 +287,12 @@ export class UsersSQLRepository extends UsersRepository {
       this.usersConfig.saltRounds,
     );
 
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `UPDATE public."Users"
-       SET password_hash = $1
-       WHERE id = $2
+       SET password_hash = $2
+       WHERE id = $1
        RETURNING id, login, email, created_at AS "createdAt"`,
-      [passwordHash, userId],
+      [userId, passwordHash],
     );
 
     return result[0][0] ?? null;
@@ -311,16 +311,16 @@ export class UsersSQLRepository extends UsersRepository {
       this.usersConfig.emailConfirmationExpirationDateHours,
     );
 
-    await this.datasource.query(
+    await this.dataSource.query(
       `UPDATE public."Confirmations"
-       SET confirmation_code = $1,
-       expiration_date = $2,
-       is_confirmed = $3
-       WHERE user_id = $4`,
-      [confirmationCode, expirationDate, isConfirmed, userId],
+       SET confirmation_code = $2,
+       expiration_date = $3,
+       is_confirmed = $4
+       WHERE user_id = $1`,
+      [userId, confirmationCode, expirationDate, isConfirmed],
     );
 
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `SELECT 
        users.id,
        users.login,
@@ -363,19 +363,19 @@ export class UsersSQLRepository extends UsersRepository {
     deviceId: string,
   ): Promise<DeviceViewModel | null> {
     const lastActiveDate = new Date().toISOString();
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `UPDATE public."Devices"
-       SET last_active_date = $1
-       WHERE user_id = $2 AND device_id = $3
+       SET last_active_date = $3
+       WHERE user_id = $1 AND device_id = $2
        RETURNING device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate"`,
-      [lastActiveDate, userId, deviceId],
+      [userId, deviceId, lastActiveDate],
     );
 
     return result[0][0] ?? null;
   }
 
   async deleteUser(userId: string): Promise<UserViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `DELETE FROM public."Users"
        WHERE id = $1
        RETURNING id, login, email, created_at AS "createdAt"`,
@@ -389,7 +389,7 @@ export class UsersSQLRepository extends UsersRepository {
     userId: string,
     deviceId: string,
   ): Promise<DeviceViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `DELETE FROM public."Devices"
        WHERE user_id = $1 AND device_id = $2
        RETURNING device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate"`,
@@ -403,7 +403,7 @@ export class UsersSQLRepository extends UsersRepository {
     userId: string,
     deviceId: string,
   ): Promise<DeviceViewModel | null> {
-    const result = await this.datasource.query(
+    const result = await this.dataSource.query(
       `DELETE FROM public."Devices"
        WHERE user_id = $1 AND device_id != $2`,
       [userId, deviceId],
@@ -413,6 +413,6 @@ export class UsersSQLRepository extends UsersRepository {
   }
 
   async deleteAll(): Promise<void> {
-    await this.datasource.query('DELETE FROM public."Users"');
+    await this.dataSource.query('DELETE FROM public."Users"');
   }
 }

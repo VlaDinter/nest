@@ -698,6 +698,104 @@ window.onload = function() {
           ]
         }
       },
+      "/api/blogs/{blogId}/posts/{postId}": {
+        "put": {
+          "operationId": "BlogsController_putPosts",
+          "summary": "Put posts",
+          "parameters": [
+            {
+              "name": "blogId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostInputModel"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "operationId": "BlogsController_deletePost",
+          "summary": "Delete post",
+          "parameters": [
+            {
+              "name": "blogId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
+        }
+      },
       "/api/posts": {
         "get": {
           "operationId": "PostsController_getPosts",

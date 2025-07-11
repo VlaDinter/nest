@@ -4,6 +4,11 @@ import { BlogDto } from '../dto/blog.dto';
 import { BlogViewModel } from '../models/output/blog-view.model';
 import { IPagination } from '../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
+import {
+  nameConstraints,
+  websiteUrlConstraints,
+  descriptionConstraints,
+} from '../constants/constants';
 
 @Schema({ timestamps: true })
 export class Blog {
@@ -21,18 +26,21 @@ export class Blog {
   @Prop({
     type: String,
     required: true,
+    ...nameConstraints,
   })
   name: string;
 
   @Prop({
     type: String,
     required: true,
+    ...descriptionConstraints,
   })
   description: string;
 
   @Prop({
     type: String,
     required: true,
+    ...websiteUrlConstraints,
   })
   websiteUrl: string;
 

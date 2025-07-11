@@ -5,14 +5,20 @@ import { PostsModule } from '../posts/posts.module';
 import { BlogsController } from './api/blogs.controller';
 import { Blog, BlogSchema } from './entities/blog.schema';
 import { BlogsService } from './application/blogs.service';
+import { IRepoType } from '../../base/interfaces/repo-type.interface';
+import { getConfiguration } from '../../../configuration/configuration';
 import { getBlogsConfiguration } from './configuration/blogs.configuration';
 import { GetPostsByBlogIdUseCase } from './usecases/get-posts-by-blog-id.usecase';
+import { BlogsSqlRepository } from './infrastructure/sql-repository/blogs.sql.repository';
 import { BlogsMongooseRepository } from './infrastructure/mongo-repository/blogs.mongoose.repository';
 
 const providers = [
   {
     provide: 'BlogsRepository',
-    useClass: BlogsMongooseRepository,
+    useClass:
+      getConfiguration().repoType === IRepoType.MONGO
+        ? BlogsMongooseRepository
+        : BlogsSqlRepository,
   },
 ];
 

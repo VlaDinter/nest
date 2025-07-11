@@ -6,6 +6,11 @@ import { IPagination } from '../../../base/interfaces/pagination.interface';
 import { ILikeStatus } from '../../../base/interfaces/like-status.interface';
 import { LikeDetailsViewModel } from '../models/output/like-details-view.model';
 import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
+import {
+  titleConstraints,
+  contentConstraints,
+  shortDescriptionConstraints,
+} from '../constants/constants';
 
 @Schema()
 export class LikeDetails {
@@ -46,18 +51,21 @@ export class Post {
   @Prop({
     type: String,
     required: true,
+    ...titleConstraints,
   })
   title: string;
 
   @Prop({
     type: String,
     required: true,
+    ...shortDescriptionConstraints,
   })
   shortDescription: string;
 
   @Prop({
     type: String,
     required: true,
+    ...contentConstraints,
   })
   content: string;
 

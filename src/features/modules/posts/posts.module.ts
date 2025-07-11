@@ -8,9 +8,12 @@ import { PostsController } from './api/posts.controller';
 import { Post, PostSchema } from './entities/post.schema';
 import { PostsService } from './application/posts.service';
 import { CommentsModule } from '../comments/comments.module';
+import { IRepoType } from '../../base/interfaces/repo-type.interface';
+import { getConfiguration } from '../../../configuration/configuration';
 import { getPostsConfiguration } from './configuration/posts.configuration';
 import { GetCommentsByPostIdUseCase } from './usecases/get-comments-by-post-id.usecase';
 import { AddPostWithBlogNameUseCase } from './usecases/add-post-with-blog-name.usecase';
+import { PostsSqlRepository } from './infrastructure/sql-repository/posts.sql.repository';
 import { AddCommentWithPostIdUseCase } from './usecases/add-comment-with-post-id.usecase';
 import { EditPostWithBlogNameUseCase } from './usecases/edit-post-with-blog-name.usecase';
 import { EditPostWithUserLoginUseCase } from './usecases/edit-post-with-user-login.usecase';
@@ -21,7 +24,10 @@ const providers = [
   PostsConfig,
   {
     provide: 'PostsRepository',
-    useClass: PostsMongooseRepository,
+    useClass:
+      getConfiguration().repoType === IRepoType.MONGO
+        ? PostsMongooseRepository
+        : PostsSqlRepository,
   },
 ];
 
