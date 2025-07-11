@@ -466,7 +466,40 @@ window.onload = function() {
           "tags": [
             "Blogs"
           ]
-        },
+        }
+      },
+      "/api/blogs/{id}": {
+        "get": {
+          "operationId": "BlogsController_getBlog",
+          "summary": "Get blog",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Blogs"
+          ]
+        }
+      },
+      "/api/sa/blogs": {
         "post": {
           "operationId": "BlogsController_postBlogs",
           "summary": "Post blogs",
@@ -503,36 +536,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/blogs/{id}": {
-        "get": {
-          "operationId": "BlogsController_getBlog",
-          "summary": "Get blog",
-          "parameters": [
-            {
-              "name": "id",
-              "required": true,
-              "in": "path",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          },
-          "tags": [
-            "Blogs"
-          ]
-        },
+      "/api/sa/blogs/{id}": {
         "put": {
           "operationId": "BlogsController_putBlog",
           "summary": "Put blog",
@@ -652,7 +656,9 @@ window.onload = function() {
           "tags": [
             "Blogs"
           ]
-        },
+        }
+      },
+      "/api/sa/blogs/{id}/posts": {
         "post": {
           "operationId": "BlogsController_postPosts",
           "summary": "Post posts",
@@ -698,7 +704,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/blogs/{blogId}/posts/{postId}": {
+      "/api/sa/blogs/{blogId}/posts/{postId}": {
         "put": {
           "operationId": "BlogsController_putPosts",
           "summary": "Put posts",

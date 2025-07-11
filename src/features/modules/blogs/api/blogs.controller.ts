@@ -37,7 +37,7 @@ import { EditPostWithBlogNameCommand } from '../../posts/usecases/commands/edit-
 import { RemovePostWithBlogNameCommand } from '../../posts/usecases/commands/remove-post-with-blog-name.command';
 
 @ApiTags('Blogs')
-@Controller('sa/blogs')
+@Controller()
 export class BlogsController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -46,7 +46,7 @@ export class BlogsController {
 
   @Api('Get blogs')
   @UseGuards(BasicAuthGuard)
-  @Get()
+  @Get('blogs')
   getBlogs(
     @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
     @Query(
@@ -85,7 +85,7 @@ export class BlogsController {
   }
 
   @Api('Get blog', true)
-  @Get(':id')
+  @Get('blogs/:id')
   async getBlog(
     @Param('id', ObjectIdValidationPipe) blogId: string,
   ): Promise<BlogViewModel | void> {
@@ -100,7 +100,7 @@ export class BlogsController {
 
   @Api('Post blogs', false, true)
   @UseGuards(BasicAuthGuard)
-  @Post()
+  @Post('sa/blogs')
   @HttpCode(HttpStatus.CREATED)
   postBlogs(@Body() inputModel: BlogInputModel): Promise<BlogViewModel> {
     return this.blogsService.addBlog(inputModel);
@@ -108,7 +108,7 @@ export class BlogsController {
 
   @Api('Put blog', true, true)
   @UseGuards(BasicAuthGuard)
-  @Put(':id')
+  @Put('sa/blogs/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async putBlog(
     @Body() inputModel: BlogInputModel,
@@ -123,7 +123,7 @@ export class BlogsController {
 
   @Api('Delete blog', true, true)
   @UseGuards(BasicAuthGuard)
-  @Delete(':id')
+  @Delete('sa/blogs/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBlog(
     @Param('id', ObjectIdValidationPipe) blogId: string,
@@ -137,7 +137,7 @@ export class BlogsController {
 
   @Api('Get posts', true)
   @UseGuards(BasicAuthGuard)
-  @Get(':id/posts')
+  @Get('blogs/:id/posts')
   async getPosts(
     @Req() req: Request,
     @Param('id', ObjectIdValidationPipe) blogId: string,
@@ -192,7 +192,7 @@ export class BlogsController {
 
   @Api('Post posts', true, true)
   @UseGuards(BasicAuthGuard)
-  @Post(':id/posts')
+  @Post('sa/blogs/:id/posts')
   async postPosts(
     @Body() inputModel: BlogPostInputModel,
     @Param('id', ObjectIdValidationPipe) blogId: string,
@@ -212,7 +212,7 @@ export class BlogsController {
 
   @Api('Put posts', true, true)
   @UseGuards(BasicAuthGuard)
-  @Put(':blogId/posts/:postId')
+  @Put('sa/blogs/:blogId/posts/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async putPosts(
     @Body() inputModel: BlogPostInputModel,
@@ -236,7 +236,7 @@ export class BlogsController {
 
   @Api('Delete post', true, true)
   @UseGuards(BasicAuthGuard)
-  @Delete(':blogId/posts/:postId')
+  @Delete('sa/blogs/:blogId/posts/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePost(
     @Param('blogId', ObjectIdValidationPipe) blogId: string,
