@@ -33,7 +33,7 @@ export class CommentsSqlRepository extends CommentsRepository {
 
     const likes = result.filter(
       (like: LikeDetailsViewModel & { status: ILikeStatus }): boolean =>
-        like.status === ILikeStatus.LIKE,
+        like.status.trim() === ILikeStatus.LIKE,
     );
 
     const dislikes = result.filter(
