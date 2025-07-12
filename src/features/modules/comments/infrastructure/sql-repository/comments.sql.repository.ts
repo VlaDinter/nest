@@ -49,7 +49,7 @@ export class CommentsSqlRepository extends CommentsRepository {
     return {
       likesCount: likes.length,
       dislikesCount: dislikes.length,
-      myStatus: like?.status ?? ILikeStatus.NONE,
+      myStatus: like?.status?.trim() ?? ILikeStatus.NONE,
     };
   }
 

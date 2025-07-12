@@ -53,7 +53,7 @@ export class PostsSqlRepository extends PostsRepository {
     return {
       likesCount: likes.length,
       dislikesCount: dislikes.length,
-      myStatus: like?.status ?? ILikeStatus.NONE,
+      myStatus: like?.status?.trim() ?? ILikeStatus.NONE,
       newestLikes: likes.slice(0, this.postsConfig.newestLikesLength).map(
         (like: LikeDetailsViewModel): LikeDetailsViewModel => ({
           login: like.login,
