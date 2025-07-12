@@ -97,7 +97,7 @@ export class CommentsSqlRepository extends CommentsRepository {
        users.login AS "userLogin"
        FROM public."Comments" comments
        LEFT OUTER JOIN public."Users" users 
-       ON users.user_id = comments.id
+       ON comments.user_id = users.id
        ${where}
        ${orderBy}
        ${limit}`,
