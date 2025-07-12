@@ -404,12 +404,23 @@ export class UsersSQLRepository extends UsersRepository {
     deviceId: string,
   ): Promise<DeviceViewModel | null> {
     const result = await this.dataSource.query(
+      `SELECT device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate" 
+       FROM public."Devices" 
+       WHERE device_id = $1`,
+      [deviceId],
+    );
+
+    if (!result.length) {
+      return null;
+    }
+
+    await this.dataSource.query(
       `DELETE FROM public."Devices"
        WHERE user_id = $1 AND device_id != $2`,
       [userId, deviceId],
     );
 
-    return result;
+    return result[0];
   }
 
   async deleteAll(): Promise<void> {

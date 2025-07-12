@@ -45,7 +45,7 @@ skipDescribe(skipTests.for('blogsTest'))('Blogs e2e', () => {
 
     it('blog should be updated', async () => {
       await request(httpServer)
-        .put(`/${GLOBAL_PREFIX}/blogs/${blogId}`)
+        .put(`/${GLOBAL_PREFIX}/sa/blogs/${blogId}`)
         .auth('sa', '123')
         .send({ ...createBlogBody, name: 'new name' })
         .expect(HttpStatus.NO_CONTENT);

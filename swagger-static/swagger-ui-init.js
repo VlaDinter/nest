@@ -412,6 +412,97 @@ window.onload = function() {
           ]
         }
       },
+      "/api/sa/blogs": {
+        "get": {
+          "operationId": "BlogsController_getSABlogs",
+          "summary": "Get sa blogs",
+          "parameters": [
+            {
+              "name": "searchNameTerm",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pageSize",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "pageNumber",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "sortBy",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "sortDirection",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Blogs"
+          ]
+        },
+        "post": {
+          "operationId": "BlogsController_postBlogs",
+          "summary": "Post blogs",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogInputModel"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BlogViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Blogs"
+          ],
+          "security": [
+            {
+              "basicAuth": []
+            }
+          ]
+        }
+      },
       "/api/blogs": {
         "get": {
           "operationId": "BlogsController_getBlogs",
@@ -496,43 +587,6 @@ window.onload = function() {
           },
           "tags": [
             "Blogs"
-          ]
-        }
-      },
-      "/api/sa/blogs": {
-        "post": {
-          "operationId": "BlogsController_postBlogs",
-          "summary": "Post blogs",
-          "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlogInputModel"
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/BlogViewModel"
-                  }
-                }
-              }
-            }
-          },
-          "tags": [
-            "Blogs"
-          ],
-          "security": [
-            {
-              "basicAuth": []
-            }
           ]
         }
       },

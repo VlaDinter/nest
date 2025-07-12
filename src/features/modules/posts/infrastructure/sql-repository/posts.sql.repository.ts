@@ -204,7 +204,7 @@ export class PostsSqlRepository extends PostsRepository {
       return null;
     }
 
-    const extendedLikesInfo = await this.findLikes(result[0][0].id);
+    const extendedLikesInfo = await this.findLikes(postId);
 
     return {
       blogName,
@@ -217,7 +217,6 @@ export class PostsSqlRepository extends PostsRepository {
     postId: string,
     updateLikeDto: LikeDto,
     userId: string,
-    _: string,
   ): Promise<PostViewModel | null> {
     const result = await this.dataSource.query(
       `SELECT 

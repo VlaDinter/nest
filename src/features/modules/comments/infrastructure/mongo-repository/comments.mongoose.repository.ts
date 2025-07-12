@@ -113,7 +113,7 @@ export class CommentsMongooseRepository extends CommentsRepository {
 
     await commentInstance.save();
 
-    return commentInstance.mapToViewModel();
+    return commentInstance.mapToViewModel(userId);
   }
 
   async deleteComment(commentId: string): Promise<CommentViewModel | null> {

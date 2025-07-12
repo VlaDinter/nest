@@ -116,7 +116,10 @@ export class PostsMongooseRepository extends PostsRepository {
 
     await postInstance.save();
 
-    return postInstance.mapToViewModel(this.postsConfig.newestLikesLength);
+    return postInstance.mapToViewModel(
+      this.postsConfig.newestLikesLength,
+      userId,
+    );
   }
 
   async deletePost(postId: string): Promise<PostViewModel | null> {

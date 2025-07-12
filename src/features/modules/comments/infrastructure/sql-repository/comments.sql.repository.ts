@@ -206,20 +206,11 @@ export class CommentsSqlRepository extends CommentsRepository {
       `UPDATE public."Comments"
        SET content = $2
        WHERE id = $1
-       RETURNING id, content, created_at AS "createdAt"`,
+       RETURNING *`,
       [commentId, dto.content],
     );
 
-    if (!result[0][0]) {
-      return null;
-    }
-
-    const likesInfo = await this.findLikes(commentId);
-
-    return {
-      likesInfo,
-      ...result[0][0],
-    };
+    return result[0][0] ?? null;
   }
 
   async updateLike(
@@ -254,7 +245,7 @@ export class CommentsSqlRepository extends CommentsRepository {
       );
     }
 
-    const likesInfo = await this.findLikes(result[0].id, userId);
+    const likesInfo = await this.findLikes(commentId, userId);
 
     return {
       likesInfo,
