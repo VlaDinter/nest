@@ -44,8 +44,47 @@ export class BlogsController {
     private readonly blogsService: BlogsService,
   ) {}
 
-  @Api('Get blogs')
+  @Api('Get sa blogs')
   @UseGuards(BasicAuthGuard)
+  @Get('sa/blogs')
+  getSABlogs(
+    @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
+    @Query(
+      'pageSize',
+      ParseNumberPipe,
+      new DefaultValuePipe(getConfiguration().pageSize),
+    )
+    pageSize: number,
+    @Query(
+      'pageNumber',
+      ParseNumberPipe,
+      new DefaultValuePipe(getConfiguration().pageNumber),
+    )
+    pageNumber: number,
+    @Query(
+      'sortBy',
+      ParseStringPipe,
+      new DefaultValuePipe(getConfiguration().sortBy),
+    )
+    sortBy: string,
+    @Query(
+      'sortDirection',
+      ParseStringPipe,
+      new ParseValuesPipe([ISortDirections.ASC, ISortDirections.DESC]),
+      new DefaultValuePipe(getConfiguration().sortDirection),
+    )
+    sortDirection: ISortDirections,
+  ): Promise<IPagination<BlogViewModel>> {
+    return this.blogsService.getBlogs({
+      sortBy,
+      pageSize,
+      pageNumber,
+      sortDirection,
+      searchNameTerm,
+    });
+  }
+
+  @Api('Get blogs')
   @Get('blogs')
   getBlogs(
     @Query('searchNameTerm', ParseStringPipe) searchNameTerm: string,
