@@ -65,8 +65,8 @@ export class MailNotifications implements IMailNotifications {
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_FROM,
-        pass: process.env.EMAIL_FROM_PASSWORD
-      }
+        pass: process.env.EMAIL_FROM_PASSWORD,
+      },
     });
 
     await new Promise((resolve, reject) => {
@@ -84,20 +84,24 @@ export class MailNotifications implements IMailNotifications {
 
     await new Promise((resolve, reject) => {
       // send mail
-      transport.sendMail({
-        from: 'Dimych <dimychdeveloper@gmail.com>',
-        to: email,
-        subject: title,
-        html: message
-      }, (err, info) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          console.log(info);
-          resolve(info);
-        }
-      });
+      transport.sendMail(
+        {
+          from: 'Dimych <dimychdeveloper@gmail.com>',
+          to: email,
+          subject: title,
+          html: message,
+        },
+        (err, info) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            console.log(info);
+            resolve(info);
+          }
+        },
+      );
+    });
 
     // const transporter = nodemailer.createTransport({
     //   port: 465,

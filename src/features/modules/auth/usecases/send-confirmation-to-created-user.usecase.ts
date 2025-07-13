@@ -1,6 +1,6 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { UsersService } from '../../users/application/users.service';
-import { SendConfirmationEvent } from '../handlers/events/send-confirmation.event';
+import { MailNotifications } from '../../../base/adapters/mail-notifications';
 import { SendConfirmationToCreatedUserCommand } from './commands/send-confirmation-to-created-user.command';
 
 @CommandHandler(SendConfirmationToCreatedUserCommand)
@@ -10,17 +10,16 @@ export class SendConfirmationToCreatedUserUseCase
   constructor(
     private readonly eventBus: EventBus,
     private readonly usersService: UsersService,
+    private readonly mailNotifications: MailNotifications,
   ) {}
 
   async execute(command: SendConfirmationToCreatedUserCommand): Promise<void> {
     const user = await this.usersService.getUser(command.userId);
 
     if (user?.emailConfirmation?.confirmationCode) {
-      await this.eventBus.publish(
-        new SendConfirmationEvent(
-          user.email,
-          user.emailConfirmation.confirmationCode,
-        ),
+      await this.mailNotifications.sendConfirmation(
+        user.email,
+        user.emailConfirmation.confirmationCode,
       );
     }
   }
