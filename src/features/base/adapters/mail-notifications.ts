@@ -64,7 +64,7 @@ export class MailNotifications implements IMailNotifications {
     const transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_FROM,
+        user: process.env.EMAIL_FROM_USER,
         pass: process.env.EMAIL_FROM_PASSWORD,
       },
     });
