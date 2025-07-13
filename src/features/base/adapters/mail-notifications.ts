@@ -61,18 +61,17 @@ export class MailNotifications implements IMailNotifications {
   }
 
   async sendEmail(email: string, title: string, message: string) {
-    const transporter = nodemailer.createTransport({
-      port: 465,
-      host: 'smtp.gmail.com',
+    const transport = nodemailer.createTransport({
+      service: 'gmail',
       auth: {
-        user: process.env.EMAIL_FROM_USER,
-        pass: process.env.EMAIL_FROM_PASSWORD,
-      },
-      secure: true,
+        user: process.env.EMAIL_FROM,
+        pass: process.env.EMAIL_FROM_PASSWORD
+      }
     });
 
     await new Promise((resolve, reject) => {
-      transporter.verify(function (error, success) {
+      // verify connection configuration
+      transport.verify(function (error, success) {
         if (error) {
           console.log(error);
           reject(error);
@@ -83,18 +82,14 @@ export class MailNotifications implements IMailNotifications {
       });
     });
 
-    const mailData = {
-      from: {
-        name: 'Dimych',
-        address: '<dimychdeveloper@gmail.com>',
-      },
-      to: email,
-      subject: title,
-      html: message,
-    };
-
     await new Promise((resolve, reject) => {
-      transporter.sendMail(mailData, (err, info) => {
+      // send mail
+      transport.sendMail({
+        from: 'Dimych <dimychdeveloper@gmail.com>',
+        to: email,
+        subject: title,
+        html: message
+      }, (err, info) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -103,7 +98,50 @@ export class MailNotifications implements IMailNotifications {
           resolve(info);
         }
       });
-    });
+
+    // const transporter = nodemailer.createTransport({
+    //   port: 465,
+    //   host: 'smtp.gmail.com',
+    //   auth: {
+    //     user: process.env.EMAIL_FROM_USER,
+    //     pass: process.env.EMAIL_FROM_PASSWORD,
+    //   },
+    //   secure: true,
+    // });
+    //
+    // await new Promise((resolve, reject) => {
+    //   transporter.verify(function (error, success) {
+    //     if (error) {
+    //       console.log(error);
+    //       reject(error);
+    //     } else {
+    //       console.log('Server is ready to take our messages');
+    //       resolve(success);
+    //     }
+    //   });
+    // });
+    //
+    // const mailData = {
+    //   from: {
+    //     name: 'Dimych',
+    //     address: '<dimychdeveloper@gmail.com>',
+    //   },
+    //   to: email,
+    //   subject: title,
+    //   html: message,
+    // };
+    //
+    // await new Promise((resolve, reject) => {
+    //   transporter.sendMail(mailData, (err, info) => {
+    //     if (err) {
+    //       console.error(err);
+    //       reject(err);
+    //     } else {
+    //       console.log(info);
+    //       resolve(info);
+    //     }
+    //   });
+    // });
 
     // const transport = nodemailer.createTransport({
     //   service: 'gmail',
