@@ -1,7 +1,7 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { UsersService } from '../../users/application/users.service';
 import { UserViewModel } from '../../users/models/output/user-view.model';
-import { SendRecoveryCodeEvent } from '../handlers/events/send-recovery-code.event';
+import { MailNotifications } from '../../../base/adapters/mail-notifications';
 import { SendRecoveryCodeToUserCommand } from './commands/send-recovery-code-to-user.command';
 
 @CommandHandler(SendRecoveryCodeToUserCommand)
@@ -12,6 +12,7 @@ export class SendRecoveryCodeToUserUseCase
   constructor(
     private readonly eventBus: EventBus,
     private readonly usersService: UsersService,
+    private readonly mailNotifications: MailNotifications,
   ) {}
 
   async execute(
@@ -29,11 +30,9 @@ export class SendRecoveryCodeToUserUseCase
     );
 
     if (updatedUser?.emailConfirmation?.confirmationCode) {
-      await this.eventBus.publish(
-        new SendRecoveryCodeEvent(
-          updatedUser.email,
-          updatedUser.emailConfirmation.confirmationCode,
-        ),
+      await this.mailNotifications.sendRecoveryCode(
+        updatedUser.email,
+        updatedUser.emailConfirmation.confirmationCode,
       );
     }
 
