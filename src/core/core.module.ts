@@ -45,6 +45,12 @@ const getRepoModule = (): DynamicModule[] => {
           password: coreConfig.pgPassword,
           database: coreConfig.pgDatabase,
           namingStrategy: new PluralNamingStrategy(),
+          ssl:
+            coreConfig.pgHost === 'localhost'
+              ? undefined
+              : {
+                  rejectUnauthorized: false,
+                },
         }),
       }),
     );
