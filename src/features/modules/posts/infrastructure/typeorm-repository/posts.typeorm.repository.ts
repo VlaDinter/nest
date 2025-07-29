@@ -28,8 +28,7 @@ export class PostsTypeormRepository extends PostsRepository {
     userId?: string,
   ): Promise<IPagination<PostViewModel>> {
     const result = this.entityManager
-      .createQueryBuilder()
-      .from(Post, 'post')
+      .createQueryBuilder(Post, 'post')
       .leftJoinAndSelect('post.blog', 'blog')
       .leftJoinAndSelect('post.likes', 'likes')
       .leftJoinAndSelect('likes.user', 'user');

@@ -25,8 +25,7 @@ export class CommentsTypeormRepository extends CommentsRepository {
     userId?: string,
   ): Promise<IPagination<CommentViewModel>> {
     const result = this.entityManager
-      .createQueryBuilder()
-      .from(Comment, 'comment')
+      .createQueryBuilder(Comment, 'comment')
       .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.likes', 'likes');
 

@@ -104,7 +104,8 @@ export class UsersTypeormRepository extends UsersRepository {
 
   findDevice(deviceId: string): Promise<DeviceViewModel | null> {
     return this.entityManager
-      .createQueryBuilder(Device, 'device')
+      .createQueryBuilder()
+      .from(Device, 'device')
       .select([
         'device.ip',
         'device.title',
