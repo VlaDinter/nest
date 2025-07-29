@@ -138,8 +138,8 @@ export class UsersTypeormRepository extends UsersRepository {
 
     const emailConfirmation = new EmailConfirmation();
 
-    emailConfirmation.id = Date.now();
     emailConfirmation.userId = user.id;
+    emailConfirmation.id = `${+new Date()}`;
     emailConfirmation.isConfirmed = isConfirmed;
     emailConfirmation.confirmationCode = randomUUID();
     emailConfirmation.expirationDate = Add.hours(

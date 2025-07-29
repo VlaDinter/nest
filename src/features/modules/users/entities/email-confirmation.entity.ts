@@ -4,7 +4,7 @@ import { User } from './user.entity';
 @Entity('Confirmations')
 export class EmailConfirmation {
   @PrimaryColumn()
-  public id: number;
+  public id: string;
 
   @Column({ name: 'confirmation_code' })
   public confirmationCode: string;
