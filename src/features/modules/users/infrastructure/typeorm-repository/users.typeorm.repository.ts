@@ -78,8 +78,7 @@ export class UsersTypeormRepository extends UsersRepository {
 
   findUser(userId: string): Promise<UserViewModel | null> {
     return this.entityManager
-      .createQueryBuilder()
-      .from(User, 'user')
+      .createQueryBuilder(User, 'user')
       .leftJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
       .where('user.id = :userId', { userId })
       .getOne();
@@ -87,8 +86,7 @@ export class UsersTypeormRepository extends UsersRepository {
 
   findUserByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
     return this.entityManager
-      .createQueryBuilder()
-      .from(User, 'user')
+      .createQueryBuilder(User, 'user')
       .leftJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
       .where('user.email = :value OR user.login = :value', {
         value: loginOrEmail,
@@ -98,8 +96,7 @@ export class UsersTypeormRepository extends UsersRepository {
 
   findUserByCode(code: string): Promise<UserViewModel | null> {
     return this.entityManager
-      .createQueryBuilder()
-      .from(User, 'user')
+      .createQueryBuilder(User, 'user')
       .innerJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
       .where('emailConfirmation.confirmationCode = :code', { code })
       .getOne();
@@ -107,8 +104,7 @@ export class UsersTypeormRepository extends UsersRepository {
 
   findDevice(deviceId: string): Promise<DeviceViewModel | null> {
     return this.entityManager
-      .createQueryBuilder()
-      .from(Device, 'device')
+      .createQueryBuilder(Device, 'device')
       .select([
         'device.ip',
         'device.title',

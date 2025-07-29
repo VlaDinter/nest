@@ -96,7 +96,6 @@ export class PostsTypeormRepository extends PostsRepository {
   ): Promise<PostViewModel | null> {
     const post = await this.entityManager
       .createQueryBuilder(Post, 'post')
-      .from(Post, 'post')
       .leftJoinAndSelect('post.blog', 'blog')
       .leftJoinAndSelect('post.likes', 'likes')
       .leftJoinAndSelect('likes.user', 'user')
