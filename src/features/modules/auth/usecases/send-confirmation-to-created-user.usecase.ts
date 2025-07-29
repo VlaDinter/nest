@@ -17,7 +17,7 @@ export class SendConfirmationToCreatedUserUseCase
     const user = await this.usersService.getUser(command.userId);
 
     if (user?.emailConfirmation?.confirmationCode) {
-      await this.mailNotifications.sendRecoveryCode(
+      await this.mailNotifications.sendConfirmation(
         user.email,
         user.emailConfirmation.confirmationCode,
       );

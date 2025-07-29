@@ -33,7 +33,7 @@ export class MailNotifications implements IMailNotifications {
   ): Promise<void> {
     await this.sendEmail(
       email,
-      'Email confirmation',
+      'AAA',
       `
       <h1>Thank for your registration</h1>
       <p>To finish registration please follow the link below:
@@ -49,7 +49,7 @@ export class MailNotifications implements IMailNotifications {
   ): Promise<void> {
     await this.sendEmail(
       email,
-      'Password recovery',
+      'BBB',
       `
       <h1>Password recovery</h1>
       <p>To finish password recovery please follow the link below:
