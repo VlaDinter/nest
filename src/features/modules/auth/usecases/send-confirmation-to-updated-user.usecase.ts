@@ -30,7 +30,7 @@ export class SendConfirmationToUpdatedUserUseCase
     );
 
     if (updatedUser?.emailConfirmation?.confirmationCode) {
-      await this.mailNotifications.sendConfirmation(
+      await this.mailNotifications.sendConfirmation2(
         updatedUser.email,
         updatedUser.emailConfirmation.confirmationCode,
       );

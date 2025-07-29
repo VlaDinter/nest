@@ -44,6 +44,22 @@ export class MailNotifications implements IMailNotifications {
     );
   }
 
+  async sendConfirmation2(
+    email: string,
+    confirmationCode: string,
+  ): Promise<void> {
+    await this.sendEmail(
+      email,
+      'CCC',
+      `
+      <h1>Thank for your registration</h1>
+      <p>To finish registration please follow the link below:
+        <a href='https://some-front.com/confirm-registration?code=${confirmationCode}'>complete registration</a>
+      </p>
+    `,
+    );
+  }
+
   async sendRecoveryCode(
     email: string,
     confirmationCode: string,
