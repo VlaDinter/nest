@@ -215,7 +215,7 @@ export class CommentsSqlRepository extends CommentsRepository {
 
   async updateLike(
     commentId: string,
-    dto: LikeDto,
+    updateLikeDto: LikeDto,
     userId: string,
     userLogin: string,
   ): Promise<CommentViewModel | null> {
@@ -236,12 +236,12 @@ export class CommentsSqlRepository extends CommentsRepository {
       [commentId, userId],
     );
 
-    if (dto.likeStatus !== ILikeStatus.NONE) {
+    if (updateLikeDto.likeStatus !== ILikeStatus.NONE) {
       await this.dataSource.query(
         `INSERT INTO public."Likes"
          (comment_id, user_id, added_at, status)
          VALUES ($1, $2, $3, $4)`,
-        [commentId, userId, new Date().toISOString(), dto.likeStatus],
+        [commentId, userId, new Date().toISOString(), updateLikeDto.likeStatus],
       );
     }
 

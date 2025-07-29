@@ -4,7 +4,7 @@ import { PostDto } from '../../dto/post.dto';
 import { PostsRepository } from '../posts.repository';
 import { PostsConfig } from '../../config/posts.config';
 import { LikeDto } from '../../../comments/dto/like.dto';
-import { Post, PostModelType } from '../../entities/post.schema';
+import { Post, PostModelType } from '../../schemes/post.schema';
 import { PostViewModel } from '../../models/output/post-view.model';
 import { IPagination } from '../../../../base/interfaces/pagination.interface';
 import { ILikeStatus } from '../../../../base/interfaces/like-status.interface';

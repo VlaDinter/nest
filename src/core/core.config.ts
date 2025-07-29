@@ -18,7 +18,7 @@ export class CoreConfig extends BaseConfig {
   @IsNumber(
     {},
     {
-      message: 'Set Env variable PGPORT, example: 5432',
+      message: 'Set Env variable PGPORT, example: 3306',
     },
   )
   pgPort: number;
@@ -29,7 +29,7 @@ export class CoreConfig extends BaseConfig {
   pgHost: string;
 
   @IsNotEmpty({
-    message: 'Set Env variable PGUSER, example: nestjs',
+    message: 'Set Env variable PGUSER, example: postgres',
   })
   pgUser: string;
 
@@ -52,12 +52,12 @@ export class CoreConfig extends BaseConfig {
   mongoURI: string;
 
   @IsNotEmpty({
-    message: 'Set Env variable PGDATABASE, example: nest',
+    message: 'Set Env variable PGDATABASE, example: test',
   })
   pgDatabase: string;
 
   @IsNotEmpty({
-    message: 'Set Env variable PGPASSWORD, example: nodejs',
+    message: 'Set Env variable PGPASSWORD, example: root',
   })
   pgPassword: string;
 

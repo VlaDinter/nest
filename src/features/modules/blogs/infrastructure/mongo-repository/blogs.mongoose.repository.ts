@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogDto } from '../../dto/blog.dto';
 import { BlogsRepository } from '../blogs.repository';
-import { Blog, BlogModelType } from '../../entities/blog.schema';
+import { Blog, BlogModelType } from '../../schemes/blog.schema';
 import { BlogViewModel } from '../../models/output/blog-view.model';
 import { IPagination } from '../../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';

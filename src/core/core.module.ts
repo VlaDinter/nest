@@ -11,18 +11,23 @@ import { DynamicModule, Global, Module } from '@nestjs/common';
 import { CoreConfig } from './core.config';
 import { getConfiguration } from '../configuration/configuration';
 import { IRepoType } from '../features/base/interfaces/repo-type.interface';
+import { PluralNamingStrategy } from '../features/common/strategies/naming.strategy';
 
 const getRepoModule = (): DynamicModule[] => {
-  const repoModule = [
-    MongooseModule.forRootAsync({
-      inject: [CoreConfig],
-      imports: [CoreModule],
-      useFactory: (coreConfig: CoreConfig) => ({
-        uri: coreConfig.mongoURI,
-        dbName: coreConfig.mongoDBName,
+  const repoModule: DynamicModule[] = [];
+
+  if (getConfiguration().repoType === IRepoType.MONGO) {
+    repoModule.push(
+      MongooseModule.forRootAsync({
+        inject: [CoreConfig],
+        imports: [CoreModule],
+        useFactory: (coreConfig: CoreConfig) => ({
+          uri: coreConfig.mongoURI,
+          dbName: coreConfig.mongoDBName,
+        }),
       }),
-    }),
-  ];
+    );
+  }
 
   if (getConfiguration().repoType === IRepoType.SQL) {
     repoModule.push(
@@ -31,19 +36,15 @@ const getRepoModule = (): DynamicModule[] => {
         imports: [CoreModule],
         useFactory: (coreConfig: CoreConfig) => ({
           type: 'postgres',
+          synchronize: true,
+          logging: ['query'],
+          autoLoadEntities: true,
           host: coreConfig.pgHost,
           port: coreConfig.pgPort,
           username: coreConfig.pgUser,
           password: coreConfig.pgPassword,
           database: coreConfig.pgDatabase,
-          autoLoadEntities: false,
-          synchronize: false,
-          ssl:
-            coreConfig.pgHost === 'localhost'
-              ? undefined
-              : {
-                  rejectUnauthorized: false,
-                },
+          namingStrategy: new PluralNamingStrategy(),
         }),
       }),
     );

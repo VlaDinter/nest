@@ -4,7 +4,7 @@ import { UserDto } from '../../dto/user.dto';
 import { UsersRepository } from '../users.repository';
 import { UsersConfig } from '../../config/users.config';
 import { DeviceDto } from '../../../devices/dto/device.dto';
-import { User, UserModelType } from '../../entities/user.schema';
+import { User, UserModelType } from '../../schemes/user.schema';
 import { UserViewModel } from '../../models/output/user-view.model';
 import { DeviceViewModel } from '../../models/output/device-view.model';
 import { IPagination } from '../../../../base/interfaces/pagination.interface';

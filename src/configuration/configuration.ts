@@ -1,6 +1,7 @@
 export const getConfiguration = () => {
   return {
     sortBy: process.env.SORT_BY,
+    databaseUrl: process.env.PGURL,
     repoType: process.env.REPO_TYPE,
     pageSize: Number(process.env.PAGE_SIZE),
     sortDirection: process.env.SORT_DIRECTION,
