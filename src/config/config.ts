@@ -11,7 +11,6 @@ export const configModule = ConfigModule.forRoot({
   envFilePath: configUtility.detectENVFile(),
   ignoreEnvFile: !process.env.NODE_ENV,
   validationSchema: Joi.object({
-    PGURL: Joi.string().uri().required(),
     MONGO_URI: Joi.string().uri().required(),
     SORT_BY: Joi.string().default('createdAt'),
     PAGE_SIZE: Joi.number().greater(0).default(10),
