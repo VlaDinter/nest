@@ -318,6 +318,8 @@ export class UsersTypeormRepository extends UsersRepository {
   }
 
   async deleteAll(): Promise<void> {
-    await this.entityManager.clear(User);
+    const users = await this.entityManager.find(User);
+
+    await this.entityManager.remove(User, users);
   }
 }

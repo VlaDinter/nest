@@ -282,6 +282,8 @@ export class CommentsTypeormRepository extends CommentsRepository {
   }
 
   async deleteAll(): Promise<void> {
-    await this.entityManager.clear(Comment);
+    const comments = await this.entityManager.find(Comment);
+
+    await this.entityManager.remove(Comment, comments);
   }
 }

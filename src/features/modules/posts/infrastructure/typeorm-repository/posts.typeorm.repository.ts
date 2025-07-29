@@ -327,6 +327,8 @@ export class PostsTypeormRepository extends PostsRepository {
   }
 
   async deleteAll(): Promise<void> {
-    await this.entityManager.clear(Post);
+    const posts = await this.entityManager.find(Post);
+
+    await this.entityManager.remove(Post, posts);
   }
 }

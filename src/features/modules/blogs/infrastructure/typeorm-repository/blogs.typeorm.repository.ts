@@ -89,6 +89,8 @@ export class BlogsTypeormRepository extends BlogsRepository {
   }
 
   async deleteAll(): Promise<void> {
-    await this.blogRepository.clear();
+    const blogs = await this.blogRepository.find();
+
+    await this.blogRepository.remove(blogs);
   }
 }
