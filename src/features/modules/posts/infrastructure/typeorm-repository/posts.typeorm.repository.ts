@@ -26,12 +26,43 @@ export class PostsTypeormRepository extends PostsRepository {
   async findPosts(
     params: IPaginationParams,
   ): Promise<IPagination<PostViewModel>> {
+    const result = this.entityManager.createQueryBuilder(Post, 'post');
+
+    if (params.blogId) {
+      result.where({ blogId: params.blogId });
+    }
+
+    const [posts, totalCount] = await result
+      .orderBy(
+        `post.${params.sortBy}`,
+        params.sortDirection?.toUpperCase() as 'ASC' | 'DESC',
+      )
+      .skip((params.pageNumber - 1) * params.pageSize)
+      .take(params.pageSize)
+      .getManyAndCount();
+
     return {
-      totalCount: 0,
+      totalCount,
       page: params.pageNumber,
       pageSize: params.pageSize,
-      pagesCount: Math.ceil(0 / params.pageSize),
-      items: [],
+      pagesCount: Math.ceil(totalCount / params.pageSize),
+      items: posts.map((post: Post): PostViewModel => {
+        return {
+          id: post.id,
+          title: post.title,
+          blogId: post.blogId,
+          content: post.content,
+          blogName: post?.blog?.name || '',
+          createdAt: post.createdAt,
+          shortDescription: post.shortDescription,
+          extendedLikesInfo: {
+            likesCount: 0,
+            dislikesCount: 0,
+            myStatus: ILikeStatus.NONE,
+            newestLikes: [],
+          },
+        };
+      }),
     };
   }
 
