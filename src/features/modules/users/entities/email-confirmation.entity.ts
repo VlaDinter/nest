@@ -19,7 +19,7 @@ export class EmailConfirmation {
   public userId: string;
 
   @OneToOne(() => User, (user: User) => user.emailConfirmation, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({
     name: 'user_id',

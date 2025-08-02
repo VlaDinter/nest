@@ -25,7 +25,7 @@ export class Comment {
   @Column({ name: 'post_id' })
   public postId: string;
 
-  @ManyToOne('Post', { cascade: true })
+  @ManyToOne('Post', { onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'post_id',
     referencedColumnName: 'id',
@@ -36,7 +36,7 @@ export class Comment {
   @Column({ name: 'user_id' })
   public userId: string;
 
-  @ManyToOne('User', { cascade: true })
+  @ManyToOne('User', { onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',

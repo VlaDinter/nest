@@ -24,7 +24,7 @@ export class Like {
   @Column({ name: 'user_id' })
   public userId: string;
 
-  @ManyToOne('User', { cascade: true })
+  @ManyToOne('User', { onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
@@ -35,7 +35,7 @@ export class Like {
   @Column({ name: 'post_id', nullable: true })
   public postId: string | null;
 
-  @ManyToOne('Post', 'likes', { nullable: true, cascade: true })
+  @ManyToOne('Post', 'likes', { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'post_id',
     referencedColumnName: 'id',
@@ -46,7 +46,7 @@ export class Like {
   @Column({ name: 'comment_id', nullable: true })
   public commentId: string | null;
 
-  @ManyToOne('Comment', 'likes', { nullable: true, cascade: true })
+  @ManyToOne('Comment', 'likes', { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'comment_id',
     referencedColumnName: 'id',

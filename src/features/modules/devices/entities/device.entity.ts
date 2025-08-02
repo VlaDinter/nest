@@ -24,7 +24,7 @@ export class Device {
   @Column({ name: 'user_id' })
   public userId: string;
 
-  @ManyToOne('User', { cascade: true })
+  @ManyToOne('User', { onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
