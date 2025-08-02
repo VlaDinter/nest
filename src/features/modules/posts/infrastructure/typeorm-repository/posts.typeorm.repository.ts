@@ -39,7 +39,7 @@ export class PostsTypeormRepository extends PostsRepository {
 
     const [posts, totalCount] = await result
       .orderBy(
-        `post.${params.sortBy}`,
+        params.sortBy === 'blogName' ? 'blog.name' : `post.${params.sortBy}`,
         params.sortDirection.toUpperCase() as 'ASC' | 'DESC',
       )
       .skip((params.pageNumber - 1) * params.pageSize)
@@ -69,7 +69,7 @@ export class PostsTypeormRepository extends PostsRepository {
           title: post.title,
           blogId: post.blogId,
           content: post.content,
-          blogName: post?.blog?.name || 'Name',
+          blogName: post.blog.name,
           createdAt: post.createdAt,
           shortDescription: post.shortDescription,
           extendedLikesInfo: {
