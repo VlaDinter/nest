@@ -35,7 +35,7 @@ export class Post {
   @Column({ name: 'blog_id' })
   public blogId: string;
 
-  @ManyToOne('Blog', { onDelete: 'CASCADE' })
+  @ManyToOne('Blog', { cascade: true })
   @JoinColumn({
     name: 'blog_id',
     referencedColumnName: 'id',

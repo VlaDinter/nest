@@ -35,9 +35,6 @@ export class User {
   @OneToOne(
     () => EmailConfirmation,
     (emailConfirmation: EmailConfirmation) => emailConfirmation.user,
-    {
-      onDelete: 'CASCADE',
-    },
   )
   public emailConfirmation: EmailConfirmation;
 }

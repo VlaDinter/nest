@@ -5,6 +5,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { BlogsModule } from '../blogs/blogs.module';
 import { PostsConfig } from './config/posts.config';
 import { UsersModule } from '../users/users.module';
+import { Like } from '../comments/entities/like.entity';
 import { PostsController } from './api/posts.controller';
 import { Post, PostSchema } from './schemes/post.schema';
 import { PostsService } from './application/posts.service';
@@ -49,7 +50,7 @@ const useCases = [
     forwardRef(() => BlogsModule),
     ConfigModule.forFeature(getPostsConfiguration),
     getConfiguration().repoType === IRepoType.SQL
-      ? TypeOrmModule.forFeature([PostEntity])
+      ? TypeOrmModule.forFeature([PostEntity, Like])
       : MongooseModule.forFeature([
           {
             name: Post.name,

@@ -16,7 +16,7 @@ export class Blog {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Index('blog_name')
+  @Index('blog_name', { synchronize: false })
   @Column({ length: nameConstraints.maxLength })
   public name: string;
 
