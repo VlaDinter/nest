@@ -1,5 +1,4 @@
 import {
-  Index,
   Column,
   Entity,
   CreateDateColumn,
@@ -16,7 +15,7 @@ export class Blog {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Index('blog_name', { synchronize: false })
+  //@Index('blog_name', { synchronize: false })
   @Column({ length: nameConstraints.maxLength })
   public name: string;
 
