@@ -27,7 +27,9 @@ export class PostsTypeormRepository extends PostsRepository {
     params: IPaginationParams,
     userId?: string,
   ): Promise<IPagination<PostViewModel>> {
-    const result = this.entityManager.createQueryBuilder(Post, 'post');
+    const result = this.entityManager
+      .createQueryBuilder(Post, 'post')
+      .leftJoinAndSelect('post.likes', 'likes');
 
     if (params.blogId) {
       result.where({ blogId: params.blogId });
@@ -48,39 +50,19 @@ export class PostsTypeormRepository extends PostsRepository {
       pageSize: params.pageSize,
       pagesCount: Math.ceil(totalCount / params.pageSize),
       items: posts.map((post: Post): PostViewModel => {
-        const like = post.likes?.find(
-          (like: Like): boolean => like.userId === userId,
-        );
-
-        const likes = post.likes?.filter(
-          (like: Like): boolean => like.status === ILikeStatus.LIKE,
-        );
-
-        const dislikes = post.likes?.filter(
-          (like: Like): boolean => like.status === ILikeStatus.DISLIKE,
-        );
-
         return {
           id: post.id,
           title: post.title,
           blogId: post.blogId,
           content: post.content,
-          blogName: post.blog?.name || '',
+          blogName: post?.blog?.name || 'Name',
           createdAt: post.createdAt,
           shortDescription: post.shortDescription,
           extendedLikesInfo: {
-            likesCount: likes?.length,
-            dislikesCount: dislikes?.length,
-            myStatus: like?.status ?? ILikeStatus.NONE,
-            newestLikes: likes
-              ?.slice(0, this.postsConfig.newestLikesLength)
-              ?.map(
-                (like: Like): LikeDetailsViewModel => ({
-                  userId: like.userId,
-                  addedAt: like.addedAt,
-                  login: like.user.login,
-                }),
-              ),
+            likesCount: 0,
+            dislikesCount: 0,
+            myStatus: ILikeStatus.NONE,
+            newestLikes: [],
           },
         };
       }),
