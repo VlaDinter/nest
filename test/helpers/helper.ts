@@ -1,5 +1,6 @@
 import { Connection } from 'mongoose';
 import request, { Response } from 'supertest';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { INestApplication } from '@nestjs/common';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
@@ -7,7 +8,11 @@ import { appSettings } from '../../src/settings/app.settings';
 import { initAppModule } from '../../src/init/app-module.init';
 import { GLOBAL_PREFIX } from '../../src/setups/global-prefix.setup';
 import { MailNotificationsMock } from '../mock/mail-notifications.mock';
+import { User } from '../../src/features/modules/users/entities/user.entity';
+import { Device } from '../../src/features/modules/devices/entities/device.entity';
 import { MailNotifications } from '../../src/features/base/adapters/mail-notifications';
+import { PluralNamingStrategy } from '../../src/features/common/strategies/naming.strategy';
+import { EmailConfirmation } from '../../src/features/modules/users/entities/email-confirmation.entity';
 
 export type TestNames =
   | 'appTest'
@@ -15,18 +20,20 @@ export type TestNames =
   | 'usersTest'
   | 'blogsTest'
   | 'postsTest'
+  | 'devicesTest'
   | 'commentsTest'
   | 'testingTest';
 
 export const skipTests = {
-  run_all_tests: true,
   appTest: false,
   authTest: false,
   usersTest: false,
   blogsTest: false,
   postsTest: false,
-  commentsTest: false,
+  devicesTest: false,
   testingTest: false,
+  commentsTest: false,
+  run_all_tests: true,
   for(testName: TestNames): boolean {
     if (this.run_all_tests) {
       return false;
@@ -45,7 +52,20 @@ export const initApp = async (
 ): Promise<INestApplication> => {
   const appModule = await initAppModule();
   const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
-    imports: [appModule],
+    imports: [
+      appModule,
+      TypeOrmModule.forRoot({
+        port: 5432,
+        type: 'postgres',
+        username: 'root',
+        password: '3307',
+        database: 'test',
+        host: 'localhost',
+        synchronize: true,
+        namingStrategy: new PluralNamingStrategy(),
+        entities: [User, EmailConfirmation, Device],
+      }),
+    ],
     providers: [MailNotifications],
   })
     .overrideProvider(MailNotifications)

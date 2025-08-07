@@ -35,9 +35,9 @@ const getRepoModule = (): DynamicModule[] => {
         inject: [CoreConfig],
         imports: [CoreModule],
         useFactory: (coreConfig: CoreConfig) => ({
+          logging: true,
           type: 'postgres',
           synchronize: true,
-          logging: ['query'],
           autoLoadEntities: true,
           host: coreConfig.pgHost,
           port: coreConfig.pgPort,

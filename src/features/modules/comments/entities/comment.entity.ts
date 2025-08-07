@@ -1,4 +1,5 @@
 import {
+  Check,
   Column,
   Entity,
   OneToMany,
@@ -10,13 +11,15 @@ import {
 import { Like } from './like.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { User } from '../../users/entities/user.entity';
+import { commentConstraints } from '../constants/constants';
 
 @Entity()
+@Check(`char_length(content) >= ${commentConstraints.minLength}`)
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column()
+  @Column({ length: commentConstraints.maxLength })
   public content: string;
 
   @CreateDateColumn({ name: 'created_at' })

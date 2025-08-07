@@ -1,5 +1,6 @@
 import {
   Index,
+  Check,
   Column,
   Entity,
   Unique,
@@ -11,6 +12,7 @@ import { loginConstraints } from '../constants/constants';
 import { EmailConfirmation } from './email-confirmation.entity';
 
 @Entity()
+@Check(`char_length(login) >= ${loginConstraints.minLength}`)
 @Index(['login', 'email'], { unique: true })
 @Unique('one_login_for_one_user_email', ['login', 'email'])
 export class User {
