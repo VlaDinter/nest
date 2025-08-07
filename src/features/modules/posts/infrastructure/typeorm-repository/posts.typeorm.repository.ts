@@ -31,14 +31,15 @@ export class PostsTypeormRepository extends PostsRepository {
       .createQueryBuilder(Post, 'post')
       .leftJoinAndSelect('post.blog', 'blog')
       .leftJoinAndSelect('post.likes', 'likes')
-      .leftJoinAndSelect('likes.user', 'user');
+      .leftJoinAndSelect('likes.user', 'user')
+      .orderBy('likes.addedAt', 'DESC');
 
     if (params.blogId) {
       result.where({ blogId: params.blogId });
     }
 
     const [posts, totalCount] = await result
-      .orderBy(
+      .addOrderBy(
         params.sortBy === 'blogName' ? 'blog.name' : `post.${params.sortBy}`,
         params.sortDirection.toUpperCase() as 'ASC' | 'DESC',
       )
@@ -99,6 +100,7 @@ export class PostsTypeormRepository extends PostsRepository {
       .leftJoinAndSelect('post.likes', 'likes')
       .leftJoinAndSelect('likes.user', 'user')
       .where('post.id = :postId', { postId })
+      .orderBy('likes.addedAt', 'DESC')
       .getOne();
 
     if (!post) {
