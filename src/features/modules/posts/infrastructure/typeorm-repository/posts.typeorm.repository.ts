@@ -31,8 +31,7 @@ export class PostsTypeormRepository extends PostsRepository {
       .createQueryBuilder(Post, 'post')
       .leftJoinAndSelect('post.blog', 'blog')
       .leftJoinAndSelect('post.likes', 'likes')
-      .leftJoinAndSelect('likes.user', 'user')
-      .orderBy('likes.addedAt', 'DESC');
+      .leftJoinAndSelect('likes.user', 'user');
 
     if (params.blogId) {
       result.where({ blogId: params.blogId });
@@ -77,13 +76,20 @@ export class PostsTypeormRepository extends PostsRepository {
             likesCount: likes.length,
             dislikesCount: dislikes.length,
             myStatus: like?.status ?? ILikeStatus.NONE,
-            newestLikes: likes.slice(0, this.postsConfig.newestLikesLength).map(
-              (like: Like): LikeDetailsViewModel => ({
-                userId: like.userId,
-                addedAt: like.addedAt,
-                login: like.user.login,
-              }),
-            ),
+            newestLikes: likes
+              .sort(
+                (like1: Like, like2: Like): number =>
+                  new Date(like2.addedAt).getTime() -
+                  new Date(like1.addedAt).getTime(),
+              )
+              .slice(0, this.postsConfig.newestLikesLength)
+              .map(
+                (like: Like): LikeDetailsViewModel => ({
+                  userId: like.userId,
+                  addedAt: like.addedAt,
+                  login: like.user.login,
+                }),
+              ),
           },
         };
       }),
@@ -100,7 +106,6 @@ export class PostsTypeormRepository extends PostsRepository {
       .leftJoinAndSelect('post.likes', 'likes')
       .leftJoinAndSelect('likes.user', 'user')
       .where('post.id = :postId', { postId })
-      .orderBy('likes.addedAt', 'DESC')
       .getOne();
 
     if (!post) {
@@ -131,13 +136,20 @@ export class PostsTypeormRepository extends PostsRepository {
         likesCount: likes.length,
         dislikesCount: dislikes.length,
         myStatus: like?.status ?? ILikeStatus.NONE,
-        newestLikes: likes.slice(0, this.postsConfig.newestLikesLength).map(
-          (like: Like): LikeDetailsViewModel => ({
-            userId: like.userId,
-            addedAt: like.addedAt,
-            login: like.user.login,
-          }),
-        ),
+        newestLikes: likes
+          .sort(
+            (like1: Like, like2: Like): number =>
+              new Date(like2.addedAt).getTime() -
+              new Date(like1.addedAt).getTime(),
+          )
+          .slice(0, this.postsConfig.newestLikesLength)
+          .map(
+            (like: Like): LikeDetailsViewModel => ({
+              userId: like.userId,
+              addedAt: like.addedAt,
+              login: like.user.login,
+            }),
+          ),
       },
     };
   }

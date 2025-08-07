@@ -27,8 +27,7 @@ export class CommentsTypeormRepository extends CommentsRepository {
     const result = this.entityManager
       .createQueryBuilder(Comment, 'comment')
       .leftJoinAndSelect('comment.user', 'user')
-      .leftJoinAndSelect('comment.likes', 'likes')
-      .orderBy('likes.addedAt', 'DESC');
+      .leftJoinAndSelect('comment.likes', 'likes');
 
     if (params.postId) {
       result.where({ postId: params.postId });
@@ -88,7 +87,6 @@ export class CommentsTypeormRepository extends CommentsRepository {
       .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.likes', 'likes')
       .where('comment.id = :id', { id: commentId })
-      .orderBy('likes.addedAt', 'DESC')
       .getOne();
 
     if (!comment) return null;
