@@ -3,10 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserDto } from '../../dto/user.dto';
 import { UsersRepository } from '../users.repository';
 import { UsersConfig } from '../../config/users.config';
-import { DeviceDto } from '../../../devices/dto/device.dto';
 import { User, UserModelType } from '../../schemes/user.schema';
 import { UserViewModel } from '../../models/output/user-view.model';
-import { DeviceViewModel } from '../../models/output/device-view.model';
 import { IPagination } from '../../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
@@ -21,14 +19,6 @@ export class UsersMongooseRepository extends UsersRepository {
 
   findUsers(params: IPaginationParams): Promise<IPagination<UserViewModel>> {
     return this.UserModel.paginated(params);
-  }
-
-  async findDevices(userId: string): Promise<Array<DeviceViewModel> | null> {
-    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
-
-    if (!userInstance) return null;
-
-    return userInstance.devices;
   }
 
   findUser(userId: string): Promise<UserViewModel | null> {
@@ -52,22 +42,6 @@ export class UsersMongooseRepository extends UsersRepository {
     ).lean();
   }
 
-  async findDevice(deviceId: string): Promise<DeviceViewModel | null> {
-    const userInstance = await this.UserModel.findOne({
-      'devices.deviceId': deviceId,
-    }).exec();
-
-    if (!userInstance) return null;
-
-    const foundDevice = userInstance.devices.find(
-      (device: DeviceViewModel): boolean => device.deviceId === deviceId,
-    );
-
-    if (!foundDevice) return null;
-
-    return foundDevice;
-  }
-
   async createUser(
     createUserDto: UserDto,
     isConfirmed: boolean,
@@ -83,21 +57,6 @@ export class UsersMongooseRepository extends UsersRepository {
     await userInstance.save();
 
     return userInstance.mapToViewModel();
-  }
-
-  async createDevice(
-    userId: string,
-    createDeviceDto: DeviceDto,
-  ): Promise<DeviceViewModel | null> {
-    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
-
-    if (!userInstance) return null;
-
-    userInstance.devices.push(createDeviceDto as DeviceViewModel);
-
-    await userInstance.save();
-
-    return userInstance.devices[userInstance.devices.length - 1];
   }
 
   async updateUserPassword(
@@ -137,27 +96,6 @@ export class UsersMongooseRepository extends UsersRepository {
     return userInstance.mapToViewModel();
   }
 
-  async updateDevice(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
-
-    if (!userInstance) return null;
-
-    const foundDevice = userInstance.devices.find(
-      (device: DeviceViewModel): boolean => device.deviceId === deviceId,
-    );
-
-    if (!foundDevice) return null;
-
-    foundDevice.lastActiveDate = new Date().toISOString();
-
-    await userInstance.save();
-
-    return foundDevice;
-  }
-
   async deleteUser(userId: string): Promise<UserViewModel | null> {
     const userInstance = await this.UserModel.findOne({ id: userId }).exec();
 
@@ -166,52 +104,6 @@ export class UsersMongooseRepository extends UsersRepository {
     await userInstance.deleteOne();
 
     return userInstance.mapToViewModel();
-  }
-
-  async deleteDevice(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
-
-    if (!userInstance) return null;
-
-    const foundDevice = userInstance.devices.find(
-      (device: DeviceViewModel): boolean => device.deviceId === deviceId,
-    );
-
-    if (!foundDevice) return null;
-
-    userInstance.devices = userInstance.devices.filter(
-      (device: DeviceViewModel): boolean => device.deviceId !== deviceId,
-    );
-
-    await userInstance.save();
-
-    return foundDevice;
-  }
-
-  async deleteDevices(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const userInstance = await this.UserModel.findOne({ id: userId }).exec();
-
-    if (!userInstance) return null;
-
-    const foundDevice = userInstance.devices.find(
-      (device: DeviceViewModel): boolean => device.deviceId === deviceId,
-    );
-
-    if (!foundDevice) return null;
-
-    userInstance.devices = userInstance.devices.filter(
-      (device: DeviceViewModel): boolean => device.deviceId === deviceId,
-    );
-
-    await userInstance.save();
-
-    return foundDevice;
   }
 
   async deleteAll(): Promise<void> {

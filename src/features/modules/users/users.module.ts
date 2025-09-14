@@ -6,7 +6,6 @@ import { UsersConfig } from './config/users.config';
 import { UsersController } from './api/users.controller';
 import { User, UserSchema } from './schemes/user.schema';
 import { UsersService } from './application/users.service';
-import { Device } from '../devices/entities/device.entity';
 import { User as UserEntity } from './entities/user.entity';
 import { IRepoType } from '../../base/interfaces/repo-type.interface';
 import { getConfiguration } from '../../../configuration/configuration';
@@ -33,7 +32,7 @@ const useCases = [AddUserWithValidateOrRejectModelUseCase];
   imports: [
     ConfigModule.forFeature(getUsersConfiguration),
     getConfiguration().repoType === IRepoType.SQL
-      ? TypeOrmModule.forFeature([UserEntity, Device, EmailConfirmation])
+      ? TypeOrmModule.forFeature([UserEntity, EmailConfirmation])
       : MongooseModule.forFeature([
           {
             name: User.name,

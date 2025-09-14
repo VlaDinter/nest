@@ -13,39 +13,6 @@ import { EmailConfirmationViewModel } from '../models/output/email-confirmation-
 @Schema({
   _id: false,
 })
-export class Device {
-  @Prop({
-    type: String,
-    default(): Types.ObjectId {
-      return new Types.ObjectId();
-    },
-  })
-  deviceId: string;
-
-  @Prop({
-    type: String,
-    required: true,
-  })
-  ip: string;
-
-  @Prop({
-    type: String,
-    required: true,
-  })
-  title: string;
-
-  @Prop({
-    type: String,
-    required: true,
-  })
-  lastActiveDate: string;
-}
-
-export const DeviceSchema = SchemaFactory.createForClass(Device);
-
-@Schema({
-  _id: false,
-})
 export class EmailConfirmation {
   @Prop({
     type: String,
@@ -109,12 +76,6 @@ export class User {
     nullable: true,
   })
   emailConfirmation: EmailConfirmation | null;
-
-  @Prop({
-    type: [DeviceSchema],
-    default: [],
-  })
-  devices: Device[];
 
   mapToViewModel(): UserViewModel {
     return {

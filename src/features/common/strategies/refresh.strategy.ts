@@ -5,12 +5,14 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CoreConfig } from '../../../core/core.config';
 import { IPayload } from '../../base/interfaces/payload.interface';
 import { UsersService } from '../../modules/users/application/users.service';
+import { DevicesService } from '../../modules/devices/application/devices.service';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(
     private readonly coreConfig: CoreConfig,
     private readonly usersService: UsersService,
+    private readonly devicesService: DevicesService,
   ) {
     super({
       ignoreExpiration: false,
@@ -29,7 +31,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
       typeof payload?.deviceId === 'string'
     ) {
       const user = await this.usersService.getUser(payload.userId);
-      const device = await this.usersService.getDevice(payload.deviceId);
+      const device = await this.devicesService.getDevice(payload.deviceId);
 
       if (
         user?.emailConfirmation?.isConfirmed &&

@@ -34,7 +34,7 @@ export class CommentsTypeormRepository extends CommentsRepository {
     }
 
     const [comments, totalCount] = await result
-      .addOrderBy(
+      .orderBy(
         `comment.${params.sortBy}`,
         params.sortDirection.toUpperCase() as 'ASC' | 'DESC',
       )

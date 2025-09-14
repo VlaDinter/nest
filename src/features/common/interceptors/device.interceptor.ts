@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { UsersService } from '../../modules/users/application/users.service';
+import { DevicesService } from '../../modules/devices/application/devices.service';
 import { LoginSuccessViewModel } from '../../modules/auth/models/output/login-success-view.model';
 
 @Injectable()
 export class DeviceInterceptor implements NestInterceptor {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly devicesService: DevicesService) {}
 
   async intercept(
     context: ExecutionContext,
@@ -27,7 +27,7 @@ export class DeviceInterceptor implements NestInterceptor {
         lastActiveDate: new Date().toISOString(),
       };
 
-      const createdDevice = await this.usersService.addDevice(
+      const createdDevice = await this.devicesService.addDevice(
         request.user['userId'],
         device,
       );

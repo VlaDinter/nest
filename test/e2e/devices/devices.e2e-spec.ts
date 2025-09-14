@@ -7,6 +7,7 @@ import { GLOBAL_PREFIX } from '../../../src/setups/global-prefix.setup';
 import { initApp, skipTests, skipDescribe } from '../../helpers/helper';
 import { UserDto } from '../../../dist/features/modules/users/dto/user.dto';
 import { UsersTypeormRepository } from '../../../src/features/modules/users/infrastructure/typeorm-repository/users.typeorm.repository';
+import { DevicesTypeormRepository } from '../../../src/features/modules/devices/infrastructure/typeorm-repository/devices.typeorm.repository';
 
 skipDescribe(skipTests.for('devicesTest'))('Devices - /devices (e2e)', () => {
   const createUser = (index: number) => ({
@@ -25,7 +26,9 @@ skipDescribe(skipTests.for('devicesTest'))('Devices - /devices (e2e)', () => {
     app = await initApp((builder: TestingModuleBuilder) => {
       builder
         .overrideProvider('UsersRepository')
-        .useClass(UsersTypeormRepository);
+        .useClass(UsersTypeormRepository)
+        .overrideProvider('DevicesRepository')
+        .useClass(DevicesTypeormRepository);
     });
 
     httpServer = app.getHttpServer();

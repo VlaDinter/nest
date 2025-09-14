@@ -38,7 +38,7 @@ export class PostsTypeormRepository extends PostsRepository {
     }
 
     const [posts, totalCount] = await result
-      .addOrderBy(
+      .orderBy(
         params.sortBy === 'blogName' ? 'blog.name' : `post.${params.sortBy}`,
         params.sortDirection.toUpperCase() as 'ASC' | 'DESC',
       )

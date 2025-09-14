@@ -1,15 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LogoutUserCommand } from './commands/logout-user.command';
-import { UsersService } from '../../users/application/users.service';
-import { DeviceViewModel } from '../../users/models/output/device-view.model';
+import { DevicesService } from '../../devices/application/devices.service';
+import { DeviceViewModel } from '../../devices/models/output/device-view.model';
 
 @CommandHandler(LogoutUserCommand)
 export class LogoutUserUseCase
   implements ICommandHandler<LogoutUserCommand, DeviceViewModel | null>
 {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly devicesService: DevicesService) {}
 
   execute(command: LogoutUserCommand): Promise<DeviceViewModel | null> {
-    return this.usersService.removeDevice(command.userId, command.deviceId);
+    return this.devicesService.removeDevice(command.userId, command.deviceId);
   }
 }

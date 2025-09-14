@@ -7,9 +7,7 @@ import { UserDto } from '../../dto/user.dto';
 import { UsersRepository } from '../users.repository';
 import { UsersConfig } from '../../config/users.config';
 import { Add } from '../../../../base/utils/date/add.utils';
-import { DeviceDto } from '../../../devices/dto/device.dto';
 import { UserViewModel } from '../../models/output/user-view.model';
-import { DeviceViewModel } from '../../models/output/device-view.model';
 import { IPagination } from '../../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
 
@@ -79,17 +77,6 @@ export class UsersSQLRepository extends UsersRepository {
       page: params.pageNumber,
       pageSize: params.pageSize,
     };
-  }
-
-  async findDevices(userId: string): Promise<Array<DeviceViewModel> | null> {
-    const result = await this.dataSource.query(
-      `SELECT device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate" 
-       FROM public."Devices" 
-       WHERE user_id = $1`,
-      [userId],
-    );
-
-    return result;
   }
 
   async findUser(userId: string): Promise<UserViewModel | null> {
@@ -211,17 +198,6 @@ export class UsersSQLRepository extends UsersRepository {
     };
   }
 
-  async findDevice(deviceId: string): Promise<DeviceViewModel | null> {
-    const result = await this.dataSource.query(
-      `SELECT device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate" 
-       FROM public."Devices" 
-       WHERE device_id = $1`,
-      [deviceId],
-    );
-
-    return result[0] ?? null;
-  }
-
   async createUser(
     createUserDto: UserDto,
     isConfirmed: boolean,
@@ -253,26 +229,6 @@ export class UsersSQLRepository extends UsersRepository {
        (user_id, confirmation_code, expiration_date, is_confirmed)
        VALUES ($1, $2, $3, $4)`,
       [result[0].id, confirmationCode, expirationDate, isConfirmed],
-    );
-
-    return result[0];
-  }
-
-  async createDevice(
-    userId: string,
-    createDeviceDto: DeviceDto,
-  ): Promise<DeviceViewModel | null> {
-    const result = await this.dataSource.query(
-      `INSERT INTO public."Devices" 
-       (user_id, ip, title, last_active_date)
-       VALUES ($1, $2, $3, $4)
-       RETURNING device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate"`,
-      [
-        userId,
-        createDeviceDto.ip,
-        createDeviceDto.title,
-        createDeviceDto.lastActiveDate,
-      ],
     );
 
     return result[0];
@@ -358,22 +314,6 @@ export class UsersSQLRepository extends UsersRepository {
     };
   }
 
-  async updateDevice(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const lastActiveDate = new Date().toISOString();
-    const result = await this.dataSource.query(
-      `UPDATE public."Devices"
-       SET last_active_date = $3
-       WHERE user_id = $1 AND device_id = $2
-       RETURNING device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate"`,
-      [userId, deviceId, lastActiveDate],
-    );
-
-    return result[0][0] ?? null;
-  }
-
   async deleteUser(userId: string): Promise<UserViewModel | null> {
     const result = await this.dataSource.query(
       `DELETE FROM public."Users"
@@ -383,44 +323,6 @@ export class UsersSQLRepository extends UsersRepository {
     );
 
     return result[0][0] ?? null;
-  }
-
-  async deleteDevice(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const result = await this.dataSource.query(
-      `DELETE FROM public."Devices"
-       WHERE user_id = $1 AND device_id = $2
-       RETURNING device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate"`,
-      [userId, deviceId],
-    );
-
-    return result[0][0] ?? null;
-  }
-
-  async deleteDevices(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const result = await this.dataSource.query(
-      `SELECT device_id AS "deviceId", ip, title, last_active_date AS "lastActiveDate" 
-       FROM public."Devices" 
-       WHERE device_id = $1`,
-      [deviceId],
-    );
-
-    if (!result.length) {
-      return null;
-    }
-
-    await this.dataSource.query(
-      `DELETE FROM public."Devices"
-       WHERE user_id = $1 AND device_id != $2`,
-      [userId, deviceId],
-    );
-
-    return result[0];
   }
 
   async deleteAll(): Promise<void> {

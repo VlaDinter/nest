@@ -8,10 +8,7 @@ import { User } from '../../entities/user.entity';
 import { UsersRepository } from '../users.repository';
 import { UsersConfig } from '../../config/users.config';
 import { Add } from '../../../../base/utils/date/add.utils';
-import { DeviceDto } from '../../../devices/dto/device.dto';
-import { Device } from '../../../devices/entities/device.entity';
 import { UserViewModel } from '../../models/output/user-view.model';
-import { DeviceViewModel } from '../../models/output/device-view.model';
 import { EmailConfirmation } from '../../entities/email-confirmation.entity';
 import { IPagination } from '../../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../../base/interfaces/pagination-params.interface';
@@ -62,20 +59,6 @@ export class UsersTypeormRepository extends UsersRepository {
     };
   }
 
-  findDevices(userId: string): Promise<DeviceViewModel[]> {
-    return this.entityManager
-      .createQueryBuilder()
-      .from(Device, 'device')
-      .select([
-        'device.ip',
-        'device.title',
-        'device.deviceId',
-        'device.lastActiveDate',
-      ])
-      .where('device.userId = :userId', { userId })
-      .getMany();
-  }
-
   findUser(userId: string): Promise<UserViewModel | null> {
     return this.entityManager
       .createQueryBuilder(User, 'user')
@@ -99,20 +82,6 @@ export class UsersTypeormRepository extends UsersRepository {
       .createQueryBuilder(User, 'user')
       .innerJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
       .where('emailConfirmation.confirmationCode = :code', { code })
-      .getOne();
-  }
-
-  findDevice(deviceId: string): Promise<DeviceViewModel | null> {
-    return this.entityManager
-      .createQueryBuilder()
-      .from(Device, 'device')
-      .select([
-        'device.ip',
-        'device.title',
-        'device.deviceId',
-        'device.lastActiveDate',
-      ])
-      .where('device.deviceId = :deviceId', { deviceId })
       .getOne();
   }
 
@@ -154,27 +123,6 @@ export class UsersTypeormRepository extends UsersRepository {
       login: user.login,
       email: user.email,
       createdAt: user.createdAt,
-    };
-  }
-
-  async createDevice(
-    userId: string,
-    dto: DeviceDto,
-  ): Promise<DeviceViewModel | null> {
-    const device = new Device();
-
-    device.ip = dto.ip;
-    device.userId = userId;
-    device.title = dto.title;
-    device.lastActiveDate = dto.lastActiveDate;
-
-    await this.entityManager.save(device);
-
-    return {
-      ip: device.ip,
-      title: device.title,
-      deviceId: device.deviceId,
-      lastActiveDate: device.lastActiveDate,
     };
   }
 
@@ -224,29 +172,6 @@ export class UsersTypeormRepository extends UsersRepository {
     });
   }
 
-  async updateDevice(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const lastActiveDate = new Date().toISOString();
-
-    await this.entityManager.update(
-      Device,
-      { userId, deviceId },
-      { lastActiveDate },
-    );
-
-    return this.entityManager.findOne<Device>(Device, {
-      where: { userId, deviceId },
-      select: {
-        ip: true,
-        title: true,
-        deviceId: true,
-        lastActiveDate: true,
-      },
-    });
-  }
-
   async deleteUser(userId: string): Promise<UserViewModel | null> {
     const user = await this.entityManager.findOne<User>(User, {
       where: { id: userId },
@@ -260,58 +185,6 @@ export class UsersTypeormRepository extends UsersRepository {
     await this.entityManager.remove(user);
 
     return user;
-  }
-
-  async deleteDevice(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const device = await this.entityManager.findOne<Device>(Device, {
-      where: { userId, deviceId },
-      select: {
-        ip: true,
-        title: true,
-        deviceId: true,
-        lastActiveDate: true,
-      },
-    });
-
-    if (!device) {
-      return null;
-    }
-
-    await this.entityManager.remove(device);
-
-    return device;
-  }
-
-  async deleteDevices(
-    userId: string,
-    deviceId: string,
-  ): Promise<DeviceViewModel | null> {
-    const devices = await this.entityManager.find<Device>(Device, {
-      where: { userId },
-      select: {
-        ip: true,
-        title: true,
-        deviceId: true,
-        lastActiveDate: true,
-      },
-    });
-
-    const device = devices.find(
-      (device: DeviceViewModel) => device.deviceId === deviceId,
-    );
-
-    if (!device) {
-      return null;
-    }
-
-    await this.entityManager.remove(
-      devices.filter((device: DeviceViewModel) => device.deviceId !== deviceId),
-    );
-
-    return device;
   }
 
   async deleteAll(): Promise<void> {

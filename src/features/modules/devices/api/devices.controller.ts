@@ -1,6 +1,7 @@
 import {
   Req,
   Get,
+  Param,
   Delete,
   HttpCode,
   UseGuards,
@@ -8,36 +9,26 @@ import {
   HttpStatus,
   NotFoundException,
   ForbiddenException,
-  Param,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
-import { CommandBus } from '@nestjs/cqrs';
+import { DevicesService } from '../application/devices.service';
+import { DeviceViewModel } from '../models/output/device-view.model';
 import { Api } from '../../../common/decorators/validation/api.decorator';
-import { DeviceViewModel } from '../../users/models/output/device-view.model';
 import { RefreshAuthGuard } from '../../../common/guards/bearer/refresh-auth.guard';
 import { ObjectIdValidationPipe } from '../../../common/pipes/object-id-validation.pipe';
-import { GetDeviceByUserIdCommand } from '../usecases/commands/get-device-by-user-id.command';
-import { GetDevicesByUserIdCommand } from '../usecases/commands/get-devices-by-user-id.command';
-import { RemoveDeviceByUserIdCommand } from '../usecases/commands/remove-device-by-user-id.command';
-import { RemoveDevicesByUserIdCommand } from '../usecases/commands/remove-devices-by-user-id.command';
 
 @ApiTags('Devices')
 @UseGuards(RefreshAuthGuard)
 @Controller('security/devices')
 export class DevicesController {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(private readonly devicesService: DevicesService) {}
 
   @Api('Get security devices')
   @Get()
   @HttpCode(HttpStatus.OK)
   getSecurityDevices(@Req() req: Request): Promise<Array<DeviceViewModel>> {
-    const command = new GetDevicesByUserIdCommand(req.user?.['userId']);
-
-    return this.commandBus.execute<
-      GetDevicesByUserIdCommand,
-      Array<DeviceViewModel>
-    >(command);
+    return this.devicesService.getDevices(req.user?.['userId']);
   }
 
   @Api('Delete security device', true)
@@ -47,25 +38,16 @@ export class DevicesController {
     @Req() req: Request,
     @Param('id', ObjectIdValidationPipe) deviceId: string,
   ): Promise<void> {
-    const deviceCommand = new GetDeviceByUserIdCommand(deviceId);
-    const foundDevice = await this.commandBus.execute<
-      GetDeviceByUserIdCommand,
-      DeviceViewModel | null
-    >(deviceCommand);
+    const foundDevice = await this.devicesService.getDevice(deviceId);
 
     if (!foundDevice) {
       throw new NotFoundException('Device not found');
     }
 
-    const command = new RemoveDeviceByUserIdCommand(
+    const deletedDevice = await this.devicesService.removeDevice(
       req.user?.['userId'],
       deviceId,
     );
-
-    const deletedDevice = await this.commandBus.execute<
-      RemoveDeviceByUserIdCommand,
-      DeviceViewModel | null
-    >(command);
 
     if (!deletedDevice) {
       throw new ForbiddenException('Device not found');
@@ -76,14 +58,9 @@ export class DevicesController {
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSecurityDevices(@Req() req: Request): Promise<void> {
-    const command = new RemoveDevicesByUserIdCommand(
+    await this.devicesService.removeDevices(
       req.user?.['userId'],
       req.user?.['deviceId'],
     );
-
-    await this.commandBus.execute<
-      RemoveDevicesByUserIdCommand,
-      DeviceViewModel | null
-    >(command);
   }
 }

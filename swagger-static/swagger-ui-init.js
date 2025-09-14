@@ -412,6 +412,68 @@ window.onload = function() {
           ]
         }
       },
+      "/api/security/devices": {
+        "get": {
+          "operationId": "DevicesController_getSecurityDevices",
+          "summary": "Get security devices",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/DeviceViewModel"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Devices"
+          ]
+        },
+        "delete": {
+          "operationId": "DevicesController_deleteSecurityDevices",
+          "summary": "Delete security devices",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Devices"
+          ]
+        }
+      },
+      "/api/security/devices/{id}": {
+        "delete": {
+          "operationId": "DevicesController_deleteSecurityDevice",
+          "summary": "Delete security device",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Devices"
+          ]
+        }
+      },
       "/api/sa/blogs": {
         "get": {
           "operationId": "BlogsController_getSABlogs",
@@ -1306,68 +1368,6 @@ window.onload = function() {
             }
           ]
         }
-      },
-      "/api/security/devices": {
-        "get": {
-          "operationId": "DevicesController_getSecurityDevices",
-          "summary": "Get security devices",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/DeviceViewModel"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "tags": [
-            "Devices"
-          ]
-        },
-        "delete": {
-          "operationId": "DevicesController_deleteSecurityDevices",
-          "summary": "Delete security devices",
-          "parameters": [],
-          "responses": {
-            "204": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "Devices"
-          ]
-        }
-      },
-      "/api/security/devices/{id}": {
-        "delete": {
-          "operationId": "DevicesController_deleteSecurityDevice",
-          "summary": "Delete security device",
-          "parameters": [
-            {
-              "name": "id",
-              "required": true,
-              "in": "path",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "Devices"
-          ]
-        }
       }
     },
     "info": {
@@ -1559,6 +1559,29 @@ window.onload = function() {
             "login",
             "email",
             "createdAt"
+          ]
+        },
+        "DeviceViewModel": {
+          "type": "object",
+          "properties": {
+            "ip": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "deviceId": {
+              "type": "string"
+            },
+            "lastActiveDate": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ip",
+            "title",
+            "deviceId",
+            "lastActiveDate"
           ]
         },
         "BlogInputModel": {
@@ -1863,29 +1886,6 @@ window.onload = function() {
             "createdAt",
             "likesInfo",
             "commentatorInfo"
-          ]
-        },
-        "DeviceViewModel": {
-          "type": "object",
-          "properties": {
-            "ip": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            },
-            "deviceId": {
-              "type": "string"
-            },
-            "lastActiveDate": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "ip",
-            "title",
-            "deviceId",
-            "lastActiveDate"
           ]
         }
       }

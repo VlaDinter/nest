@@ -1,21 +1,38 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from '../users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { DevicesController } from './api/devices.controller';
-import { GetDeviceByUserIdUseCase } from './usecases/get-device-by-user-id.usecase';
-import { GetDevicesByUserIdUseCase } from './usecases/get-devices-by-user-id.usecase';
-import { RemoveDeviceByUserIdUseCase } from './usecases/remove-device-by-user-id.usecase';
-import { RemoveDevicesByUserIdUseCase } from './usecases/remove-devices-by-user-id.usecase';
+import { DevicesService } from './application/devices.service';
+import { Device, DeviceSchema } from './schemes/device.schema';
+import { Device as DeviceEntity } from './entities/device.entity';
+import { IRepoType } from '../../base/interfaces/repo-type.interface';
+import { getConfiguration } from '../../../configuration/configuration';
+import { DevicesMongooseRepository } from './infrastructure/mongo-repository/devices.mongoose.repository';
+import { DevicesTypeormRepository } from './infrastructure/typeorm-repository/devices.typeorm.repository';
 
-const useCases = [
-  GetDeviceByUserIdUseCase,
-  GetDevicesByUserIdUseCase,
-  RemoveDeviceByUserIdUseCase,
-  RemoveDevicesByUserIdUseCase,
+const providers = [
+  {
+    provide: 'DevicesRepository',
+    useClass:
+      getConfiguration().repoType === IRepoType.MONGO
+        ? DevicesMongooseRepository
+        : DevicesTypeormRepository,
+  },
 ];
 
 @Module({
-  imports: [UsersModule],
+  imports: [
+    getConfiguration().repoType === IRepoType.SQL
+      ? TypeOrmModule.forFeature([DeviceEntity])
+      : MongooseModule.forFeature([
+          {
+            name: Device.name,
+            schema: DeviceSchema,
+          },
+        ]),
+  ],
   controllers: [DevicesController],
-  providers: [...useCases],
+  providers: [DevicesService, ...providers],
+  exports: [DevicesService],
 })
 export class DevicesModule {}

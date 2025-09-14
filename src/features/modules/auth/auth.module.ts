@@ -6,6 +6,7 @@ import { CoreConfig } from '../../../core/core.config';
 import { CoreModule } from '../../../core/core.module';
 import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
+import { DevicesModule } from '../devices/devices.module';
 import { LoginUserUseCase } from './usecases/login-user.usecase';
 import { LogoutUserUseCase } from './usecases/logout-user.usecase';
 import { MailNotifications } from '../../base/adapters/mail-notifications';
@@ -13,6 +14,7 @@ import { GetMeByUserIdUseCase } from './usecases/get-me-by-user-id.usecase';
 import { LoginMiddleware } from '../../common/middlewares/login.middleware';
 import { SendConfirmationHandler } from './handlers/send-confirmation.handler';
 import { SendRecoveryCodeHandler } from './handlers/send-recovery-code.handler';
+import { GetDeviceByUserIdUseCase } from './usecases/get-device-by-user-id.usecase';
 import { EditDeviceByUserIdUseCase } from './usecases/edit-device-by-user-id.usecase';
 import { EditUserPasswordByCodeUseCase } from './usecases/edit-user-password-by-code.usecase';
 import { SendRecoveryCodeToUserUseCase } from './usecases/send-recovery-code-to-user.usecase';
@@ -53,6 +55,7 @@ const useCases = [
   GetMeByUserIdUseCase,
   SendConfirmationHandler,
   SendRecoveryCodeHandler,
+  GetDeviceByUserIdUseCase,
   EditDeviceByUserIdUseCase,
   EditUserPasswordByCodeUseCase,
   SendRecoveryCodeToUserUseCase,
@@ -63,7 +66,7 @@ const useCases = [
 ];
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, DevicesModule],
   controllers: [AuthController],
   providers: [AuthService, ...providers, ...adapters, ...useCases],
   exports: [AuthService, ...adapters],
