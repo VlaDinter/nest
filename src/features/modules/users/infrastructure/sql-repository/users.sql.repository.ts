@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 import { DataSource } from 'typeorm';
 import { Injectable } from '@nestjs/common';

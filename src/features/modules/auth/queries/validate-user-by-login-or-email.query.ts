@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { UsersService } from '../../users/application/users.service';
 import { UserViewModel } from '../../users/models/output/user-view.model';
