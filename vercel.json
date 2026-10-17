@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "nest",
-  "regions": ["fra1"],
   "builds": [
     {
       "src": "src/main.ts",
