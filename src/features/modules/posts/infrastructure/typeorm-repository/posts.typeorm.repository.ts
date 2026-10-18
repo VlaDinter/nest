@@ -238,6 +238,14 @@ export class PostsTypeormRepository extends PostsRepository {
     updateLikeDto: LikeDto,
     userId: string,
   ): Promise<PostViewModel | null> {
+    const postsCount = await this.entityManager.countBy(Post, {
+      id: postId,
+    });
+
+    if (!postsCount) {
+      return null;
+    }
+
     await this.entityManager.delete(Like, { postId, userId });
 
     if (updateLikeDto.likeStatus !== ILikeStatus.NONE) {

@@ -28,6 +28,7 @@ import { ParseValuesPipe } from '../../../common/pipes/parse-values.pipe';
 import { getConfiguration } from '../../../../configuration/configuration';
 import { BlogPostInputModel } from '../models/input/blog-post-input.model';
 import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 import { BasicAuthGuard } from '../../../common/guards/basic/basic-auth.guard';
 import { ISortDirections } from '../../../base/interfaces/sort-directions.interface';
 import { ObjectIdValidationPipe } from '../../../common/pipes/object-id-validation.pipe';
@@ -205,16 +206,57 @@ export class BlogsController {
     )
     sortDirection: ISortDirections,
   ): Promise<IPagination<PostViewModel>> {
-    const command = new GetPostsByBlogIdCommand(
-      {
-        blogId,
-        sortBy,
-        pageSize,
-        pageNumber,
-        sortDirection,
-      },
+    return this.findPostsByBlogId(
+      { blogId, sortBy, pageSize, pageNumber, sortDirection },
       req.user?.['userId'],
     );
+  }
+
+  @Api('Get sa posts', true, true)
+  @UseGuards(BasicAuthGuard)
+  @Get('sa/blogs/:id/posts')
+  getSAPosts(
+    @Param('id', ObjectIdValidationPipe) blogId: string,
+    @Query(
+      'pageSize',
+      ParseNumberPipe,
+      new DefaultValuePipe(getConfiguration().pageSize),
+    )
+    pageSize: number,
+    @Query(
+      'pageNumber',
+      ParseNumberPipe,
+      new DefaultValuePipe(getConfiguration().pageNumber),
+    )
+    pageNumber: number,
+    @Query(
+      'sortBy',
+      ParseStringPipe,
+      new DefaultValuePipe(getConfiguration().sortBy),
+    )
+    sortBy: string,
+    @Query(
+      'sortDirection',
+      ParseStringPipe,
+      new ParseValuesPipe([ISortDirections.ASC, ISortDirections.DESC]),
+      new DefaultValuePipe(getConfiguration().sortDirection),
+    )
+    sortDirection: ISortDirections,
+  ): Promise<IPagination<PostViewModel>> {
+    return this.findPostsByBlogId({
+      blogId,
+      sortBy,
+      pageSize,
+      pageNumber,
+      sortDirection,
+    });
+  }
+
+  private async findPostsByBlogId(
+    params: IPaginationParams,
+    userId?: string,
+  ): Promise<IPagination<PostViewModel>> {
+    const command = new GetPostsByBlogIdCommand(params, userId);
 
     const foundPosts = await this.commandBus.execute<
       GetPostsByBlogIdCommand,

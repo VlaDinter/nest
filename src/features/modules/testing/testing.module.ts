@@ -4,6 +4,7 @@ import { BlogsModule } from '../blogs/blogs.module';
 import { PostsModule } from '../posts/posts.module';
 import { DevicesModule } from '../devices/devices.module';
 import { CommentsModule } from '../comments/comments.module';
+import { quizModules } from '../quiz/quiz-modules';
 import { TestingController } from './api/testing.controller';
 import { RemoveAllDataUseCase } from './usecases/remove-all-data.usecase';
 
@@ -16,6 +17,7 @@ const useCases = [RemoveAllDataUseCase];
     PostsModule,
     DevicesModule,
     CommentsModule,
+    ...quizModules,
   ],
   controllers: [TestingController],
   providers: [...useCases],

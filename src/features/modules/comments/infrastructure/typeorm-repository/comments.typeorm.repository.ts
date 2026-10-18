@@ -195,6 +195,14 @@ export class CommentsTypeormRepository extends CommentsRepository {
     updateLikeDto: LikeDto,
     userId: string,
   ): Promise<CommentViewModel | null> {
+    const commentsCount = await this.entityManager.countBy(Comment, {
+      id: commentId,
+    });
+
+    if (!commentsCount) {
+      return null;
+    }
+
     await this.entityManager.delete(Like, { commentId, userId });
 
     if (updateLikeDto.likeStatus !== ILikeStatus.NONE) {

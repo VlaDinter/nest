@@ -7,6 +7,7 @@ import { CoreConfig } from './core/core.config';
 import { AppController } from './app.controller';
 import { AuthGuard } from './features/common/guards/auth.guard';
 import { AuthModule } from './features/modules/auth/auth.module';
+import { quizModules } from './features/modules/quiz/quiz-modules';
 import { UsersModule } from './features/modules/users/users.module';
 import { BlogsModule } from './features/modules/blogs/blogs.module';
 import { PostsModule } from './features/modules/posts/posts.module';
@@ -46,6 +47,7 @@ const providers = [
     PostsModule,
     DevicesModule,
     CommentsModule,
+    ...quizModules,
   ],
   controllers: [AppController],
   providers: [AppService, ...providers],
