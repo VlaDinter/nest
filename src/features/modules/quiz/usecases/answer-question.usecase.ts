@@ -1,10 +1,10 @@
 import { EntityManager } from 'typeorm';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Answer } from '../entities/answer.entity';
-import { IGameStatus } from '../interfaces/game-status.interface';
+import { countAnswers, finishGame } from '../utils/game-rules';
 import { IAnswerStatus } from '../interfaces/answer-status.interface';
 import { AnswerViewModel } from '../models/output/answer-view.model';
 import { AnswerQuestionCommand } from './commands/answer-question.command';
+import { GameTimeoutService } from '../application/game-timeout.service';
 import { GamesTypeormRepository } from '../infrastructure/games.typeorm.repository';
 
 const normalize = (value: string): string => value.trim().toLowerCase();
@@ -13,7 +13,10 @@ const normalize = (value: string): string => value.trim().toLowerCase();
 export class AnswerQuestionUseCase
   implements ICommandHandler<AnswerQuestionCommand, AnswerViewModel | null>
 {
-  constructor(private readonly gamesRepository: GamesTypeormRepository) {}
+  constructor(
+    private readonly gamesRepository: GamesTypeormRepository,
+    private readonly gameTimeoutService: GameTimeoutService,
+  ) {}
 
   execute(command: AnswerQuestionCommand): Promise<AnswerViewModel | null> {
     return this.gamesRepository.transaction(
@@ -39,16 +42,21 @@ export class AnswerQuestionUseCase
           manager,
         );
 
-        const isFirstPlayer = game.firstPlayerId === command.userId;
+        // Too late: the opponent finished more than 10 seconds ago.
+        const isTimedOut = await this.gameTimeoutService.finishIfTimedOut(
+          game,
+          gameQuestions,
+          answers,
+          manager,
+        );
 
-        const myAnswersCount = answers.filter(
-          (answer: Answer): boolean => answer.userId === command.userId,
-        ).length;
+        const myAnswersCount = countAnswers(answers, command.userId);
 
-        if (myAnswersCount >= gameQuestions.length) {
+        if (isTimedOut || myAnswersCount >= gameQuestions.length) {
           return null;
         }
 
+        const isFirstPlayer = game.firstPlayerId === command.userId;
         const { question } = gameQuestions[myAnswersCount];
 
         const isCorrect = question.correctAnswers.some(
@@ -78,16 +86,11 @@ export class AnswerQuestionUseCase
           otherAnswersCount === gameQuestions.length;
 
         if (isGameFinished) {
-          game.status = IGameStatus.FINISHED;
-          game.finishGameDate = new Date();
+          const opponentId = isFirstPlayer
+            ? game.secondPlayerId
+            : game.firstPlayerId;
 
-          // The other player answered all questions first: bonus point
-          // if they have at least one correct answer.
-          if (isFirstPlayer && game.secondPlayerScore > 0) {
-            game.secondPlayerScore += 1;
-          } else if (!isFirstPlayer && game.firstPlayerScore > 0) {
-            game.firstPlayerScore += 1;
-          }
+          finishGame(game, opponentId as string);
         }
 
         await this.gamesRepository.updateGame(game, manager);

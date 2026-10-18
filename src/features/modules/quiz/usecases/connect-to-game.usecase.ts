@@ -3,6 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { gameQuestionsCount } from '../constants/constants';
 import { ConnectToGameCommand } from './commands/connect-to-game.command';
 import { GamePairViewModel } from '../models/output/game-pair-view.model';
+import { GameTimeoutService } from '../application/game-timeout.service';
 import { GamesTypeormRepository } from '../infrastructure/games.typeorm.repository';
 import { QuestionsTypeormRepository } from '../infrastructure/questions.typeorm.repository';
 
@@ -13,11 +14,15 @@ export class ConnectToGameUseCase
   constructor(
     private readonly gamesRepository: GamesTypeormRepository,
     private readonly questionsRepository: QuestionsTypeormRepository,
+    private readonly gameTimeoutService: GameTimeoutService,
   ) {}
 
   async execute(
     command: ConnectToGameCommand,
   ): Promise<GamePairViewModel | null> {
+    // A player whose game timed out must be able to start a new one.
+    await this.gameTimeoutService.finishTimedOutGames();
+
     const gameId = await this.gamesRepository.transaction(
       async (manager: EntityManager): Promise<string | null> => {
         // Serializes connections so two users can't both open a pending game

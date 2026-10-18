@@ -5,6 +5,8 @@ export const bodyConstraints = {
 
 export const gameQuestionsCount = 5;
 
+export const answerTimeoutMs = 10_000;
+
 export const connectionLockKey = 25;
 
 export const gamesSortFields = [

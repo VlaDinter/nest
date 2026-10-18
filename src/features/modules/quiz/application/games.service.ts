@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Game } from '../entities/game.entity';
+import { GameTimeoutService } from './game-timeout.service';
 import { parseTopSort } from '../utils/parse-top-sort';
 import { TopPlayerViewModel } from '../models/output/top-player-view.model';
 import { GamePairViewModel } from '../models/output/game-pair-view.model';
@@ -10,26 +11,37 @@ import { IPaginationParams } from '../../../base/interfaces/pagination-params.in
 
 @Injectable()
 export class GamesService {
-  constructor(private readonly gamesRepository: GamesTypeormRepository) {}
+  constructor(
+    private readonly gamesRepository: GamesTypeormRepository,
+    private readonly gameTimeoutService: GameTimeoutService,
+  ) {}
 
   async getCurrentGame(userId: string): Promise<GamePairViewModel | null> {
+    await this.gameTimeoutService.finishTimedOutGames();
+
     const game = await this.gamesRepository.findUnfinishedGame(userId);
 
     return game ? this.gamesRepository.findGameView(game.id) : null;
   }
 
-  getGame(gameId: string): Promise<GamePairViewModel | null> {
+  async getGame(gameId: string): Promise<GamePairViewModel | null> {
+    await this.gameTimeoutService.finishTimedOutGames();
+
     return this.gamesRepository.findGameView(gameId);
   }
 
-  getUserGames(
+  async getUserGames(
     userId: string,
     params: IPaginationParams,
   ): Promise<IPagination<GamePairViewModel>> {
+    await this.gameTimeoutService.finishTimedOutGames();
+
     return this.gamesRepository.findUserGames(userId, params);
   }
 
   async getUserStatistic(userId: string): Promise<MyStatisticViewModel> {
+    await this.gameTimeoutService.finishTimedOutGames();
+
     const games = await this.gamesRepository.findFinishedUserGames(userId);
 
     const statistic: MyStatisticViewModel = {
@@ -69,11 +81,13 @@ export class GamesService {
     return statistic;
   }
 
-  getTopPlayers(
+  async getTopPlayers(
     sort: unknown,
     pageNumber: number,
     pageSize: number,
   ): Promise<IPagination<TopPlayerViewModel>> {
+    await this.gameTimeoutService.finishTimedOutGames();
+
     return this.gamesRepository.findTopPlayers(
       parseTopSort(sort),
       pageNumber,

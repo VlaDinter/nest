@@ -4,6 +4,7 @@ import { Game } from './entities/game.entity';
 import { Answer } from './entities/answer.entity';
 import { Question } from './entities/question.entity';
 import { GamesService } from './application/games.service';
+import { GameTimeoutService } from './application/game-timeout.service';
 import { GameQuestion } from './entities/game-question.entity';
 import { QuestionsController } from './api/questions.controller';
 import { QuizUsersController } from './api/quiz-users.controller';
@@ -26,6 +27,7 @@ const useCases = [ConnectToGameUseCase, AnswerQuestionUseCase];
   ],
   providers: [
     GamesService,
+    GameTimeoutService,
     QuestionsService,
     GamesTypeormRepository,
     QuestionsTypeormRepository,

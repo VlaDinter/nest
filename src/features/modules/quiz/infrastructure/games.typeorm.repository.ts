@@ -71,6 +71,42 @@ export class GamesTypeormRepository {
     });
   }
 
+  findActiveGameByIdForUpdate(
+    gameId: string,
+    manager: EntityManager,
+  ): Promise<Game | null> {
+    return manager.findOne(Game, {
+      where: { id: gameId, status: IGameStatus.ACTIVE },
+      lock: { mode: 'pessimistic_write' },
+    });
+  }
+
+  // Active games where one player answered all questions before `deadline`
+  // and the other player has not finished yet.
+  async findTimedOutGameIds(deadline: Date): Promise<string[]> {
+    const rows: { id: string }[] = await this.entityManager.query(
+      `WITH progress AS (
+         SELECT g.id,
+                (SELECT COUNT(*) FROM "GameQuestions" q WHERE q.game_id = g.id) AS total,
+                COUNT(a.id) FILTER (WHERE a.user_id = g.first_player_id) AS first_count,
+                MAX(a.added_at) FILTER (WHERE a.user_id = g.first_player_id) AS first_last,
+                COUNT(a.id) FILTER (WHERE a.user_id = g.second_player_id) AS second_count,
+                MAX(a.added_at) FILTER (WHERE a.user_id = g.second_player_id) AS second_last
+           FROM "Games" g
+           LEFT JOIN "Answers" a ON a.game_id = g.id
+          WHERE g.status = $1
+          GROUP BY g.id
+       )
+       SELECT id FROM progress
+        WHERE total > 0
+          AND ((first_count = total AND second_count < total AND first_last <= $2)
+            OR (second_count = total AND first_count < total AND second_last <= $2))`,
+      [IGameStatus.ACTIVE, deadline],
+    );
+
+    return rows.map(({ id }) => id);
+  }
+
   findGameQuestions(
     gameId: string,
     manager: EntityManager,
@@ -126,6 +162,18 @@ export class GamesTypeormRepository {
     return manager.save(
       Answer,
       manager.create(Answer, { ...answer, addedAt: new Date() }),
+    );
+  }
+
+  async createAnswers(
+    answers: Pick<Answer, 'gameId' | 'userId' | 'questionId' | 'status'>[],
+    manager: EntityManager,
+  ): Promise<void> {
+    const addedAt = new Date();
+
+    await manager.insert(
+      Answer,
+      answers.map((answer) => ({ ...answer, addedAt })),
     );
   }
 
