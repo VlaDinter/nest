@@ -3,10 +3,12 @@ import {
   Post,
   Body,
   Param,
+  Query,
   HttpCode,
   UseGuards,
   Controller,
   HttpStatus,
+  DefaultValuePipe,
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
@@ -18,14 +20,21 @@ import { AnswerViewModel } from '../models/output/answer-view.model';
 import { GamePairViewModel } from '../models/output/game-pair-view.model';
 import { ConnectToGameCommand } from '../usecases/commands/connect-to-game.command';
 import { AnswerQuestionCommand } from '../usecases/commands/answer-question.command';
+import { MyStatisticViewModel } from '../models/output/my-statistic-view.model';
 import { Api } from '../../../common/decorators/validation/api.decorator';
+import { ParseNumberPipe } from '../../../common/pipes/parse-number.pipe';
+import { ParseStringPipe } from '../../../common/pipes/parse-string.pipe';
+import { ParseValuesPipe } from '../../../common/pipes/parse-values.pipe';
+import { getConfiguration } from '../../../../configuration/configuration';
+import { IPagination } from '../../../base/interfaces/pagination.interface';
+import { ISortDirections } from '../../../base/interfaces/sort-directions.interface';
 import { JwtAuthGuard } from '../../../common/guards/bearer/jwt-auth.guard';
 import { UuidValidationPipe } from '../../../common/pipes/uuid-validation.pipe';
 import { CurrentUserId } from '../../../common/decorators/current-user-id.decorator';
 
 @ApiTags('PairQuizGame')
 @UseGuards(JwtAuthGuard)
-@Controller('pair-game-quiz/pairs')
+@Controller('pair-game-quiz')
 export class PairGameQuizController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -33,7 +42,7 @@ export class PairGameQuizController {
   ) {}
 
   @Api('Get current game', false, false, true)
-  @Get('my-current')
+  @Get('pairs/my-current')
   async getCurrentGame(
     @CurrentUserId() currentUserId: string,
   ): Promise<GamePairViewModel> {
@@ -46,8 +55,50 @@ export class PairGameQuizController {
     return game;
   }
 
+  @Api('Get my games', false, false, true)
+  @Get('pairs/my')
+  getMyGames(
+    @CurrentUserId() currentUserId: string,
+    @Query(
+      'pageSize',
+      ParseNumberPipe,
+      new DefaultValuePipe(getConfiguration().pageSize),
+    )
+    pageSize: number,
+    @Query(
+      'pageNumber',
+      ParseNumberPipe,
+      new DefaultValuePipe(getConfiguration().pageNumber),
+    )
+    pageNumber: number,
+    @Query('sortBy', ParseStringPipe, new DefaultValuePipe('pairCreatedDate'))
+    sortBy: string,
+    @Query(
+      'sortDirection',
+      ParseStringPipe,
+      new ParseValuesPipe([ISortDirections.ASC, ISortDirections.DESC]),
+      new DefaultValuePipe(ISortDirections.DESC),
+    )
+    sortDirection: ISortDirections,
+  ): Promise<IPagination<GamePairViewModel>> {
+    return this.gamesService.getUserGames(currentUserId, {
+      sortBy,
+      pageSize,
+      pageNumber,
+      sortDirection,
+    });
+  }
+
+  @Api('Get my statistic', false, false, true)
+  @Get('users/my-statistic')
+  getMyStatistic(
+    @CurrentUserId() currentUserId: string,
+  ): Promise<MyStatisticViewModel> {
+    return this.gamesService.getUserStatistic(currentUserId);
+  }
+
   @Api('Get game', true, false, true)
-  @Get(':id')
+  @Get('pairs/:id')
   async getGame(
     @CurrentUserId() currentUserId: string,
     @Param('id', UuidValidationPipe) gameId: string,
@@ -70,7 +121,7 @@ export class PairGameQuizController {
   }
 
   @Api('Connect to game', false, false, true)
-  @Post('connection')
+  @Post('pairs/connection')
   @HttpCode(HttpStatus.OK)
   async connect(
     @CurrentUserId() currentUserId: string,
@@ -88,7 +139,7 @@ export class PairGameQuizController {
   }
 
   @Api('Send answer', false, false, true)
-  @Post('my-current/answers')
+  @Post('pairs/my-current/answers')
   @HttpCode(HttpStatus.OK)
   async answer(
     @CurrentUserId() currentUserId: string,

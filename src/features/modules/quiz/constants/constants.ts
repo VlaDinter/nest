@@ -7,6 +7,13 @@ export const gameQuestionsCount = 5;
 
 export const connectionLockKey = 25;
 
+export const gamesSortFields = [
+  'status',
+  'pairCreatedDate',
+  'startGameDate',
+  'finishGameDate',
+];
+
 export const questionsSortFields = [
   'body',
   'published',
