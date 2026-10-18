@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Game } from '../entities/game.entity';
+import { parseTopSort } from '../utils/parse-top-sort';
+import { TopPlayerViewModel } from '../models/output/top-player-view.model';
 import { GamePairViewModel } from '../models/output/game-pair-view.model';
 import { IPagination } from '../../../base/interfaces/pagination.interface';
 import { MyStatisticViewModel } from '../models/output/my-statistic-view.model';
@@ -65,6 +67,18 @@ export class GamesService {
     }
 
     return statistic;
+  }
+
+  getTopPlayers(
+    sort: unknown,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<IPagination<TopPlayerViewModel>> {
+    return this.gamesRepository.findTopPlayers(
+      parseTopSort(sort),
+      pageNumber,
+      pageSize,
+    );
   }
 
   async removeAll(): Promise<void> {

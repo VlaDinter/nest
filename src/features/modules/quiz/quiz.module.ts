@@ -6,6 +6,7 @@ import { Question } from './entities/question.entity';
 import { GamesService } from './application/games.service';
 import { GameQuestion } from './entities/game-question.entity';
 import { QuestionsController } from './api/questions.controller';
+import { QuizUsersController } from './api/quiz-users.controller';
 import { QuestionsService } from './application/questions.service';
 import { PairGameQuizController } from './api/pair-game-quiz.controller';
 import { AnswerQuestionUseCase } from './usecases/answer-question.usecase';
@@ -18,7 +19,11 @@ const useCases = [ConnectToGameUseCase, AnswerQuestionUseCase];
 // SQL only: the quiz game relies on Postgres transactions and row locks.
 @Module({
   imports: [TypeOrmModule.forFeature([Question, Game, GameQuestion, Answer])],
-  controllers: [QuestionsController, PairGameQuizController],
+  controllers: [
+    QuestionsController,
+    QuizUsersController,
+    PairGameQuizController,
+  ],
   providers: [
     GamesService,
     QuestionsService,

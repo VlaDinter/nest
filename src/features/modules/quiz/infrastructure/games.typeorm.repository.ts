@@ -9,7 +9,9 @@ import { IPagination } from '../../../base/interfaces/pagination.interface';
 import { IPaginationParams } from '../../../base/interfaces/pagination-params.interface';
 import { GameQuestion } from '../entities/game-question.entity';
 import { IGameStatus } from '../interfaces/game-status.interface';
+import { ITopSort } from '../utils/parse-top-sort';
 import { IAnswerStatus } from '../interfaces/answer-status.interface';
+import { TopPlayerViewModel } from '../models/output/top-player-view.model';
 import { User } from '../../users/entities/user.entity';
 import {
   GamePairViewModel,
@@ -190,6 +192,67 @@ export class GamesTypeormRepository {
         { secondPlayerId: userId, status },
       ],
     });
+  }
+
+  async findTopPlayers(
+    sort: ITopSort[],
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<IPagination<TopPlayerViewModel>> {
+    // One row per player per finished game, seen from that player's side.
+    const playerGames = `
+      SELECT first_player_id AS user_id,
+             first_player_score AS score,
+             second_player_score AS opponent_score
+        FROM "Games" WHERE status = '${IGameStatus.FINISHED}'
+      UNION ALL
+      SELECT second_player_id, second_player_score, first_player_score
+        FROM "Games" WHERE status = '${IGameStatus.FINISHED}'`;
+
+    // Fields and directions are whitelisted by parseTopSort.
+    const orderBy = sort
+      .map(({ field, direction }) => `"${field}" ${direction.toUpperCase()}`)
+      .join(', ');
+
+    const [rows, [{ count }]] = await Promise.all([
+      this.entityManager.query(
+        `WITH player_games AS (${playerGames})
+         SELECT u.id,
+                u.login,
+                SUM(pg.score)::int AS "sumScore",
+                ROUND(AVG(pg.score), 2)::float AS "avgScores",
+                COUNT(*)::int AS "gamesCount",
+                COUNT(*) FILTER (WHERE pg.score > pg.opponent_score)::int AS "winsCount",
+                COUNT(*) FILTER (WHERE pg.score < pg.opponent_score)::int AS "lossesCount",
+                COUNT(*) FILTER (WHERE pg.score = pg.opponent_score)::int AS "drawsCount"
+           FROM player_games pg
+           JOIN "Users" u ON u.id = pg.user_id
+          GROUP BY u.id, u.login
+          ORDER BY ${orderBy}
+          LIMIT $1 OFFSET $2`,
+        [pageSize, (pageNumber - 1) * pageSize],
+      ),
+      this.entityManager.query(
+        `WITH player_games AS (${playerGames})
+         SELECT COUNT(DISTINCT user_id)::int AS count FROM player_games`,
+      ),
+    ]);
+
+    return {
+      page: pageNumber,
+      pageSize,
+      totalCount: count,
+      pagesCount: Math.ceil(count / pageSize),
+      items: rows.map((row) => ({
+        sumScore: row.sumScore,
+        avgScores: row.avgScores,
+        gamesCount: row.gamesCount,
+        winsCount: row.winsCount,
+        lossesCount: row.lossesCount,
+        drawsCount: row.drawsCount,
+        player: { id: row.id, login: row.login },
+      })),
+    };
   }
 
   private async findGameViews(gameIds: string[]): Promise<GamePairViewModel[]> {
